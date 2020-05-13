@@ -5,7 +5,7 @@ from properties import (
     UserAttr,
     UserState,
     Secret,
-    RequestField,
+    RequestField, QueueState,
 )
 from internal import validate_field, generate_id, end, RequestHandler
 from encrypt import password_encrypt
@@ -23,6 +23,7 @@ class New(RequestHandler):
                     TableKey.PARTITION: TablePartition.USER,
                     TableKey.SORT: new_id,
                     UserAttr.STATE: UserState.NEW,
+                    UserAttr.QUEUE_STATE: QueueState.NONE,
                     UserAttr.INVENTORY: {"BS": []},
                     UserAttr.NAME: name,
                     UserAttr.FLAG: flag,

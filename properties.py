@@ -112,6 +112,12 @@ class ResponseType:
 
 # region Database
 @unique
+class QueueState(Enum):
+    NONE = auto()
+    ENLISTED = auto()
+    MATCHED = auto()
+
+@unique
 class UserState(Enum):
     NEW = auto()
     NORMAL = auto()
@@ -143,6 +149,7 @@ class UserAttr:
     CURRENT_HOME = "current_home"
     NAME = "name"
     STATE = "state"
+    QUEUE_STATE = "queue_state"
     FLAG = "flag"
     SELECTED = "selected"
     INVENTORY = "inventory"
