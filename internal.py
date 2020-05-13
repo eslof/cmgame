@@ -9,6 +9,7 @@ from enum import Enum
 from abc import ABC, abstractmethod
 
 
+# TODO: assert imported handlers issubclass(Save, RequestHandler) in lambda_function.py?
 class RequestHandler(ABC):
     @staticmethod
     @abstractmethod
