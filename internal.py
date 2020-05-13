@@ -1,15 +1,28 @@
 import base64
 import json
 import secrets
+from inspect import isclass
 from sys import exit as sys_exit
-from typing import Type, Callable
+from typing import Type, Callable, Union, List
 
 from properties import Constants, PacketHeader
 from enum import Enum
 from abc import ABC, abstractmethod
 
 
-# TODO: assert imported handlers issubclass(Save, RequestHandler) in lambda_function.py?
+def assert_inheritance(target: Union[type, List[type]], base: type):
+    if isinstance(target, list):
+        for obj in target:
+            if not isclass(obj):
+                end(f"Misuse of assert_inheritance (Not a class)")
+            elif not issubclass(obj, base):
+                end(f"Architecture broken ({target} != {base})")
+    elif not isclass(target):
+        end(f"Misuse of assert_inheritance (Not a class)")
+    elif not issubclass(target, base):
+        end(f"Architecture broken ({target} != {base})")
+
+
 class RequestHandler(ABC):
     @staticmethod
     @abstractmethod

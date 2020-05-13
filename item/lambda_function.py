@@ -4,7 +4,7 @@ from .place import Place
 from .update import Update
 
 from properties import PacketHeader, UserAttr, RequestField
-from internal import sanitize_request
+from internal import sanitize_request, assert_inheritance, RequestHandler
 from enum import Enum, unique, auto
 
 
@@ -12,6 +12,9 @@ from enum import Enum, unique, auto
 class ItemRequest(Enum):
     PLACE = auto()
     UPDATE = auto()
+
+
+assert_inheritance([Place, Update], RequestHandler)
 
 
 def lambda_handler(event, context):

@@ -5,7 +5,7 @@ from .find import Find
 from .end import End
 
 from properties import PacketHeader
-from internal import sanitize_request
+from internal import sanitize_request, RequestHandler, assert_inheritance
 from enum import Enum, unique, auto
 
 
@@ -17,9 +17,13 @@ class QueueRequest(Enum):
     END = auto()
 
 
+assert_inheritance([Enlist, Find, End], RequestHandler)
+
+
 def lambda_handler(event, context):
     sanitize_request(target=event, request_enum=QueueRequest)
     req = QueueRequest(event[PacketHeader.REQUEST])
+    user_id = User.auth(event)
 
     if req == QueueRequest.ENLIST:
         # TODO:implement

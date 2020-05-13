@@ -28,7 +28,7 @@ class Save(RequestHandler):
             return True
 
     @staticmethod
-    def sanitize(event):
+    def sanitize(event: dict):
         # TODO: Make sure it's not too big meta content
         sanitize_json(
             target=event, field=RequestField.Home.META, sanity_id="Home Save API"

@@ -11,7 +11,7 @@ from properties import (
     RequestField,
     ItemAttr,
 )
-from internal import sanitize_request
+from internal import sanitize_request, RequestHandler, assert_inheritance
 from enum import Enum, unique, auto
 
 
@@ -20,6 +20,9 @@ class ItemBoxRequest(Enum):
     NONE = auto()
     DEMAND = auto()
     ACCEPT = auto()
+
+
+assert_inheritance([Demand, Accept], RequestHandler)
 
 
 def lambda_handler(event, context):
