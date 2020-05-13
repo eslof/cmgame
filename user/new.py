@@ -22,8 +22,8 @@ class New(RequestHandler):
                 Item={
                     TableKey.PARTITION: TablePartition.USER,
                     TableKey.SORT: new_id,
-                    UserAttr.STATE: UserState.NEW,
-                    UserAttr.QUEUE_STATE: QueueState.NONE,
+                    UserAttr.STATE: UserState.NEW.value,
+                    UserAttr.QUEUE_STATE: QueueState.NONE.value,
                     UserAttr.INVENTORY: {"BS": []},
                     UserAttr.NAME: name,
                     UserAttr.FLAG: flag,

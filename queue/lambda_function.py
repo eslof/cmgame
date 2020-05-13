@@ -2,7 +2,6 @@ from user import User
 from view import View
 from .enlist import Enlist
 from .find import Find
-from .end import End
 
 from properties import PacketHeader
 from internal import validate_request, RequestHandler, assert_inheritance
@@ -14,10 +13,9 @@ class QueueRequest(Enum):
     NONE = auto()
     ENLIST = auto()
     FIND = auto()
-    END = auto()
 
 
-assert_inheritance([Enlist, Find, End], RequestHandler)
+assert_inheritance([Enlist, Find], RequestHandler)
 
 
 def lambda_handler(event, context):
@@ -27,7 +25,7 @@ def lambda_handler(event, context):
 
     if req == QueueRequest.ENLIST:
         # TODO:implement
-        # check user state, already enlisted? update timestamp : new entry
+        # check user state, in match? ignore, shouldn't happen : already enlisted? update timestamp : new entry
         # unless user is already connected to someone...
         # also surely you should be able to be both enlisted and searching at the same time
         pass
@@ -35,12 +33,11 @@ def lambda_handler(event, context):
     elif req == QueueRequest.FIND:
         # TODO: implement
         # make sure user isn't already connected? otherwise we don't really care
-        # this is where we look for anyone with a 5-10sec old timestamp in enlist table
+        # this is where we look for anyone with a recent timestamp in enlist table
         # if you find someone we will tell you where to connect the websocket
         pass
 
-    elif req == QueueRequest.END:
-        # TODO: implement
-        # close your enlisting (aka stop updating your timestamp)
-        # breaking up your current matching will be entirely automatic by client closing connection to websocket server
-        pass
+
+# breaking up your current matching will be entirely automatic by client closing connection to websocket server
+# this triggers setting your queue_state from enlisted or matched to none by the websocket server
+
