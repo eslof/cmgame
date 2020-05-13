@@ -1,4 +1,2 @@
 # cmgame
-root directory contains shared base layer
-
-folders are separate aws lambda functions
+Root directory contains shared base layer. Folders are separate aws lambda functions.
