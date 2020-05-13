@@ -21,6 +21,7 @@ class User:
     @staticmethod
     def get(user_id: str, attributes: str) -> dict:
         try:
+            # TODO: rework db
             response = table.get_item(
                 Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
                 ProjectionExpression=attributes,
