@@ -4,7 +4,7 @@ from .new import New
 from .save import Save
 from .go import Go
 
-from internal import sanitize_field
+from internal import sanitize_field, sanitize_request
 from enum import Enum, unique, auto
 from properties import (
     PacketHeader,
@@ -23,15 +23,9 @@ class HomeRequests(Enum):
 
 
 def lambda_handler(event, context):
-    sanitize_field(
-        target=event,
-        field=PacketHeader.REQUEST,
-        sanity=lambda value: isinstance(value, int)
-        and value in HomeRequests._value2member_map_,
-        sanity_id="Home Request API",
-    )
-    user_id = User.auth(event)
+    sanitize_request(target=event, request_enum=HomeRequests)
     req = HomeRequests(event[PacketHeader.REQUEST])
+    user_id = User.auth(event)
 
     if req == HomeRequests.NEW:
         New.sanitize(event)

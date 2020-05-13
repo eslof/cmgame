@@ -1,7 +1,10 @@
 import base64
 import json
 import secrets
-from properties import Constants
+from typing import Type
+
+from properties import Constants, PacketHeader
+from enum import Enum
 
 
 def end(message="", code=0) -> None:
@@ -18,6 +21,16 @@ def generate_id() -> str:
 
 
 # TODO: Move some of these hard coded strings somewhere maybe
+
+
+def sanitize_request(target: dict, request_enum: Type[Enum]) -> None:
+    sanitize_field(
+        target=target,
+        field=PacketHeader.REQUEST,
+        sanity=lambda value: isinstance(value, int)
+        and value in request_enum._value2member_map_,
+        sanity_id=f"Request API ({request_enum})",
+    )
 
 
 def sanitize_field(target, field, sanity, sanity_id="") -> None:

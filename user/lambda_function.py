@@ -5,7 +5,7 @@ from .data import Data
 from .save import Save
 
 from properties import PacketHeader, RequestField, ResponseType, ResponseField
-from internal import sanitize_field
+from internal import sanitize_request
 from enum import Enum, unique, auto
 
 
@@ -17,14 +17,7 @@ class UserRequest(Enum):
 
 
 def lambda_handler(event, context):
-    sanitize_field(
-        event,
-        PacketHeader.REQUEST,
-        lambda value: isinstance(value, int)
-        and value in UserRequest._value2member_map_,
-        "User Request API",
-    )
-
+    sanitize_request(target=event, request_enum=UserRequest)
     req = UserRequest(event[PacketHeader.REQUEST])
 
     if req == UserRequest.NEW:

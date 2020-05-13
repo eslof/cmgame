@@ -4,7 +4,7 @@ from .place import Place
 from .update import Update
 
 from properties import PacketHeader, UserAttr, RequestField
-from internal import sanitize_field
+from internal import sanitize_request
 from enum import Enum, unique, auto
 
 
@@ -15,15 +15,10 @@ class ItemRequest(Enum):
 
 
 def lambda_handler(event, context):
-    sanitize_field(
-        target=event,
-        field=PacketHeader.REQUEST,
-        sanity=lambda value: isinstance(value, int)
-        and value in ItemRequest._value2member_map_,
-        sanity_id="Item Request API",
-    )
-    user_id = User.auth(event)
+    sanitize_request(target=event, request_enum=ItemRequest)
     req = ItemRequest(event[PacketHeader.REQUEST])
+
+    user_id = User.auth(event)
 
     if req == ItemRequest.PLACE:
         user_data = User.get(

@@ -11,7 +11,7 @@ from properties import (
     RequestField,
     ItemAttr,
 )
-from internal import sanitize_field
+from internal import sanitize_request
 from enum import Enum, unique, auto
 
 
@@ -23,17 +23,10 @@ class ItemBoxRequest(Enum):
 
 
 def lambda_handler(event, context):
-    sanitize_field(
-        target=event,
-        field=PacketHeader.REQUEST,
-        sanity=lambda value: isinstance(value, int)
-        and value in ItemBoxRequest._value2member_map_
-        and ItemBoxRequest(value) != ItemBoxRequest.NONE,
-        sanity_id="ItemBox Request API",
-    )
+    sanitize_request(target=event, request_enum=ItemBoxRequest)
+    req = ItemBoxRequest(event[PacketHeader.REQUEST])
 
     user_id = User.auth(event)
-    req = ItemBoxRequest(event[PacketHeader.REQUEST])
 
     if req == ItemBoxRequest.DEMAND:
         user_data = User.get(

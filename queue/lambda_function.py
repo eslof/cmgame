@@ -5,7 +5,7 @@ from .find import Find
 from .end import End
 
 from properties import PacketHeader
-from internal import sanitize_field
+from internal import sanitize_request
 from enum import Enum, unique, auto
 
 
@@ -18,16 +18,7 @@ class QueueRequest(Enum):
 
 
 def lambda_handler(event, context):
-    sanitize_field(
-        target=event,
-        field=PacketHeader.REQUEST,
-        sanity=lambda value: isinstance(value, int)
-        and value in QueueRequest._value2member_map_
-        and QueueRequest(value) != QueueRequest.NONE,
-        sanity_id="Queue Request API",
-    )
-
-    user_id = User.auth(event)
+    sanitize_request(target=event, request_enum=QueueRequest)
     req = QueueRequest(event[PacketHeader.REQUEST])
 
     if req == QueueRequest.ENLIST:
