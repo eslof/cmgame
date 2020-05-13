@@ -1,8 +1,8 @@
 from properties import RequestField
-from internal import sanitize_field
+from internal import sanitize_field, RequestHandler
 
 
-class Accept:
+class Accept(RequestHandler):
     @staticmethod
     def run(user_id, choice):
         # TODO: implement

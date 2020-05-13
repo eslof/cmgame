@@ -1,4 +1,7 @@
-class Find:
+from internal import RequestHandler
+
+
+class Find(RequestHandler):
     @staticmethod
     def run(user_id: str) -> None:
         # TODO: implement

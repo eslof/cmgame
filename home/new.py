@@ -1,10 +1,10 @@
 from base64 import b64encode
 from encrypt import password_encrypt
 from properties import RequestField, TableKey, HomeAttr, Secret, Constants, Biodome
-from internal import sanitize_field, generate_id, end
+from internal import sanitize_field, generate_id, end, RequestHandler
 
 
-class New:
+class New(RequestHandler):
     @staticmethod
     def run(user_id: str, name: str, biodome: int):
         new_id = generate_id()

@@ -1,8 +1,8 @@
 from properties import TableKey, TablePartition, HomeAttr, RequestField
-from internal import sanitize_json
+from internal import sanitize_json, RequestHandler
 
 
-class Save:
+class Save(RequestHandler):
     @staticmethod
     def run(home_id: str, meta_data: str):
         try:

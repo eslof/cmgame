@@ -7,10 +7,10 @@ from properties import (
     HomeAttr,
     ItemAttr,
 )
-from internal import end
+from internal import end, RequestHandler
 
 
-class Data:
+class Data(RequestHandler):
     @staticmethod
     def run(user_id: str) -> dict:
         try:

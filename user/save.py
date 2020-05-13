@@ -1,6 +1,6 @@
 from countries import Countries
 from properties import RequestField, UserAttr, TableKey, TablePartition
-from internal import sanitize_field
+from internal import sanitize_field, RequestHandler
 from enum import Enum, unique, auto
 
 
@@ -11,7 +11,7 @@ class SaveRequest(Enum):
     META = auto()
 
 
-class Save:
+class Save(RequestHandler):
     @staticmethod
     def run(save_request: int, user_id: str, event: dict) -> bool:
         # TODO: this could probably be made better

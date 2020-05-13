@@ -1,8 +1,8 @@
 from properties import TableKey, TablePartition, HomeAttr, Constants, RequestField
-from internal import sanitize_field, sanitize_json
+from internal import sanitize_field, sanitize_json, RequestHandler
 
 
-class Update:
+class Update(RequestHandler):
     @staticmethod
     def run(home_id: str, grid_index: int, item_meta: str) -> bool:
         try:

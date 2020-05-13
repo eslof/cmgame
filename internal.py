@@ -1,11 +1,24 @@
 import base64
 import json
 import secrets
-from typing import Type
 from sys import exit as sys_exit
+from typing import Type, Callable
 
 from properties import Constants, PacketHeader
 from enum import Enum
+from abc import ABC, abstractmethod
+
+
+class RequestHandler(ABC):
+    @staticmethod
+    @abstractmethod
+    def sanitize(*args, **kwargs):
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def run(*args, **kwargs):
+        pass
 
 
 def end(message="", code=0) -> None:
@@ -34,14 +47,14 @@ def sanitize_request(target: dict, request_enum: Type[Enum]) -> None:
     )
 
 
-def sanitize_field(target, field, sanity, sanity_id="") -> None:
+def sanitize_field(target: dict, field: str, sanity: Callable, sanity_id: str = "") -> None:
     if not hasattr(target, field) and field not in target:
         end(f"No sane index present ({sanity_id}): {json.dumps(target)}")
     elif not sanity(target[field]):
         end(f"Failed sanity check ({sanity_id}): {field} = {str(target[field])}")
 
 
-def sanitize_json(target, field, sanity_id="") -> None:
+def sanitize_json(target: dict, field: str, sanity_id: str = "") -> None:
     if not hasattr(target, field) and field not in target:
         end(f"No sane index present ({sanity_id}): {json.dumps(target)}")
     elif not isinstance(target[field], str) or not target[field]:

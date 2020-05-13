@@ -4,7 +4,7 @@ from .new import New
 from .save import Save
 from .go import Go
 
-from internal import sanitize_field, sanitize_request
+from internal import sanitize_request
 from enum import Enum, unique, auto
 from properties import (
     PacketHeader,

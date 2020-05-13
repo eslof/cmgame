@@ -7,12 +7,12 @@ from properties import (
     Secret,
     RequestField,
 )
-from internal import sanitize_field, generate_id, end
+from internal import sanitize_field, generate_id, end, RequestHandler
 from encrypt import password_encrypt
 from base64 import b64encode
 
 
-class New:
+class New(RequestHandler):
     @staticmethod
     def run(name: str, flag: int) -> str:
         new_id = generate_id()

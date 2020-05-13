@@ -1,8 +1,8 @@
 from properties import TableKey, TablePartition, HomeAttr, RequestField
-from internal import sanitize_field, end
+from internal import sanitize_field, end, RequestHandler
 
 
-class Go:
+class Go(RequestHandler):
     @staticmethod
     def run(home_id: str) -> list:
         try:

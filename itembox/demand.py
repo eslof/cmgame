@@ -1,9 +1,9 @@
-from internal import end
+from internal import end, RequestHandler
 from item import Item
 from random import Random
 
 
-class Demand:
+class Demand(RequestHandler):
     @staticmethod
     def run(inventory: list, seed: int) -> list:
         # TODO: whatever's going on here might not work
