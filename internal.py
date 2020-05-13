@@ -10,6 +10,8 @@ from enum import Enum
 from abc import ABC, abstractmethod
 
 
+# TODO: Move some of these hard coded strings somewhere maybe
+
 def assert_inheritance(target: Union[type, List[type]], base: type):
     if isinstance(target, list):
         for obj in target:
@@ -46,9 +48,6 @@ def generate_id() -> str:
     return base64.b64encode(secrets.token_bytes(Constants.ID_TOKEN_BYTE_COUNT)).decode(
         "ascii"
     )
-
-
-# TODO: Move some of these hard coded strings somewhere maybe
 
 
 def sanitize_request(target: dict, request_enum: Type[Enum]) -> None:
