@@ -4,7 +4,7 @@ from .new import New
 from .save import Save
 from .go import Go
 
-from internal import sanitize_request, assert_inheritance, RequestHandler
+from internal import validate_request, assert_inheritance, RequestHandler
 from enum import Enum, unique, auto
 from properties import (
     PacketHeader,
@@ -26,12 +26,12 @@ assert_inheritance([New, Save, Go], RequestHandler)
 
 
 def lambda_handler(event, context):
-    sanitize_request(target=event, request_enum=HomeRequest)
+    validate_request(target=event, request_enum=HomeRequest)
     req = HomeRequest(event[PacketHeader.REQUEST])
     user_id = User.auth(event)
 
     if req == HomeRequest.NEW:
-        New.sanitize(event)
+        New.validate(event)
         result = New.run(
             user_id=user_id,
             name=event[RequestField.Home.NAME],
@@ -41,7 +41,7 @@ def lambda_handler(event, context):
 
     elif req == HomeRequest.SAVE:
         user_data = User.get(user_id=user_id, attributes=UserAttr.CURRENT_HOME)
-        Save.sanitize(event)
+        Save.validate(event)
         result = Save.run(
             home_id=user_data[UserAttr.CURRENT_HOME],
             meta_data=event[RequestField.Home.META],
@@ -51,7 +51,7 @@ def lambda_handler(event, context):
     elif req == HomeRequest.GO:
         # TODO: also get home meta data
         user_data = User.get(user_id=user_id, attributes=UserAttr.HOME_LIST)
-        Go.sanitize(event=event, home_count=len(user_data[UserAttr.HOME_LIST]))
+        Go.validate(event=event, home_count=len(user_data[UserAttr.HOME_LIST]))
         grid = Go.run(
             home_id=user_data[UserAttr.HOME_LIST][event[RequestField.User.HOME_INDEX]]
         )

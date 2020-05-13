@@ -5,7 +5,7 @@ from .find import Find
 from .end import End
 
 from properties import PacketHeader
-from internal import sanitize_request, RequestHandler, assert_inheritance
+from internal import validate_request, RequestHandler, assert_inheritance
 from enum import Enum, unique, auto
 
 
@@ -21,7 +21,7 @@ assert_inheritance([Enlist, Find, End], RequestHandler)
 
 
 def lambda_handler(event, context):
-    sanitize_request(target=event, request_enum=QueueRequest)
+    validate_request(target=event, request_enum=QueueRequest)
     req = QueueRequest(event[PacketHeader.REQUEST])
     user_id = User.auth(event)
 

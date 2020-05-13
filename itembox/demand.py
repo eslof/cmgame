@@ -20,7 +20,7 @@ class Demand(RequestHandler):
         return choices
 
     @staticmethod
-    def sanitize(key_count: int) -> None:
+    def validate(key_count: int) -> None:
         # TODO: does this really need to be here
         if key_count <= 0:
             end(f"Insufficient keys: {key_count}")

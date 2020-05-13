@@ -1,5 +1,5 @@
 from properties import TableKey, TablePartition, HomeAttr, RequestField
-from internal import sanitize_json, RequestHandler
+from internal import validate_meta, RequestHandler
 
 
 class Save(RequestHandler):
@@ -28,8 +28,8 @@ class Save(RequestHandler):
             return True
 
     @staticmethod
-    def sanitize(event: dict):
+    def validate(event: dict):
         # TODO: Make sure it's not too big meta content
-        sanitize_json(
-            target=event, field=RequestField.Home.META, sanity_id="Home Save API"
+        validate_meta(
+            target=event, field=RequestField.Home.META, validation_id="Home Save API"
         )

@@ -28,7 +28,7 @@ def assert_inheritance(target: Union[type, List[type]], base: type):
 class RequestHandler(ABC):
     @staticmethod
     @abstractmethod
-    def sanitize(*args, **kwargs):
+    def validate(*args, **kwargs):
         pass
 
     @staticmethod
@@ -50,30 +50,31 @@ def generate_id() -> str:
     )
 
 
-def sanitize_request(target: dict, request_enum: Type[Enum]) -> None:
-    sanitize_field(
+def validate_request(target: dict, request_enum: Type[Enum]) -> None:
+    validate_field(
         target=target,
         field=PacketHeader.REQUEST,
-        sanity=lambda value: isinstance(value, int)
+        validation=lambda value: isinstance(value, int)
         and value in request_enum._value2member_map_,
-        sanity_id=f"Request API ({request_enum})",
+        validation_id=f"Request API ({request_enum.__name__})",
     )
 
 
-def sanitize_field(target: dict, field: str, sanity: Callable, sanity_id: str = "") -> None:
+def validate_field(target: dict, field: str, validation: Callable, validation_id: str = "") -> None:
     if not hasattr(target, field) and field not in target:
-        end(f"No sane index present ({sanity_id}): {json.dumps(target)}")
-    elif not sanity(target[field]):
-        end(f"Failed sanity check ({sanity_id}): {field} = {str(target[field])}")
+        end(f"No valid index present ({validation_id}): {json.dumps(target)}")
+    elif not validation(target[field]):
+        end(f"Failed validation ({validation_id}): {field} = {str(target[field])}")
 
 
-def sanitize_json(target: dict, field: str, sanity_id: str = "") -> None:
+def validate_meta(target: dict, field: str, validation_id: str = "") -> None:
     if not hasattr(target, field) and field not in target:
-        end(f"No sane index present ({sanity_id}): {json.dumps(target)}")
+        end(f"No valid index present ({validation_id}): {json.dumps(target)}")
     elif not isinstance(target[field], str) or not target[field]:
-        end(f"Failed sanity check for json contents: {target[field]}")
+        end(f"Content not present or wrong type: {target[field]}")
     else:
         try:
+            # TODO: View._decode
             json.loads(target[field])
         except ValueError as e:
-            end(f"Failed sanity check for json: {target[field]} {e}")
+            end(f"Failed validation of meta during decoding: {target[field]} {e}")

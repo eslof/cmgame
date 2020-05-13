@@ -1,5 +1,5 @@
 from properties import TableKey, TablePartition, HomeAttr, Constants, RequestField
-from internal import sanitize_field, sanitize_json, RequestHandler
+from internal import validate_field, validate_meta, RequestHandler
 
 
 class Update(RequestHandler):
@@ -29,16 +29,16 @@ class Update(RequestHandler):
         return True
 
     @staticmethod
-    def sanitize(event: dict) -> None:
-        sanitize_field(
+    def validate(event: dict) -> None:
+        validate_field(
             target=event,
             field=RequestField.Home.GRID_INDEX,
-            sanity=lambda value: isinstance(value, int)
-            and 0 < value <= Constants.Home.SIZE,
-            sanity_id="Item Update API (GRID_INDEX)",
+            validation=lambda value: isinstance(value, int)
+                                     and 0 < value <= Constants.Home.SIZE,
+            validation_id="Item Update API (GRID_INDEX)",
         )
-        sanitize_json(
+        validate_meta(
             target=event,
             field=RequestField.Item.META,
-            sanity_id="Item Update API (META)",
+            validation_id="Item Update API (META)",
         )

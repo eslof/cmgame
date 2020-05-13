@@ -1,5 +1,5 @@
 from properties import RequestField
-from internal import sanitize_field, RequestHandler
+from internal import validate_field, RequestHandler
 
 
 class Accept(RequestHandler):
@@ -9,10 +9,10 @@ class Accept(RequestHandler):
         pass
 
     @staticmethod
-    def sanitize(event):
-        sanitize_field(
+    def validate(event):
+        validate_field(
             target=event,
             field=RequestField.ItemBox.CHOICE,
-            sanity=lambda value: isinstance(value, int) and 1 <= value <= 3,
-            sanity_id="ItemBox Accept API",
+            validation=lambda value: isinstance(value, int) and 1 <= value <= 3,
+            validation_id="ItemBox Accept API",
         )

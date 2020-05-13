@@ -1,7 +1,7 @@
 from base64 import b64encode
 from encrypt import password_encrypt
 from properties import RequestField, TableKey, HomeAttr, Secret, Constants, Biodome
-from internal import sanitize_field, generate_id, end, RequestHandler
+from internal import validate_field, generate_id, end, RequestHandler
 
 
 class New(RequestHandler):
@@ -30,18 +30,18 @@ class New(RequestHandler):
             return b64encode(password_encrypt(new_id, Secret.USER_ID)).decode("ascii")
 
     @staticmethod
-    def sanitize(event: dict) -> None:
-        sanitize_field(
+    def validate(event: dict) -> None:
+        validate_field(
             target=event,
             field=RequestField.Home.NAME,
-            sanity=lambda value: isinstance(value, str)
-            and 0 < len(value) <= Constants.Home.NAME_MAX_SIZE,
-            sanity_id="Home Create API (NAME)",
+            validation=lambda value: isinstance(value, str)
+                                     and 0 < len(value) <= Constants.Home.NAME_MAX_SIZE,
+            validation_id="Home Create API (NAME)",
         )
-        sanitize_field(
+        validate_field(
             target=event,
             field=RequestField.Home.BIODOME,
-            sanity=lambda value: isinstance(value, int)
-            and value in Biodome._value2member_map_,
-            sanity_id="Home Create API (BIODOME)",
+            validation=lambda value: isinstance(value, int)
+                                     and value in Biodome._value2member_map_,
+            validation_id="Home Create API (BIODOME)",
         )

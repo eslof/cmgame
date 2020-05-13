@@ -5,7 +5,7 @@ from .data import Data
 from .save import Save
 
 from properties import PacketHeader, RequestField, ResponseType, ResponseField
-from internal import sanitize_request, RequestHandler, assert_inheritance
+from internal import validate_request, RequestHandler, assert_inheritance
 from enum import Enum, unique, auto
 
 
@@ -20,11 +20,11 @@ assert_inheritance([New, Data, Save], RequestHandler)
 
 
 def lambda_handler(event, context):
-    sanitize_request(target=event, request_enum=UserRequest)
+    validate_request(target=event, request_enum=UserRequest)
     req = UserRequest(event[PacketHeader.REQUEST])
 
     if req == UserRequest.NEW:
-        New.sanitize(event)
+        New.validate(event)
         encrypted_uuid = New.run(
             name=event[RequestField.User.NAME], flag=event[RequestField.User.FLAG]
         )
@@ -43,7 +43,7 @@ def lambda_handler(event, context):
         )
 
     elif req == UserRequest.SAVE:
-        Save.sanitize(event)
+        Save.validate(event)
         result = Save.run(
             save_request=event[RequestField.User.SAVE], user_id=user_id, event=event
         )

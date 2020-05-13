@@ -1,5 +1,5 @@
 from properties import TableKey, TablePartition, HomeAttr, RequestField
-from internal import sanitize_field, end, RequestHandler
+from internal import validate_field, end, RequestHandler
 
 
 class Go(RequestHandler):
@@ -26,10 +26,10 @@ class Go(RequestHandler):
         return response["Item"][HomeAttr.ITEM_GRID]
 
     @staticmethod
-    def sanitize(event: dict, home_count: int) -> None:
-        sanitize_field(
+    def validate(event: dict, home_count: int) -> None:
+        validate_field(
             target=event,
             field=RequestField.User.HOME_INDEX,
-            sanity=lambda value: isinstance(value, int) and 0 < value <= home_count,
-            sanity_id="Home select API",
+            validation=lambda value: isinstance(value, int) and 0 < value <= home_count,
+            validation_id="Home select API",
         )

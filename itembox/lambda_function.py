@@ -11,7 +11,7 @@ from properties import (
     RequestField,
     ItemAttr,
 )
-from internal import sanitize_request, RequestHandler, assert_inheritance
+from internal import validate_request, RequestHandler, assert_inheritance
 from enum import Enum, unique, auto
 
 
@@ -26,7 +26,7 @@ assert_inheritance([Demand, Accept], RequestHandler)
 
 
 def lambda_handler(event, context):
-    sanitize_request(target=event, request_enum=ItemBoxRequest)
+    validate_request(target=event, request_enum=ItemBoxRequest)
     req = ItemBoxRequest(event[PacketHeader.REQUEST])
 
     user_id = User.auth(event)
@@ -36,7 +36,7 @@ def lambda_handler(event, context):
             user_id=user_id,
             attributes=f"{UserAttr.KEY_COUNT}, {UserAttr.INVENTORY}, {UserAttr.USED_KEY_COUNT}",
         )
-        Demand.sanitize(user_data[UserAttr.KEY_COUNT])
+        Demand.validate(user_data[UserAttr.KEY_COUNT])
 
         # unique for user; different every time
         seed = user_id + user_data[UserAttr.USED_KEY_COUNT]
@@ -48,7 +48,7 @@ def lambda_handler(event, context):
         )
 
     elif req == ItemBoxRequest.ACCEPT:
-        Accept.sanitize(event)
+        Accept.validate(event)
         item_data = Accept.run(
             user_id=user_id, choice=event[RequestField.ItemBox.CHOICE]
         )

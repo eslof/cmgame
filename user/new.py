@@ -7,7 +7,7 @@ from properties import (
     Secret,
     RequestField,
 )
-from internal import sanitize_field, generate_id, end, RequestHandler
+from internal import validate_field, generate_id, end, RequestHandler
 from encrypt import password_encrypt
 from base64 import b64encode
 
@@ -41,16 +41,16 @@ class New(RequestHandler):
         return b64encode(password_encrypt(new_id, Secret.USER_ID)).decode("ascii")
 
     @staticmethod
-    def sanitize(event) -> None:
-        sanitize_field(
+    def validate(event) -> None:
+        validate_field(
             event,
             RequestField.User.NAME,
             lambda value: isinstance(value, str) and 0 < len(value) < 24,
             "User New API (NAME)",
         )
-        sanitize_field(
+        validate_field(
             event,
             RequestField.User.FLAG,
-            lambda value: isinstance(value, int) and Countries.sanitize(value),
+            lambda value: isinstance(value, int) and value in Countries._value2member_map_,
             "User New API (FLAG)",
         )

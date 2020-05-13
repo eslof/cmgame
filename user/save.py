@@ -1,6 +1,6 @@
 from countries import Countries
 from properties import RequestField, UserAttr, TableKey, TablePartition
-from internal import sanitize_field, RequestHandler
+from internal import validate_field, RequestHandler
 from enum import Enum, unique, auto
 
 
@@ -51,8 +51,8 @@ class Save(RequestHandler):
             return True
 
     @staticmethod
-    def sanitize(event) -> None:
-        sanitize_field(
+    def validate(event) -> None:
+        validate_field(
             event,
             RequestField.User.SAVE,
             lambda value: isinstance(value, int)
@@ -63,14 +63,14 @@ class Save(RequestHandler):
         save_req = SaveRequest(event[RequestField.User.SAVE])
 
         if save_req == SaveRequest.NAME:
-            sanitize_field(
+            validate_field(
                 event,
                 RequestField.User.NAME,
                 lambda value: isinstance(value, str) and len(value) < 24,
                 "User Save API (NAME)",
             )
         elif save_req == SaveRequest.FLAG:
-            sanitize_field(
+            validate_field(
                 event,
                 RequestField.User.FLAG,
                 lambda value: isinstance(value, int)
@@ -78,7 +78,7 @@ class Save(RequestHandler):
                 "User Save API (FLAG)",
             )
         elif save_req == SaveRequest.META:
-            sanitize_field(
+            validate_field(
                 event,
                 RequestField.User.META,
                 lambda value: isinstance(value, str) and len(value) < 2048,

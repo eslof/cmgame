@@ -45,8 +45,7 @@ class Biodome(Enum):
 # region Network
 
 
-@unique
-class PacketHeader(Enum):
+class PacketHeader:
     REQUEST = "request"
     RESPONSE = "response"
 

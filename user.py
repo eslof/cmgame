@@ -1,4 +1,4 @@
-from internal import sanitize_field, end
+from internal import validate_field, end
 from properties import RequestField, TableKey, TablePartition, Secret, Constants
 from encrypt import password_decrypt
 
@@ -6,12 +6,12 @@ from encrypt import password_decrypt
 class User:
     @staticmethod
     def auth(event: dict) -> str:
-        sanitize_field(
+        validate_field(
             target=event,
             field=RequestField.User.ID,
-            sanity=lambda value: isinstance(value, str)
-            and len(value) == Constants.User.EXPECTED_ID_LENGTH,
-            sanity_id="User authentication API",
+            validation=lambda value: isinstance(value, str)
+                                     and len(value) == Constants.User.EXPECTED_ID_LENGTH,
+            validation_id="User authentication API",
         )
 
         return password_decrypt(

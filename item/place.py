@@ -1,5 +1,5 @@
 from properties import TableKey, TablePartition, HomeAttr, RequestField, Constants
-from internal import sanitize_field, sanitize_json, RequestHandler
+from internal import validate_field, validate_meta, RequestHandler
 
 
 class Place(RequestHandler):
@@ -33,22 +33,22 @@ class Place(RequestHandler):
         return True
 
     @staticmethod
-    def sanitize(event: dict, inventory_size: int) -> None:
-        sanitize_field(
+    def validate(event: dict, inventory_size: int) -> None:
+        validate_field(
             target=event,
             field=RequestField.User.ITEM_INDEX,
-            sanity=lambda value: isinstance(value, int) and 0 < value <= inventory_size,
-            sanity_id="Item Place API (ITEM_INDEX)",
+            validation=lambda value: isinstance(value, int) and 0 < value <= inventory_size,
+            validation_id="Item Place API (ITEM_INDEX)",
         )
-        sanitize_field(
+        validate_field(
             target=event,
             field=RequestField.Home.GRID_INDEX,
-            sanity=lambda value: isinstance(value, int)
-            and 0 < value <= Constants.Home.SIZE,
-            sanity_id="Item Place API (GRID_INDEX)",
+            validation=lambda value: isinstance(value, int)
+                                     and 0 < value <= Constants.Home.SIZE,
+            validation_id="Item Place API (GRID_INDEX)",
         )
-        sanitize_json(
+        validate_meta(
             target=event,
             field=RequestField.Item.META,
-            sanity_id="Item Place API (META)",
+            validation_id="Item Place API (META)",
         )

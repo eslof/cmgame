@@ -8,6 +8,6 @@ class Enlist(RequestHandler):
         pass
 
     @staticmethod
-    def sanitize() -> None:
+    def validate() -> None:
         # TODO: check if not currently enlisted and/or in find state?
         pass
