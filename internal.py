@@ -2,6 +2,7 @@ import base64
 import json
 import secrets
 from typing import Type
+from sys import exit as sys_exit
 
 from properties import Constants, PacketHeader
 from enum import Enum
@@ -11,7 +12,7 @@ def end(message="", code=0) -> None:
     if message:
         # TODO: does logging have a place here? does this method even make sense?
         print(message)
-    quit(code)
+    sys_exit(code)
 
 
 def generate_id() -> str:
