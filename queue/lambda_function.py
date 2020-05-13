@@ -27,12 +27,19 @@ def lambda_handler(event, context):
 
     if req == QueueRequest.ENLIST:
         # TODO:implement
+        # check user state, already enlisted? update timestamp : new entry
+        # unless user is already connected to someone...
+        # also surely you should be able to be both enlisted and searching at the same time
         pass
 
     elif req == QueueRequest.FIND:
         # TODO: implement
+        # make sure user isn't already connected? otherwise we don't really care
+        # this is where we look for anyone with a 5-10sec old timestamp in enlist table
         pass
 
     elif req == QueueRequest.END:
         # TODO: implement
+        # close your enlisting (aka stop updating your timestamp)
+        # or you're telling us you're breaking up your current matching
         pass
