@@ -36,10 +36,11 @@ def lambda_handler(event, context):
         # TODO: implement
         # make sure user isn't already connected? otherwise we don't really care
         # this is where we look for anyone with a 5-10sec old timestamp in enlist table
+        # if you find someone we will tell you where to connect the websocket
         pass
 
     elif req == QueueRequest.END:
         # TODO: implement
         # close your enlisting (aka stop updating your timestamp)
-        # or you're telling us you're breaking up your current matching
+        # breaking up your current matching will be entirely automatic by client closing connection to websocket server
         pass
