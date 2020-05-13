@@ -16,18 +16,18 @@ from properties import (
 
 
 @unique
-class HomeRequests(Enum):
+class HomeRequest(Enum):
     NEW = auto()
     SAVE = auto()
     GO = auto()
 
 
 def lambda_handler(event, context):
-    sanitize_request(target=event, request_enum=HomeRequests)
-    req = HomeRequests(event[PacketHeader.REQUEST])
+    sanitize_request(target=event, request_enum=HomeRequest)
+    req = HomeRequest(event[PacketHeader.REQUEST])
     user_id = User.auth(event)
 
-    if req == HomeRequests.NEW:
+    if req == HomeRequest.NEW:
         New.sanitize(event)
         result = New.run(
             user_id=user_id,
@@ -36,7 +36,7 @@ def lambda_handler(event, context):
         )
         return View.generic(result)
 
-    elif req == HomeRequests.SAVE:
+    elif req == HomeRequest.SAVE:
         user_data = User.get(user_id=user_id, attributes=UserAttr.CURRENT_HOME)
         Save.sanitize(event)
         result = Save.run(
@@ -45,7 +45,7 @@ def lambda_handler(event, context):
         )
         return View.generic(result)
 
-    elif req == HomeRequests.GO:
+    elif req == HomeRequest.GO:
         # TODO: also get home meta data
         user_data = User.get(user_id=user_id, attributes=UserAttr.HOME_LIST)
         Go.sanitize(event=event, home_count=len(user_data[UserAttr.HOME_LIST]))
