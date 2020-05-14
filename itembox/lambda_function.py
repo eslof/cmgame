@@ -1,18 +1,14 @@
+from enum import Enum, unique, auto
+
+from internal import validate_request, RequestHandler, assert_inheritance
+from properties import PacketHeader, RequestField, ResponseField
+from properties import ResponseType, UserAttr, ItemAttr
 from user import User
 from view import View
-from .demand import Demand
-from .accept import Accept
 
-from properties import (
-    PacketHeader,
-    UserAttr,
-    ResponseType,
-    ResponseField,
-    RequestField,
-    ItemAttr,
-)
-from internal import validate_request, RequestHandler, assert_inheritance
-from enum import Enum, unique, auto
+from .accept import Accept
+from .demand import Demand
+assert_inheritance([Demand, Accept], RequestHandler)
 
 
 @unique
@@ -20,9 +16,6 @@ class ItemBoxRequest(Enum):
     NONE = auto()
     DEMAND = auto()
     ACCEPT = auto()
-
-
-assert_inheritance([Demand, Accept], RequestHandler)
 
 
 def lambda_handler(event, context):

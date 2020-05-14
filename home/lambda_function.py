@@ -1,18 +1,15 @@
+from enum import Enum, unique, auto
+
+from internal import validate_request, assert_inheritance, RequestHandler
+from properties import PacketHeader, RequestField, ResponseField
+from properties import ResponseType, UserAttr
 from user import User
 from view import View
+
 from .new import New
 from .save import Save
 from .go import Go
-
-from internal import validate_request, assert_inheritance, RequestHandler
-from enum import Enum, unique, auto
-from properties import (
-    PacketHeader,
-    RequestField,
-    ResponseType,
-    ResponseField,
-    UserAttr,
-)
+assert_inheritance([New, Save, Go], RequestHandler)
 
 
 @unique
@@ -20,9 +17,6 @@ class HomeRequest(Enum):
     NEW = auto()
     SAVE = auto()
     GO = auto()
-
-
-assert_inheritance([New, Save, Go], RequestHandler)
 
 
 def lambda_handler(event, context):

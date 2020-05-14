@@ -1,20 +1,19 @@
+from enum import Enum, unique, auto
+
+from internal import validate_request, assert_inheritance, RequestHandler
+from properties import PacketHeader, UserAttr, RequestField
 from user import User
 from view import View
+
 from .place import Place
 from .update import Update
-
-from properties import PacketHeader, UserAttr, RequestField
-from internal import validate_request, assert_inheritance, RequestHandler
-from enum import Enum, unique, auto
+assert_inheritance([Place, Update], RequestHandler)
 
 
 @unique
 class ItemRequest(Enum):
     PLACE = auto()
     UPDATE = auto()
-
-
-assert_inheritance([Place, Update], RequestHandler)
 
 
 def lambda_handler(event, context):

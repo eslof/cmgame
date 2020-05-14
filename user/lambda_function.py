@@ -1,12 +1,14 @@
+from enum import Enum, unique, auto
+
+from internal import validate_request, RequestHandler, assert_inheritance
+from properties import PacketHeader, RequestField, ResponseType, ResponseField
 from user import User
 from view import View
+
 from .new import New
 from .data import Data
 from .save import Save
-
-from properties import PacketHeader, RequestField, ResponseType, ResponseField
-from internal import validate_request, RequestHandler, assert_inheritance
-from enum import Enum, unique, auto
+assert_inheritance([New, Data, Save], RequestHandler)
 
 
 @unique
@@ -14,9 +16,6 @@ class UserRequest(Enum):
     NEW = auto()
     DATA = auto()
     SAVE = auto()
-
-
-assert_inheritance([New, Data, Save], RequestHandler)
 
 
 def lambda_handler(event, context):

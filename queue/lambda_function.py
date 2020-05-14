@@ -1,11 +1,13 @@
+from enum import Enum, unique, auto
+
+from internal import validate_request, RequestHandler, assert_inheritance, end
+from properties import PacketHeader, UserAttr, QueueState
 from user import User
 from view import View
+
 from .enlist import Enlist
 from .find import Find
-
-from properties import PacketHeader, UserAttr, QueueState
-from internal import validate_request, RequestHandler, assert_inheritance, end
-from enum import Enum, unique, auto
+assert_inheritance([Enlist, Find], RequestHandler)
 
 
 @unique
@@ -13,9 +15,6 @@ class QueueRequest(Enum):
     NONE = auto()
     ENLIST = auto()
     FIND = auto()
-
-
-assert_inheritance([Enlist, Find], RequestHandler)
 
 
 def lambda_handler(event, context):
