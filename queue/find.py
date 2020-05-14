@@ -16,6 +16,7 @@ class Find(RequestHandler):
             ScanIndexForward=False,
             Limit=1,
         )
+        listing = None
         if len(response["Item"] > 0):
             listing = response["Item"][0]
             # TODO: update listing's state to matched, and prompt for accept by finder
@@ -24,7 +25,7 @@ class Find(RequestHandler):
             # TODO: So you can't be enlisted and find at the same time but they can both override eachother
             # TODO: so figure that part out...
             pass
-        return {}
+        return listing
 
     @staticmethod
     def validate(user_id: str) -> QueueState:

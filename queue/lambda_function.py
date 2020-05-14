@@ -32,10 +32,14 @@ def lambda_handler(event, context):
 
     elif req == QueueRequest.FIND:
         queue_state = Find.validate(user_id)
-        result = Find.run(user_id, queue_state)
-        return View.construct(
-            response_type=ResponseType.QUEUE, data={ResponseField.Queue.MATCH: result}
-        )
+        listing = Find.run(user_id, queue_state)
+        if listing:
+            return View.construct(
+                response_type=ResponseType.QUEUE,
+                data={ResponseField.Queue.MATCH: listing},
+            )
+        else:
+            View.generic(False)
         # TODO: if you find someone we will tell you where to connect the websocket
 
 
