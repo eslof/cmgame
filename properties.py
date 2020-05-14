@@ -117,6 +117,7 @@ class QueueState(Enum):
     ENLISTED = auto()
     MATCHED = auto()
 
+
 @unique
 class UserState(Enum):
     NEW = auto()
