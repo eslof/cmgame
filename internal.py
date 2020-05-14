@@ -57,7 +57,7 @@ def generate_id() -> str:
 
 
 def validate_request(target: dict, request_enum: Type[Enum]) -> None:
-    """validate_field wrapper used for base requests in all lambda_function.py files."""
+    """validate_field wrapper for given enum used for base requests in all lambda_function.py files."""
     validate_field(
         target=target,
         field=PacketHeader.REQUEST,

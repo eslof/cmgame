@@ -6,8 +6,8 @@ class Enlist(RequestHandler):
 
     @staticmethod
     def run(user_id: str) -> None:
-        """If the user already has an enlistment then we update its timestamp.
-        If the user has no enlistment then we add an enlistment entry for this user."""
+        """If an enlistment for the given user_id exists then we update its timestamp.
+        If there is no enlistment for the given user_id then we add one."""
         # TODO: implement
         pass
 

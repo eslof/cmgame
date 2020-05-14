@@ -7,7 +7,7 @@ class Save(RequestHandler):
 
     @staticmethod
     def run(home_id: str, meta_data: str):
-        """Set meta data for requested home id."""
+        """Set meta data for given home id."""
         try:
             # TODO: rework database model
             response = table.update_item(

@@ -7,7 +7,7 @@ class Update(RequestHandler):
 
     @staticmethod
     def run(home_id: str, grid_index: int, item_meta: str) -> bool:
-        """Sets item meta-data at requested grid index for the given home id"""
+        """Sets given item meta-data at requested grid index for the given home id"""
         try:
             # TODO: rework database model
             response = table.update_item(

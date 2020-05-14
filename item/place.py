@@ -7,7 +7,7 @@ class Place(RequestHandler):
 
     @staticmethod
     def run(home_id: str, item_index: int, grid_index: int, item_meta: str) -> bool:
-        """Sets a grid slot for home id to contain a requested item with meta data."""
+        """Sets a grid slot for given home id to contain a requested item with given meta data."""
         try:
             # TODO: rework database model
             response = table.update_item(

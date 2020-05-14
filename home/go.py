@@ -7,7 +7,7 @@ class Go(RequestHandler):
 
     @staticmethod
     def run(home_id: str) -> list:
-        """Home grid is fetched along with associated meta-data and pushed to View."""
+        """Home grid is fetched along with associated meta-data for given home id and pushed to View."""
 
         try:
             # TODO: rework database model also dont forget to get home meta data

@@ -6,7 +6,7 @@ class Find(RequestHandler):
 
     @staticmethod
     def run(user_id: str) -> None:
-        """Find an enlistment with a recent time-stamp and create a match."""
+        """Find enlistment with a recent timestamp and create a match between enlisted user and given user id."""
         # TODO: implement
         pass
 
