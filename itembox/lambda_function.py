@@ -24,7 +24,6 @@ def lambda_handler(event, context):
 
     validate_request(target=event, request_enum=ItemBoxRequest)
     req = ItemBoxRequest(event[PacketHeader.REQUEST])
-
     user_id = User.validate_id(event)
 
     if req == ItemBoxRequest.DEMAND:
@@ -32,6 +31,7 @@ def lambda_handler(event, context):
             user_id=user_id,
             attributes=f"{UserAttr.KEY_COUNT}, {UserAttr.INVENTORY}, {UserAttr.USED_KEY_COUNT}",
         )
+        # TODO: maybe we do the db request in the validation?
         Demand.validate(user_data[UserAttr.KEY_COUNT])
 
         # unique for user; different every time
