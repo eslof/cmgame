@@ -151,6 +151,10 @@ class ItemAttr:
     NAME = "name"
 
 
+class QueueAttr:
+    DATE = "date"
+
+
 class UserAttr:
     META = "meta"
     CURRENT_HOME = "current_home"

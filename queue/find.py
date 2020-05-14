@@ -10,15 +10,19 @@ class Find(RequestHandler):
     def run(user_id: str, queue_state: QueueState) -> dict:
         """Find enlistment with a recent timestamp and create a match between enlisted user and given user id."""
         # TODO: look for enlisted other
-        response = t(  # table.get_item(
+        response = table.get_item(
             Key={TableKey.PARTITION: TablePartition.QUEUE},
+            # TODO: condition expression: state != matched
             ScanIndexForward=False,
             Limit=1,
         )
-        listing = response["Item"][0]
-
-        if queue_state == QueueState.ENLISTED:
-            # TODO: AND update current listing with new timestamp
+        if len(response["Item"] > 0):
+            listing = response["Item"][0]
+            # TODO: update listing's state to matched, and prompt for accept by finder
+            # TODO: then as the enlisters code comes to update its enlistment we look for this
+        elif queue_state == QueueState.ENLISTED:
+            # TODO: So you can't be enlisted and find at the same time but they can both override eachother
+            # TODO: so figure that part out...
             pass
         return {}
 

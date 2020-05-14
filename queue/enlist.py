@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from internal import RequestHandler, end
-from properties import QueueState, UserAttr
+from properties import QueueState, UserAttr, TableKey, TablePartition, QueueAttr
 from user import User
 
 
@@ -13,25 +13,14 @@ class Enlist(RequestHandler):
         """If an enlistment for the given user_id exists then we update its timestamp.
         If there is no enlistment for the given user_id then we add one."""
         dt = datetime.today()  # Get timezone naive now
-        seconds = int(
-            dt.timestamp()
-        )  # TODO: this got real annoying real quick SQL is superior
-        if queue_state == QueueState.ENLISTED:
-            response = table.update_item(
-                Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
-                UpdateExpression=f"SET #meta = :home_meta",
-                ConditionExpression=f"attribute_exists(#id)",
-                ExpressionAttributeNames={
-                    "#id": TableKey.PARTITION,
-                    "#meta": HomeAttr.META,
-                },
-                ExpressionAttributeValues={":home_meta": meta_data},
-            )
-            pass
-        elif queue_state == QueueState.NONE:
-            # TODO: create new listing
-            pass
-        # TODO: implement
+        seconds = int(dt.timestamp())
+        response = table.update_item(
+            Key={TableKey.PARTITION: TablePartition.QUEUE, TableKey.SORT: user_id},
+            UpdateExpression=f"SET #date = :seconds",
+            ExpressionAttributeNames={"#date": QueueAttr.DATE},
+            ExpressionAttributeValues={":seconds": seconds},
+        )
+        # TODO: error handling
         return True
 
     @staticmethod
