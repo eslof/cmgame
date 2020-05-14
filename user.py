@@ -6,6 +6,7 @@ from encrypt import password_decrypt
 class User:
     @staticmethod
     def auth(event: dict) -> str:
+        """TODO: user authentication"""
         validate_field(
             target=event,
             field=RequestField.User.ID,
@@ -20,6 +21,7 @@ class User:
 
     @staticmethod
     def get(user_id: str, attributes: str) -> dict:
+        """TODO: is this even useful shouldn't I grab this and cache it at auth()?"""
         try:
             # TODO: rework db
             response = table.get_item(
