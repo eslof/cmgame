@@ -38,10 +38,10 @@ class RequestHandler(ABC):
         pass
 
 
-def end(message="", code=0) -> None:
+def end(message: str = "", code: int = 0) -> None:
     if message:
         # TODO: does logging have a place here? does this method even make sense?
-        print(message)
+        print(View.serialize({"debug": message}))
     sys_exit(code)
 
 

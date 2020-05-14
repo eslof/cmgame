@@ -21,7 +21,7 @@ class Item:
         return cls.data[item_id]
 
     @classmethod
-    def get_random(cls, count: int, seed: str, exclude_list=None):
+    def get_random(cls, count: int, seed: str, exclude_list: list = None):
         cls.load()
         exclude_list = exclude_list or []
         item_ids = list(cls.data.keys())
