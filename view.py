@@ -8,6 +8,10 @@ class View:
         return json.dumps(data)
 
     @staticmethod
+    def _deserialize(data: str) -> dict:
+        return json.loads(data)
+
+    @staticmethod
     def construct(response_type: int, data: dict) -> str:
         data[PacketHeader.RESPONSE] = response_type
         return View._serialize(data)

@@ -1,16 +1,17 @@
-import base64
-import json
-import secrets
+from abc import ABC, abstractmethod
+from base64 import b64encode
+from enum import Enum
 from inspect import isclass
+from secrets import token_bytes
 from sys import exit as sys_exit
 from typing import Type, Callable, Union, List
 
 from properties import Constants, PacketHeader
-from enum import Enum
-from abc import ABC, abstractmethod
+from view import View
 
 
 # TODO: Move some of these hard coded strings somewhere maybe
+
 
 def assert_inheritance(target: Union[type, List[type]], base: type):
     if isinstance(target, list):
@@ -45,7 +46,7 @@ def end(message="", code=0) -> None:
 
 
 def generate_id() -> str:
-    return base64.b64encode(secrets.token_bytes(Constants.ID_TOKEN_BYTE_COUNT)).decode(
+    return b64encode(token_bytes(Constants.ID_TOKEN_BYTE_COUNT)).decode(
         "ascii"
     )
 
@@ -62,19 +63,19 @@ def validate_request(target: dict, request_enum: Type[Enum]) -> None:
 
 def validate_field(target: dict, field: str, validation: Callable, validation_id: str = "") -> None:
     if not hasattr(target, field) and field not in target:
-        end(f"No valid index present ({validation_id}): {json.dumps(target)}")
+        end(f"No valid index present ({validation_id}): {View._serialize(target)}")
     elif not validation(target[field]):
         end(f"Failed validation ({validation_id}): {field} = {str(target[field])}")
 
 
 def validate_meta(target: dict, field: str, validation_id: str = "") -> None:
     if not hasattr(target, field) and field not in target:
-        end(f"No valid index present ({validation_id}): {json.dumps(target)}")
+        end(f"No valid index present ({validation_id}): {View._serialize(target)}")
     elif not isinstance(target[field], str) or not target[field]:
         end(f"Content not present or wrong type: {target[field]}")
     else:
         try:
             # TODO: View._decode
-            json.loads(target[field])
+            View._deserialize(target[field])
         except ValueError as e:
             end(f"Failed validation of meta during decoding: {target[field]} {e}")
