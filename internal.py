@@ -63,19 +63,18 @@ def validate_request(target: dict, request_enum: Type[Enum]) -> None:
 
 def validate_field(target: dict, field: str, validation: Callable, validation_id: str = "") -> None:
     if not hasattr(target, field) and field not in target:
-        end(f"No valid index present ({validation_id}): {View._serialize(target)}")
+        end(f"No valid index present ({validation_id}): {View.serialize(target)}")
     elif not validation(target[field]):
         end(f"Failed validation ({validation_id}): {field} = {str(target[field])}")
 
 
 def validate_meta(target: dict, field: str, validation_id: str = "") -> None:
     if not hasattr(target, field) and field not in target:
-        end(f"No valid index present ({validation_id}): {View._serialize(target)}")
+        end(f"No valid index present ({validation_id}): {View.serialize(target)}")
     elif not isinstance(target[field], str) or not target[field]:
         end(f"Content not present or wrong type: {target[field]}")
     else:
         try:
-            # TODO: View._decode
-            View._deserialize(target[field])
+            View.deserialize(target[field])
         except ValueError as e:
             end(f"Failed validation of meta during decoding: {target[field]} {e}")
