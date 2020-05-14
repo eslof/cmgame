@@ -24,7 +24,7 @@ def lambda_handler(event, context):
     validate_request(target=event, request_enum=ItemRequest)
     req = ItemRequest(event[PacketHeader.REQUEST])
 
-    user_id = User.auth(event)
+    user_id = User.validate_id(event)
 
     if req == ItemRequest.PLACE:
         user_data = User.get(

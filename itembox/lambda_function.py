@@ -25,7 +25,7 @@ def lambda_handler(event, context):
     validate_request(target=event, request_enum=ItemBoxRequest)
     req = ItemBoxRequest(event[PacketHeader.REQUEST])
 
-    user_id = User.auth(event)
+    user_id = User.validate_id(event)
 
     if req == ItemBoxRequest.DEMAND:
         user_data = User.get(

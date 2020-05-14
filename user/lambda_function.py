@@ -36,7 +36,7 @@ def lambda_handler(event, context):
             data={ResponseField.User.ID: encrypted_uuid},
         )
 
-    user_id = User.auth(event)
+    user_id = User.validate_id(event)
 
     if req == UserRequest.DATA:
         user_data = Data.run(user_id)

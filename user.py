@@ -5,8 +5,8 @@ from encrypt import password_decrypt
 
 class User:
     @staticmethod
-    def auth(event: dict) -> str:
-        """TODO: user authentication"""
+    def validate_id(event: dict) -> str:
+        """TODO: user authentication + store user state + queue state"""
         validate_field(
             target=event,
             field=RequestField.User.ID,

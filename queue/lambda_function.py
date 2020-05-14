@@ -23,7 +23,7 @@ def lambda_handler(event, context):
 
     validate_request(target=event, request_enum=QueueRequest)
     req = QueueRequest(event[PacketHeader.REQUEST])
-    user_id = User.auth(event)
+    user_id = User.validate_id(event)
 
     if req == QueueRequest.ENLIST:
         queue_state = Enlist.validate(user_id)
