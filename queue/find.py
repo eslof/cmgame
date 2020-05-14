@@ -7,13 +7,13 @@ class Find(RequestHandler):
     """User requests to find an enlisted user to visit."""
 
     @staticmethod
-    def run(user_id: str, queue_state: QueueState) -> None:
+    def run(user_id: str, queue_state: QueueState) -> dict:
         """Find enlistment with a recent timestamp and create a match between enlisted user and given user id."""
         # TODO: look for enlisted other
         if queue_state == QueueState.ENLISTED:
             # TODO: AND update current listing with new timestamp
             pass
-        pass
+        return {}
 
     @staticmethod
     def validate(user_id: str) -> QueueState:

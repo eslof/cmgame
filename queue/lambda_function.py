@@ -1,7 +1,7 @@
 from enum import Enum, unique, auto
 
-from internal import validate_request, RequestHandler, assert_inheritance, end
-from properties import PacketHeader, UserAttr, QueueState
+from internal import validate_request, RequestHandler, assert_inheritance
+from properties import PacketHeader, ResponseType, ResponseField
 from user import User
 from view import View
 
@@ -27,12 +27,15 @@ def lambda_handler(event, context):
 
     if req == QueueRequest.ENLIST:
         queue_state = Enlist.validate(user_id)
-        Enlist.run(user_id, queue_state)
+        result = Enlist.run(user_id, queue_state)
+        return View.generic(result)
 
     elif req == QueueRequest.FIND:
         queue_state = Find.validate(user_id)
-        Find.run(user_id, queue_state)
-
+        result = Find.run(user_id, queue_state)
+        return View.construct(
+            response_type=ResponseType.QUEUE, data={ResponseField.Queue.MATCH: result}
+        )
         # TODO: if you find someone we will tell you where to connect the websocket
 
 

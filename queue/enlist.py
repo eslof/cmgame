@@ -7,7 +7,7 @@ class Enlist(RequestHandler):
     """User requests to open his home for a possible visitor."""
 
     @staticmethod
-    def run(user_id: str, queue_state: QueueState) -> None:
+    def run(user_id: str, queue_state: QueueState) -> bool:
         """If an enlistment for the given user_id exists then we update its timestamp.
         If there is no enlistment for the given user_id then we add one."""
         if queue_state == QueueState.ENLISTED:
@@ -17,7 +17,7 @@ class Enlist(RequestHandler):
             # TODO: create new listing
             pass
         # TODO: implement
-        pass
+        return True
 
     @staticmethod
     def validate(user_id: str) -> QueueState:

@@ -74,6 +74,9 @@ class RequestField:
 
 
 class ResponseField:
+    class Queue:
+        MATCH = "match"
+
     class ItemBox:
         DATA = "data"
 
@@ -99,6 +102,7 @@ class ResponseField:
         BIODOME = "bundle"
 
 
+# TODO: we can probably make this an enum as long as we rework View to take an enum and then grab its .value
 class ResponseType:
     WELCOME = 1
     GENERIC = 2
@@ -106,6 +110,7 @@ class ResponseType:
     HOME_DATA = 4
     ITEM_BOX = 5
     ITEM_DATA = 6
+    QUEUE = 7
 
 
 # endregion
