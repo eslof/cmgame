@@ -36,6 +36,8 @@ def lambda_handler(event, context):
         Demand.validate(user_data[UserAttr.KEY_COUNT])
 
         # unique for user; different every time
+        # if user_id is random and not known by user it should be predictable by only ourselves
+        # TODO: verify that user cannot predict + if it even makes any difference
         seed = user_id + user_data[UserAttr.USED_KEY_COUNT]
 
         item_box_data = Demand.run(inventory=user_data[UserAttr.INVENTORY], seed=seed)
