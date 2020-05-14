@@ -11,7 +11,7 @@ class Save(RequestHandler):
         try:
             # TODO: rework database model
             response = table.update_item(
-                Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: home_id},
+                Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
                 UpdateExpression=f"SET #meta = :home_meta",
                 ConditionExpression=f"attribute_exists(#id)",
                 ExpressionAttributeNames={

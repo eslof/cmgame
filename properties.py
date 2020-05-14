@@ -142,6 +142,7 @@ class TablePartition:
     ID = "id"
     BIO = "biodome"
     ITEM = "item"
+    QUEUE = "queue"
 
 
 class ItemAttr:

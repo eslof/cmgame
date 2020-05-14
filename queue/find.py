@@ -1,5 +1,5 @@
 from internal import RequestHandler, end
-from properties import QueueState, UserAttr
+from properties import QueueState, UserAttr, TablePartition, TableKey
 from user import User
 
 
@@ -10,6 +10,13 @@ class Find(RequestHandler):
     def run(user_id: str, queue_state: QueueState) -> dict:
         """Find enlistment with a recent timestamp and create a match between enlisted user and given user id."""
         # TODO: look for enlisted other
+        response = t(  # table.get_item(
+            Key={TableKey.PARTITION: TablePartition.QUEUE},
+            ScanIndexForward=False,
+            Limit=1,
+        )
+        listing = response["Item"][0]
+
         if queue_state == QueueState.ENLISTED:
             # TODO: AND update current listing with new timestamp
             pass
