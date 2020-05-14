@@ -14,7 +14,6 @@ assert_inheritance([Demand, Accept], RequestHandler)
 
 @unique
 class ItemBoxRequest(Enum):
-    NONE = auto()
     DEMAND = auto()
     ACCEPT = auto()
 

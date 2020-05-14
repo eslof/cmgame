@@ -13,7 +13,6 @@ assert_inheritance([Enlist, Find], RequestHandler)
 
 @unique
 class QueueRequest(Enum):
-    NONE = auto()
     ENLIST = auto()
     FIND = auto()
 
