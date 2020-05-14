@@ -15,7 +15,7 @@ class New(RequestHandler):
 
         new_id = generate_id()
         try:
-            # TODO: rework database model template..
+            # TODO: rework database model template...
             response = table.put_item(
                 Item={
                     TableKey.PARTITION: {"S": new_id},
