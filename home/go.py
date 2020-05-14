@@ -6,8 +6,9 @@ class Go(RequestHandler):
     """User requests to be moved to one of the user's own homes."""
 
     @staticmethod
-    def run(home_id: str) -> list:
-        """Get and return grid along with associated meta-data for given home id."""
+    def run(user_id: str, home_id: str) -> list:
+        """Set selected home of given user id to given home id.
+         Get and return grid and associated meta-data for given home id."""
 
         try:
             # TODO: rework database model also dont forget to get home meta data
@@ -31,7 +32,7 @@ class Go(RequestHandler):
 
     @staticmethod
     def validate(event: dict, home_count: int) -> None:
-        """Confirm requested home index to fall in the range of user's home count."""
+        """Confirm requested index to be in range of user's home count."""
 
         validate_field(
             target=event,
