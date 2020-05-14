@@ -7,6 +7,7 @@ from view import View
 
 from .place import Place
 from .update import Update
+
 assert_inheritance([Place, Update], RequestHandler)
 
 
@@ -17,6 +18,9 @@ class ItemRequest(Enum):
 
 
 def lambda_handler(event, context):
+    """High-level overview: Request is validated, user is authenticated, and
+    for each request we .validate the contents and .run the requested action."""
+
     validate_request(target=event, request_enum=ItemRequest)
     req = ItemRequest(event[PacketHeader.REQUEST])
 

@@ -3,8 +3,11 @@ from internal import validate_field, validate_meta, RequestHandler
 
 
 class Place(RequestHandler):
+    """User requests to change the contents of a grid slot in the user's selected home."""
+
     @staticmethod
     def run(home_id: str, item_index: int, grid_index: int, item_meta: str) -> bool:
+        """Sets a grid slot for home id to contain a requested item with meta data."""
         try:
             # TODO: rework database model
             response = table.update_item(
@@ -34,21 +37,23 @@ class Place(RequestHandler):
 
     @staticmethod
     def validate(event: dict, inventory_size: int) -> None:
+        """Confirm item index to be in range of inventory size.
+        Confirm target grid index to be in range of home size.
+        Confirm that item meta-data follows correct format and TODO: apply size limitation in case of misuse."""
         validate_field(
             target=event,
             field=RequestField.User.ITEM_INDEX,
-            validation=lambda value: isinstance(value, int) and 0 < value <= inventory_size,
-            validation_id="Item Place API (ITEM_INDEX)",
+            validation=lambda value: isinstance(value, int)
+            and 0 < value <= inventory_size,
+            message="Item Place API (ITEM_INDEX)",
         )
         validate_field(
             target=event,
             field=RequestField.Home.GRID_INDEX,
             validation=lambda value: isinstance(value, int)
-                                     and 0 < value <= Constants.Home.SIZE,
-            validation_id="Item Place API (GRID_INDEX)",
+            and 0 < value <= Constants.Home.SIZE,
+            message="Item Place API (GRID_INDEX)",
         )
         validate_meta(
-            target=event,
-            field=RequestField.Item.META,
-            validation_id="Item Place API (META)",
+            target=event, field=RequestField.Item.META, message="Item Place API (META)",
         )

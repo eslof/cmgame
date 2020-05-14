@@ -1,4 +1,4 @@
-import item
+from item import Item
 from properties import (
     TableKey,
     TablePartition,
@@ -11,8 +11,16 @@ from internal import end, RequestHandler
 
 
 class Data(RequestHandler):
+    """Returning user requests a welcome package containing: Profile, inventory, home names and their biodomes."""
+
+    @staticmethod
+    def validate():
+        """TODO: figure out what to do here since we're already auth'd"""
+        pass
+
     @staticmethod
     def run(user_id: str) -> dict:
+        """Get and return name, flag, meta-data, inventory, and home list for given user id."""
         try:
             # TODO: rework database model
             response = table.get_item(
@@ -83,7 +91,7 @@ class Data(RequestHandler):
         inventory = []
         if item_ids:
             for item_id in item_ids:
-                item = item.get(item_id)
+                item = Item.get(item_id)
                 inventory_entry = {
                     ResponseField.Item.BUNDLE: item[ItemAttr.BUNDLE],
                     ResponseField.Item.VERSION: item[ItemAttr.VERSION],

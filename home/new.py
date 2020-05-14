@@ -1,12 +1,18 @@
 from base64 import b64encode
 from encrypt import password_encrypt
+
 from properties import RequestField, TableKey, HomeAttr, Secret, Constants, Biodome
 from internal import validate_field, generate_id, end, RequestHandler
 
 
 class New(RequestHandler):
+    """User requests to create a new home."""
+
     @staticmethod
     def run(user_id: str, name: str, biodome: int):
+        """TODO: this entire thing needs a rework: there need be a template for user item
+        TODO: should it be recursive or is there a better way?"""
+
         new_id = generate_id()
         try:
             # TODO: rework database model
@@ -31,17 +37,18 @@ class New(RequestHandler):
 
     @staticmethod
     def validate(event: dict) -> None:
+        """Confirm name to be of appropriate length, and existence of requested Biodome."""
         validate_field(
             target=event,
             field=RequestField.Home.NAME,
             validation=lambda value: isinstance(value, str)
-                                     and 0 < len(value) <= Constants.Home.NAME_MAX_SIZE,
-            validation_id="Home Create API (NAME)",
+            and 0 < len(value) <= Constants.Home.NAME_MAX_SIZE,
+            message="Home Create API (NAME)",
         )
         validate_field(
             target=event,
             field=RequestField.Home.BIODOME,
             validation=lambda value: isinstance(value, int)
-                                     and value in Biodome._value2member_map_,
-            validation_id="Home Create API (BIODOME)",
+            and value in Biodome._value2member_map_,
+            message="Home Create API (BIODOME)",
         )

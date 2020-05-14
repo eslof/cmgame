@@ -14,6 +14,7 @@ from view import View
 
 
 def assert_inheritance(target: Union[type, List[type]], base: type):
+    """Assert that given class, or list of classes, inherit from given base class."""
     if isinstance(target, list):
         for obj in target:
             if not isclass(obj):
@@ -27,6 +28,10 @@ def assert_inheritance(target: Union[type, List[type]], base: type):
 
 
 class RequestHandler(ABC):
+    """Modules used by our AWS Lambda functions inherit this ABC.
+    This to help maintain the architecture of the application.
+    Refer to TODO: future implementation .py file template"""
+
     @staticmethod
     @abstractmethod
     def validate(*args, **kwargs):
@@ -39,6 +44,7 @@ class RequestHandler(ABC):
 
 
 def end(message: str = "", code: int = 0) -> None:
+    """Wrapper for exit at case outcomes that are not expected by client without possible misuse or corruption."""
     if message:
         # TODO: does logging have a place here? does this method even make sense?
         print(View.serialize({"debug": message}))
@@ -46,35 +52,40 @@ def end(message: str = "", code: int = 0) -> None:
 
 
 def generate_id() -> str:
-    return b64encode(token_bytes(Constants.ID_TOKEN_BYTE_COUNT)).decode(
-        "ascii"
-    )
+    """TODO: what's good"""
+    return b64encode(token_bytes(Constants.ID_TOKEN_BYTE_COUNT)).decode("ascii")
 
 
 def validate_request(target: dict, request_enum: Type[Enum]) -> None:
+    """validate_field wrapper used for base requests in all lambda_function.py files."""
     validate_field(
         target=target,
         field=PacketHeader.REQUEST,
         validation=lambda value: isinstance(value, int)
         and value in request_enum._value2member_map_,
-        validation_id=f"Request API ({request_enum.__name__})",
+        message=f"Request API ({request_enum.__name__})",
     )
 
 
-def validate_field(target: dict, field: str, validation: Callable, validation_id: str = "") -> None:
+def validate_field(
+    target: dict, field: str, validation: Callable, message: str = ""
+) -> None:
+    """Confirm that the given field exists in target and perform given validation on its content."""
     if not hasattr(target, field) and field not in target:
-        end(f"No valid index present ({validation_id}): {View.serialize(target)}")
+        end(f"No valid attribute present ({message}): {View.serialize(target)}")
     elif not validation(target[field]):
-        end(f"Failed validation ({validation_id}): {field} = {str(target[field])}")
+        end(f"Failed validation ({message}): {field} = {str(target[field])}")
 
 
-def validate_meta(target: dict, field: str, validation_id: str = "") -> None:
-    if not hasattr(target, field) and field not in target:
-        end(f"No valid index present ({validation_id}): {View.serialize(target)}")
-    elif not isinstance(target[field], str) or not target[field]:
-        end(f"Content not present or wrong type: {target[field]}")
-    else:
-        try:
-            View.deserialize(target[field])
-        except ValueError as e:
-            end(f"Failed validation of meta during decoding: {target[field]} {e}")
+def validate_meta(target: dict, field: str, message: str = "") -> None:
+    """validate_field and confirm that contents follow the correct format."""
+    validate_field(
+        target=target,
+        field=field,
+        validation=lambda value: isinstance(value, str) and value,
+        message=message,
+    )
+    try:
+        View.deserialize(target[field])
+    except ValueError as e:
+        end(f"Failed validation of meta during decoding: {target[field]} {e}")

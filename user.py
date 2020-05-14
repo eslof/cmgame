@@ -10,8 +10,8 @@ class User:
             target=event,
             field=RequestField.User.ID,
             validation=lambda value: isinstance(value, str)
-                                     and len(value) == Constants.User.EXPECTED_ID_LENGTH,
-            validation_id="User authentication API",
+            and len(value) == Constants.User.EXPECTED_ID_LENGTH,
+            message="User authentication API",
         )
 
         return password_decrypt(

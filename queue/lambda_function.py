@@ -7,6 +7,7 @@ from view import View
 
 from .enlist import Enlist
 from .find import Find
+
 assert_inheritance([Enlist, Find], RequestHandler)
 
 
@@ -18,6 +19,9 @@ class QueueRequest(Enum):
 
 
 def lambda_handler(event, context):
+    """High-level overview: Request is validated, user is authenticated, and
+    for each request we .validate the contents and .run the requested action."""
+
     validate_request(target=event, request_enum=QueueRequest)
     req = QueueRequest(event[PacketHeader.REQUEST])
     user_id = User.auth(event)
@@ -46,4 +50,3 @@ def lambda_handler(event, context):
 
 # breaking up your current matching will be entirely automatic by client closing connection to websocket server
 # this triggers setting your queue_state from enlisted or matched to none by the websocket server
-

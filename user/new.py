@@ -5,7 +5,8 @@ from properties import (
     UserAttr,
     UserState,
     Secret,
-    RequestField, QueueState,
+    RequestField,
+    QueueState,
 )
 from internal import validate_field, generate_id, end, RequestHandler
 from encrypt import password_encrypt
@@ -13,8 +14,12 @@ from base64 import b64encode
 
 
 class New(RequestHandler):
+    """We are blessed with a new user, make sure he has a good time.
+    New user is added and receive: A list of starting items and a list of biodomes for a home."""
+
     @staticmethod
     def run(name: str, flag: int) -> str:
+        """TODO: this needs to be a template item pushed to the DB"""
         new_id = generate_id()
         try:
             # TODO: rework database model
@@ -43,6 +48,8 @@ class New(RequestHandler):
 
     @staticmethod
     def validate(event) -> None:
+        """Confirm name to be of appropriate length.
+        Confirm country/flag to exist (yes we decide what countries exist, deal with it)."""
         validate_field(
             event,
             RequestField.User.NAME,
@@ -52,6 +59,7 @@ class New(RequestHandler):
         validate_field(
             event,
             RequestField.User.FLAG,
-            lambda value: isinstance(value, int) and value in Countries._value2member_map_,
+            lambda value: isinstance(value, int)
+            and value in Countries._value2member_map_,
             "User New API (FLAG)",
         )

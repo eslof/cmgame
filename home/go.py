@@ -3,8 +3,12 @@ from internal import validate_field, end, RequestHandler
 
 
 class Go(RequestHandler):
+    """User requests to be moved to one of the user's own homes."""
+
     @staticmethod
     def run(home_id: str) -> list:
+        """Home grid is fetched along with associated meta-data and pushed to View."""
+
         try:
             # TODO: rework database model also dont forget to get home meta data
             response = table.get_item(
@@ -20,16 +24,18 @@ class Go(RequestHandler):
             if "Item" not in response:
                 # TODO: figure this out
                 end("No such user found")
-
+        # TODO: meta data
         # TODO: also update user current home
-
+        # TODO: biodome is delivered at welcome and could be delivered at match found but we might as well always send
         return response["Item"][HomeAttr.ITEM_GRID]
 
     @staticmethod
     def validate(event: dict, home_count: int) -> None:
+        """Confirm requested home index to fall in the range of user's home count."""
+
         validate_field(
             target=event,
             field=RequestField.User.HOME_INDEX,
             validation=lambda value: isinstance(value, int) and 0 < value <= home_count,
-            validation_id="Home select API",
+            message="Home select API",
         )

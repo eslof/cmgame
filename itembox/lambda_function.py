@@ -1,13 +1,14 @@
 from enum import Enum, unique, auto
 
 from internal import validate_request, RequestHandler, assert_inheritance
-from properties import (PacketHeader, RequestField, ResponseField,
-                        ResponseType, UserAttr, ItemAttr)
+from properties import PacketHeader, RequestField, ResponseField, ResponseType
+from properties import UserAttr, ItemAttr
 from user import User
 from view import View
 
 from .accept import Accept
 from .demand import Demand
+
 assert_inheritance([Demand, Accept], RequestHandler)
 
 
@@ -19,6 +20,9 @@ class ItemBoxRequest(Enum):
 
 
 def lambda_handler(event, context):
+    """High-level overview: Request is validated, user is authenticated, and
+    for each request we .validate the contents and .run the requested action."""
+
     validate_request(target=event, request_enum=ItemBoxRequest)
     req = ItemBoxRequest(event[PacketHeader.REQUEST])
 

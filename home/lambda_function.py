@@ -1,14 +1,14 @@
 from enum import Enum, unique, auto
 
 from internal import validate_request, assert_inheritance, RequestHandler
-from properties import (PacketHeader, RequestField, ResponseField,
-                        ResponseType, UserAttr)
+from properties import PacketHeader, RequestField, ResponseField, ResponseType, UserAttr
 from user import User
 from view import View
 
 from .new import New
 from .save import Save
 from .go import Go
+
 assert_inheritance([New, Save, Go], RequestHandler)
 
 
@@ -20,6 +20,9 @@ class HomeRequest(Enum):
 
 
 def lambda_handler(event, context):
+    """High-level overview: Request is validated, user is authenticated, and
+    for each request we .validate the contents and .run the requested action."""
+
     validate_request(target=event, request_enum=HomeRequest)
     req = HomeRequest(event[PacketHeader.REQUEST])
     user_id = User.auth(event)

@@ -12,9 +12,12 @@ class SaveRequest(Enum):
 
 
 class Save(RequestHandler):
+    """User requests to save changes made to one of the user's settings or profile."""
+
     @staticmethod
     def run(save_request: int, user_id: str, event: dict) -> bool:
-        # TODO: this could probably be made better
+        """TODO: this needs to be reworked"""
+
         request = SaveRequest(save_request)
         expression_names = {}
         expression_values = {}
@@ -52,6 +55,8 @@ class Save(RequestHandler):
 
     @staticmethod
     def validate(event) -> None:
+        """Confirm that the request is valid and TODO: look over this"""
+
         validate_field(
             event,
             RequestField.User.SAVE,

@@ -3,8 +3,11 @@ from internal import validate_meta, RequestHandler
 
 
 class Save(RequestHandler):
+    """User requests to save meta data of the user's selected home."""
+
     @staticmethod
     def run(home_id: str, meta_data: str):
+        """Set meta data for requested home id."""
         try:
             # TODO: rework database model
             response = table.update_item(
@@ -29,7 +32,7 @@ class Save(RequestHandler):
 
     @staticmethod
     def validate(event: dict):
-        # TODO: Make sure it's not too big meta content
+        """Confirm that home meta-data follows correct format and TODO: apply size limitation in case of misuse."""
         validate_meta(
-            target=event, field=RequestField.Home.META, validation_id="Home Save API"
+            target=event, field=RequestField.Home.META, message="Home Save API"
         )
