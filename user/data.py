@@ -8,6 +8,7 @@ from properties import (
     ItemAttr,
 )
 from internal import end, RequestHandler
+from user import User
 
 
 class Data(RequestHandler):
@@ -22,26 +23,24 @@ class Data(RequestHandler):
     def run(user_id: str) -> dict:
         """Get and return name, flag, meta-data, inventory, and home list for given user id."""
         try:
-            # TODO: rework database model
-            response = table.get_item(
-                Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
-                ProjectionExpression="#name, #flag, #meta, #inventory, #homes",
-                ExpressionAttributeNames={
-                    "#name": UserAttr.NAME,
-                    "#flag": UserAttr.FLAG,
-                    "#meta": UserAttr.META,
-                    "#inventory": UserAttr.HOME_LIST,
-                    "#homes": UserAttr.INVENTORY,
-                },
-            )
+            attributes = [
+                UserAttr.NAME,
+                UserAttr.FLAG,
+                UserAttr.META,
+                UserAttr.HOME_INFO,
+                UserAttr.INVENTORY,
+            ]
+
+            response = User.get(user_id=user_id, attributes=", ".join(attributes))
+
         except ClientError as e:
             end(e.response["Error"]["Message"])  # TODO: Proper error-handling
-            return (
-                {}
-            )  # this avoids complains about unassigned reference to response_item return var
+            # this avoids complains about unassigned reference to response_item
+            return {}
         else:
-            if "Item" not in response:
+            if "Item" not in response or len(response["Item"] < 1):
                 end("No such user found")  # TODO: Proper error-handling
+
             response_item = response["Item"]
 
         # TODO: clean this mess up
@@ -51,42 +50,6 @@ class Data(RequestHandler):
         }
 
         item_ids = response_item.Inventory
-
-        home_ids = []
-        for home in response_item.Homes:
-            home_id_entry = {
-                TableKey.PARTITION: TablePartition.HOME,
-                TableKey.SORT: home,
-            }
-            home_ids.append(home_id_entry)
-
-        homes = []
-        if home_ids:
-            try:
-                response = table.batch_get_item(home_ids)
-            except ClientError as e:
-                end(e.response["Error"]["Message"])  # TODO: Proper error-handling
-                return (
-                    {}
-                )  # this avoids complains about unassigned reference to response_items return var
-            else:
-                # first (and only) table (index 0)
-                if (
-                    "Responses" not in response
-                    or not response["Responses"]
-                    or not response["Responses"][0]
-                ):
-                    end("No such homes found")
-
-            # first (and only) table (index 0)
-            response_items = response["Responses"][0]
-
-            for item in response_items:
-                home_entry = {
-                    ResponseField.Home.NAME: item[HomeAttr.NAME],
-                    ResponseField.Home.BIODOME: item[HomeAttr.BIODOME],
-                }
-                homes.append(home_entry)
 
         inventory = []
         if item_ids:
