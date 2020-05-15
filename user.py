@@ -51,6 +51,12 @@ class User:
             response = table.get_item(
                 Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
                 ProjectionExpression=attributes,
+                ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
+                ExpressionAttributeValues={":banned": UserState.BANNED.value,},
+                ExpressionAttributeNames={
+                    "#id": TableKey.PARTITION,
+                    "#state": UserAttr.STATE,
+                },
             )
         except ClientError as e:
             error = e.response["Error"]["Code"]
