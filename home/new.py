@@ -36,8 +36,10 @@ class New(RequestHandler):
             return b64encode(password_encrypt(new_id, Secret.USER_ID)).decode("ascii")
 
     @staticmethod
-    def validate(event: dict) -> None:
+    def validate(event: dict, home_count: int) -> None:
         """Confirm name to be of appropriate length, and existence of requested Biodome."""
+        if home_count > Constants.User.HOME_COUNT_MAX:
+            end("Maximum homes reached")  # TODO: error handling
         validate_field(
             target=event,
             field=RequestField.Home.NAME,

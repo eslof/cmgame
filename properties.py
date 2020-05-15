@@ -23,6 +23,7 @@ class Constants:
     ID_TOKEN_BYTE_COUNT = 62
 
     class User:
+        HOME_COUNT_MAX = 5
         META_MAX_LENGTH = 1024
         STARTING_KEY_COUNT = 3
         EXPECTED_ID_LENGTH = 42
