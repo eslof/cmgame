@@ -42,7 +42,7 @@ class New(RequestHandler):
             target=event,
             field=RequestField.Home.NAME,
             validation=lambda value: isinstance(value, str)
-            and 0 < len(value) <= Constants.Home.NAME_MAX_SIZE,
+            and 0 < len(value) <= Constants.Home.NAME_MAX_LENGTH,
             message="Home Create API (NAME)",
         )
         validate_field(

@@ -28,7 +28,7 @@ class Constants:
 
     class Home:
         SIZE = 49
-        NAME_MAX_SIZE = 255
+        NAME_MAX_LENGTH = 255
 
     class Item:
         ID_CHAR_LENGTH = 12
