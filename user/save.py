@@ -19,7 +19,6 @@ class Save(RequestHandler):
     def run(request: Enum, user_id: str, event: dict) -> bool:
         """TODO: this needs to be reworked"""
 
-        expression_names, expression_values = {}, {}
         attr, value = None, None
         if request == SaveRequest.NAME:
             value = event[RequestField.User.NAME]
@@ -31,18 +30,21 @@ class Save(RequestHandler):
             value = event[RequestField.User.META]
             attr = {"S": UserAttr.META}
 
-        expression_values[":value"] = value
-        expression_names[":name"] = attr
-        expression_names["#id"] = TableKey.PARTITION
-
         try:
             # TODO: rework database model
             response = table.update_item(
                 Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
                 UpdateExpression="set #name = :value",
-                ConditionExpression=f"attribute_exists(#id) AND user_state <> {UserState.BANNED.value}",
-                ExpressionAttributeValues=expression_values,
-                ExpressionAttributeNames=expression_names,
+                ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
+                ExpressionAttributeValues={
+                    ":value": value,
+                    ":banned": UserState.BANNED.value,
+                },
+                ExpressionAttributeNames={
+                    "#name": attr,
+                    "#id": TableKey.PARTITION,
+                    "#state": UserAttr.STATE,
+                },
                 ReturnValues="UPDATED_NEW",
             )
         except ClientError as e:
