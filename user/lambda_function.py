@@ -46,8 +46,6 @@ def lambda_handler(event, context):
         )
 
     elif req == UserRequest.SAVE:
-        Save.validate(event)
-        result = Save.run(
-            save_request=event[RequestField.User.SAVE], user_id=user_id, event=event
-        )
+        save_request = Save.validate(event)
+        result = Save.run(request=save_request, user_id=user_id, event=event)
         return View.generic(result)

@@ -16,22 +16,23 @@ class Save(RequestHandler):
     """User requests to save changes made to one of the user's settings or profile."""
 
     @staticmethod
-    def run(save_request: int, user_id: str, event: dict) -> bool:
+    def run(request: Enum, user_id: str, event: dict) -> bool:
         """TODO: this needs to be reworked"""
 
-        request = SaveRequest(save_request)
-        expression_names = {}
-        expression_values = {}
+        expression_names, expression_values = {}, {}
+        attr, value = None, None
         if request == SaveRequest.NAME:
-            expression_values[":value"] = event[RequestField.User.NAME]
-            expression_names["#name"] = {"S": UserAttr.NAME}
+            value = event[RequestField.User.NAME]
+            attr = {"S": UserAttr.NAME}
         elif request == SaveRequest.FLAG:
-            expression_values[":value"] = event[RequestField.User.FLAG]
-            expression_names["#name"] = {"N": UserAttr.FLAG}
+            value = event[RequestField.User.FLAG]
+            attr = {"N": UserAttr.FLAG}
         elif request == SaveRequest.META:
-            expression_values[":value"] = event[RequestField.User.META]
-            expression_names["#name"] = {"S": UserAttr.META}
+            value = event[RequestField.User.META]
+            attr = {"S": UserAttr.META}
 
+        expression_values[":value"] = value
+        expression_names[":name"] = attr
         expression_names["#id"] = TableKey.PARTITION
 
         try:
@@ -49,12 +50,14 @@ class Save(RequestHandler):
             if error != "ConditionalCheckFailedException":
                 end("Error: " + error)
             # TODO: figure out if we tell the client he's banned or whatever
+            # TODO: if we remove attribute_exists(#id) can we then just check
+            #  if returned item count is zero to know explicitly if he's banned?
             return False
         else:
             return True
 
     @staticmethod
-    def validate(event) -> None:
+    def validate(event) -> SaveRequest:
         """Confirm that the request is valid and TODO: look over this"""
 
         validate_field(
@@ -90,3 +93,4 @@ class Save(RequestHandler):
             message = "User Save API (META)"
 
         validate_field(event, field, validation, message)
+        return save_req
