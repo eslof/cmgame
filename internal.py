@@ -27,10 +27,11 @@ def assert_inheritance(target: Union[type, List[type]], base: type):
         end(f"Architecture broken ({target} != {base})")
 
 
+# TODO: metaclass=abc.ABCMeta ? research
 class RequestHandler(ABC):
     """Modules used by our AWS Lambda functions inherit this ABC.
     This to help maintain the architecture of the application.
-    Refer to TODO: future implementation .py file template"""
+    Refer to RequestHandlerTemplate.py"""
 
     @staticmethod
     @abstractmethod
