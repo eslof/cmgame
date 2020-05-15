@@ -1,6 +1,6 @@
 from country import Country
 from properties import RequestField, UserAttr, TableKey, TablePartition
-from internal import validate_field, RequestHandler
+from internal import validate_field, RequestHandler, end
 from enum import Enum, unique, auto
 
 
@@ -38,18 +38,20 @@ class Save(RequestHandler):
             response = table.update_item(
                 Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
                 UpdateExpression="set #name = :value",
-                ConditionExpression=f"attribute_exists(#id)",
+                ConditionExpression=f"attribute_exists(#id)",  # TODO: user_state != banned
                 ExpressionAttributeValues=expression_values,
                 ExpressionAttributeNames=expression_names,
                 ReturnValues="UPDATED_NEW",
             )
         except ClientError as e:
-            return False  # TODO: error handling
-            #  error = e.response['Error']['Code']
-            # if error != 'ConditionalCheckFailedException':
-            #     end("Error: " + error)
+            error = e.response["Error"]["Code"]
+            if error != "ConditionalCheckFailedException":
+                end("Error: " + error)
 
-            # end("No such user found!")
+            # TODO: add banned to condition check and treat it the same (?)
+            # TODO: return View.response(ResponseType.BANNED) ?
+            # TODO: does that mean we change View.generic(data) to View.response(Type.GENERIC, data) ?
+            return False
         else:
             return True
 

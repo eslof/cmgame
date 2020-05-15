@@ -35,6 +35,21 @@ class Constants:
 
 
 @unique
+class QueueState(Enum):
+    NONE = auto()
+    ENLISTED = auto()
+    MATCHED = auto()
+
+
+@unique
+class UserState(Enum):
+    NEW = auto()
+    NORMAL = auto()
+    VISITOR = auto()
+    BANNED = auto()
+
+
+@unique
 class Biodome(Enum):
     GRASS = auto()
     DESERT = auto()
@@ -119,19 +134,6 @@ class ResponseType(Enum):
 # endregion
 
 # region Database
-@unique
-class QueueState(Enum):
-    NONE = auto()
-    ENLISTED = auto()
-    MATCHED = auto()
-
-
-@unique
-class UserState(Enum):
-    NEW = auto()
-    NORMAL = auto()
-    VISITOR = auto()
-    BANNED = auto()
 
 
 class TableKey:
@@ -167,7 +169,7 @@ class UserAttr:
     FLAG = "flag"
     SELECTED = "selected"
     INVENTORY = "inventory"
-    HOME_LIST = "home_count"
+    HOME_INFO = "home_info"
     KEY_COUNT = "key_count"
     USED_KEY_COUNT = "used_key_count"
     INVENTORY_COUNT = "inventory_count"
