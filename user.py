@@ -44,7 +44,8 @@ class User:
 
     @staticmethod
     def get(user_id: str, attributes: str) -> dict:
-        """TODO: is this even useful shouldn't I grab this and cache it at auth()?"""
+        """TODO: is this even useful shouldn't I grab this and cache it at auth()?
+        TODO: do we... add user_state != banned to conditionexpression?"""
         try:
             # TODO: rework db
             response = table.get_item(
