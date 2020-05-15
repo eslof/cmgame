@@ -5,11 +5,12 @@ from properties import PacketHeader, RequestField, ResponseField, ResponseType, 
 from user import User
 from view import View
 
+from .delete import Delete
+from .go import Go
 from .new import New
 from .save import Save
-from .go import Go
 
-assert_inheritance([New, Save, Go], RequestHandler)
+assert_inheritance([Delete, Go, New, Save], RequestHandler)
 
 
 @unique
@@ -17,6 +18,7 @@ class HomeRequest(Enum):
     NEW = auto()
     SAVE = auto()
     GO = auto()
+    DELETE = auto()
 
 
 def lambda_handler(event, context):
@@ -27,7 +29,8 @@ def lambda_handler(event, context):
     user_id = User.validate_id(event)
 
     if req == HomeRequest.NEW:
-        New.validate(event)
+        user_data = User.get(user_id, f"{UserAttr.HOMES}")
+        New.validate(event, len(user_data[UserAttr.HOMES]))
         result = New.run(
             user_id=user_id,
             name=event[RequestField.Home.NAME],
@@ -36,7 +39,7 @@ def lambda_handler(event, context):
         return View.generic(result)
 
     elif req == HomeRequest.SAVE:
-        user_data = User.get(user_id=user_id, attributes=UserAttr.CURRENT_HOME)
+        user_data = User.get(user_id, UserAttr.CURRENT_HOME)
         Save.validate(event)
         result = Save.run(
             home_id=user_data[UserAttr.CURRENT_HOME],
@@ -54,3 +57,7 @@ def lambda_handler(event, context):
         return View.construct(
             response_type=ResponseType.HOME_DATA, data={ResponseField.Home.DATA: grid}
         )
+    elif req == HomeRequest.DELETE:
+        user_data = User.get(user_id, f"{UserAttr.HOMES}")
+        Delete.validate(event, len(user_data[UserAttr.HOMES]))
+        Delete.run(user_data[UserAttr.HOMES], event[RequestField.User.HOME_INDEX])
