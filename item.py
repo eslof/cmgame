@@ -1,7 +1,8 @@
 import json
 import random
 import string
-from properties import Constants
+from properties import Constants, ResponseField, ItemAttr
+
 
 # TODO: look into how to do this better
 
@@ -23,6 +24,14 @@ class Item:
         """Get item data"""
         cls.load()
         return cls.data[item_id]
+
+    @classmethod
+    def get_template(cls, item_id: str) -> dict:
+        item = cls.get(item_id)
+        return {
+            ResponseField.Item.BUNDLE: item[ItemAttr.BUNDLE],
+            ResponseField.Item.VERSION: item[ItemAttr.VERSION],
+        }
 
     @classmethod
     def get_random(cls, count: int, seed: str, exclude_list: list = None):

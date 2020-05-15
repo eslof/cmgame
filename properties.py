@@ -100,6 +100,7 @@ class ResponseField:
         RESULT = "results"
 
     class User:
+        META = "meta"
         DATA = "data"
         ID = "id"
         NAME = "name"
@@ -169,7 +170,7 @@ class UserAttr:
     FLAG = "flag"
     SELECTED = "selected"
     INVENTORY = "inventory"
-    HOME_INFO = "home_info"
+    HOMES = "home_info"
     KEY_COUNT = "key_count"
     USED_KEY_COUNT = "used_key_count"
     INVENTORY_COUNT = "inventory_count"

@@ -47,10 +47,10 @@ def lambda_handler(event, context):
 
     elif req == HomeRequest.GO:
         # TODO: also get home meta data
-        user_data = User.get(user_id=user_id, attributes=UserAttr.HOME_INFO)
-        Go.validate(event=event, home_count=len(user_data[UserAttr.HOME_INFO]))
+        user_data = User.get(user_id=user_id, attributes=UserAttr.HOMES)
+        Go.validate(event=event, home_count=len(user_data[UserAttr.HOMES]))
         grid = Go.run(
-            home_id=user_data[UserAttr.HOME_INFO][event[RequestField.User.HOME_INDEX]]
+            home_id=user_data[UserAttr.HOMES][event[RequestField.User.HOME_INDEX]]
         )
         return View.construct(
             response_type=ResponseType.HOME_DATA, data={ResponseField.Home.DATA: grid}

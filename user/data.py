@@ -27,7 +27,7 @@ class Data(RequestHandler):
                 UserAttr.NAME,
                 UserAttr.FLAG,
                 UserAttr.META,
-                UserAttr.HOME_INFO,
+                UserAttr.HOMES,
                 UserAttr.INVENTORY,
             ]
 
@@ -41,27 +41,20 @@ class Data(RequestHandler):
             if "Item" not in response or len(response["Item"] < 1):
                 end("No such user found")  # TODO: Proper error-handling
 
-            response_item = response["Item"]
+            response_item = response["Item"][0]
 
-        # TODO: clean this mess up
         user_data = {
-            ResponseField.User.NAME: response_item.Name,
-            ResponseField.User.FLAG: response_item.Flag,
+            ResponseField.User.NAME: response_item[UserAttr.NAME],
+            ResponseField.User.FLAG: response_item[UserAttr.FLAG],
+            ResponseField.User.META: response_item[UserAttr.META],
+            ResponseField.User.HOMES: {
+                key: value
+                for key, value in response_item[UserAttr.HOMES].items()
+                if key == HomeAttr.BIODOME or key == HomeAttr.NAME
+            },
+            ResponseField.User.INVENTORY: [
+                Item.get_template(value) for value in response_item[UserAttr.INVENTORY]
+            ],
         }
-
-        item_ids = response_item.Inventory
-
-        inventory = []
-        if item_ids:
-            for item_id in item_ids:
-                item = Item.get(item_id)
-                inventory_entry = {
-                    ResponseField.Item.BUNDLE: item[ItemAttr.BUNDLE],
-                    ResponseField.Item.VERSION: item[ItemAttr.VERSION],
-                }
-                inventory.append(inventory_entry)
-
-        user_data[ResponseField.User.HOMES] = homes
-        user_data[ResponseField.User.INVENTORY] = inventory
 
         return user_data
