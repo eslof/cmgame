@@ -1,5 +1,6 @@
 from country import Country
-from properties import RequestField, UserAttr, TableKey, TablePartition
+from properties import RequestField, UserAttr, TableKey
+from properties import TablePartition, UserState, Constants
 from internal import validate_field, RequestHandler, end
 from enum import Enum, unique, auto
 
@@ -57,34 +58,35 @@ class Save(RequestHandler):
         """Confirm that the request is valid and TODO: look over this"""
 
         validate_field(
-            event,
-            RequestField.User.SAVE,
-            lambda value: isinstance(value, int)
+            target=event,
+            field=RequestField.User.SAVE,
+            validation=lambda value: isinstance(value, int)
             and value in SaveRequest._value2member_map_,
-            "User Save API (REQUEST)",
+            message="User Save API (REQUEST)",
         )
 
         save_req = SaveRequest(event[RequestField.User.SAVE])
-
+        field, validation, message = None, None, None
         if save_req == SaveRequest.NAME:
-            validate_field(
-                event,
-                RequestField.User.NAME,
-                lambda value: isinstance(value, str) and len(value) < 24,
-                "User Save API (NAME)",
+            field = RequestField.User.NAME
+            validation = (
+                lambda value: isinstance(value, str)
+                and len(value) < Constants.User.NAME_MAX_LENGTH
             )
+            message = "User Save API (NAME)"
         elif save_req == SaveRequest.FLAG:
-            validate_field(
-                event,
-                RequestField.User.FLAG,
+            field = RequestField.User.FLAG
+            validation = (
                 lambda value: isinstance(value, int)
-                and value in Country._value2member_map_,
-                "User Save API (FLAG)",
+                and value in Country._value2member_map_
             )
+            message = "User Save API (FLAG)"
         elif save_req == SaveRequest.META:
-            validate_field(
-                event,
-                RequestField.User.META,
-                lambda value: isinstance(value, str) and len(value) < 2048,
-                "User Save API (META)",
+            field = RequestField.User.META
+            validation = (
+                lambda value: isinstance(value, str)
+                and len(value) < Constants.User.META_MAX_LENGTH
             )
+            message = "User Save API (META)"
+
+        validate_field(event, field, validation, message)
