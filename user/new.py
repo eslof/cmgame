@@ -1,4 +1,4 @@
-from countries import Countries
+from country import Country
 from properties import (
     TableKey,
     TablePartition,
@@ -12,6 +12,8 @@ from internal import validate_field, generate_id, end, RequestHandler
 from encrypt import password_encrypt
 from base64 import b64encode
 
+from user import User
+
 
 class New(RequestHandler):
     """We are blessed with a new user, make sure he has a good time.
@@ -19,21 +21,13 @@ class New(RequestHandler):
 
     @staticmethod
     def run(name: str, flag: int) -> str:
-        """TODO: this needs to be a template item pushed to the DB"""
+        """Generate new ID and push User.template_new with given name and flag into DB.
+        Returns the user id on successful entry TODO: why cant dynamodb just give me an auto id"""
         new_id = generate_id()
         try:
             # TODO: rework database model
             response = table.put_item(
-                Item={
-                    TableKey.PARTITION: TablePartition.USER,
-                    TableKey.SORT: new_id,
-                    UserAttr.STATE: UserState.NEW.value,
-                    UserAttr.QUEUE_STATE: QueueState.NONE.value,
-                    UserAttr.INVENTORY: {"BS": []},
-                    UserAttr.NAME: name,
-                    UserAttr.FLAG: flag,
-                    UserAttr.KEY_COUNT: 0,
-                },
+                Item=User.template_new(new_id=new_id, name=name, flag=flag),
                 ConditionExpression="attribute_not_exists(#id)",
                 ExpressionAttributeNames={"#id": TableKey.PARTITION},
             )
@@ -42,7 +36,7 @@ class New(RequestHandler):
             if error != "ConditionalCheckFailedException":
                 end("Error: " + error)  # TODO: error handling
 
-            return New.run(name, flag)
+            return New.run(name, flag)  # TODO: recursion limit
 
         return b64encode(password_encrypt(new_id, Secret.USER_ID)).decode("ascii")
 
@@ -60,6 +54,6 @@ class New(RequestHandler):
             event,
             RequestField.User.FLAG,
             lambda value: isinstance(value, int)
-            and value in Countries._value2member_map_,
+            and value in Country._value2member_map_,
             "User New API (FLAG)",
         )

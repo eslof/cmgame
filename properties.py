@@ -23,6 +23,7 @@ class Constants:
     ID_TOKEN_BYTE_COUNT = 62
 
     class User:
+        STARTING_KEY_COUNT = 3
         EXPECTED_ID_LENGTH = 42
 
     class Home:

@@ -1,9 +1,32 @@
+from country import Country
 from internal import validate_field, end
-from properties import RequestField, TableKey, TablePartition, Secret, Constants
+from properties import (
+    RequestField,
+    TableKey,
+    TablePartition,
+    Secret,
+    Constants,
+    UserState,
+    QueueState,
+    UserAttr,
+)
 from encrypt import password_decrypt
 
 
 class User:
+    @staticmethod
+    def template_new(new_id: str, name: str, flag: int) -> dict:
+        return {
+            TableKey.PARTITION: TablePartition.USER,
+            TableKey.SORT: new_id,
+            UserAttr.STATE: UserState.NEW.value,
+            UserAttr.QUEUE_STATE: QueueState.NONE.value,
+            UserAttr.INVENTORY: {"SS": []},
+            UserAttr.NAME: name,
+            UserAttr.FLAG: flag,
+            UserAttr.KEY_COUNT: Constants.User.STARTING_KEY_COUNT,
+        }
+
     @staticmethod
     def validate_id(event: dict) -> str:
         """TODO: user authentication + store user state + queue state"""

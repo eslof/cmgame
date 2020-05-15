@@ -1,4 +1,4 @@
-from countries import Countries
+from country import Country
 from properties import RequestField, UserAttr, TableKey, TablePartition
 from internal import validate_field, RequestHandler
 from enum import Enum, unique, auto
@@ -79,7 +79,7 @@ class Save(RequestHandler):
                 event,
                 RequestField.User.FLAG,
                 lambda value: isinstance(value, int)
-                and value in Countries._value2member_map_,
+                and value in Country._value2member_map_,
                 "User Save API (FLAG)",
             )
         elif save_req == SaveRequest.META:
