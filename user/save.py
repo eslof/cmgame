@@ -19,7 +19,7 @@ class Save(RequestHandler):
 
     @staticmethod
     def run(request: Enum, user_id: str, event: dict) -> bool:
-        """TODO: this needs to be reworked"""
+        """Set requested user property to requested value for given user id."""
         attribute, value = None, None
         if request == SaveRequest.NAME:
             attribute, value = UserAttr.NAME, RequestField.User.NAME
@@ -31,7 +31,7 @@ class Save(RequestHandler):
 
     @staticmethod
     def validate(event) -> SaveRequest:
-        """Confirm that the request is valid and TODO: look over this"""
+        """Confirm name or meta to be of appropriate size or confirm existence of country."""
         req = validate_request(event, SaveRequest, RequestField.User.SAVE)
         field, validation, message = None, None, None
         if req == SaveRequest.NAME:
@@ -57,4 +57,4 @@ class Save(RequestHandler):
             message = "User Save API (META)"
 
         validate_field(event, field, validation, message)
-        return req
+        return SaveRequest(req)
