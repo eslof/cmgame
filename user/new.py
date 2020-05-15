@@ -46,16 +46,16 @@ class New(RequestHandler):
         """Confirm name to be of appropriate length.
         Confirm country/flag to exist (yes we decide what countries exist, deal with it)."""
         validate_field(
-            event,
-            RequestField.User.NAME,
-            lambda value: isinstance(value, str)
+            target=event,
+            field=RequestField.User.NAME,
+            validation=lambda value: isinstance(value, str)
             and 0 < len(value) < Constants.User.NAME_MAX_LENGTH,
-            "User New API (NAME)",
+            message="User New API (NAME)",
         )
         validate_field(
-            event,
-            RequestField.User.FLAG,
-            lambda value: isinstance(value, int)
+            target=event,
+            field=RequestField.User.FLAG,
+            validation=lambda value: isinstance(value, int)
             and value in Country._value2member_map_,
-            "User New API (FLAG)",
+            message="User New API (FLAG)",
         )
