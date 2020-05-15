@@ -102,6 +102,8 @@ class ResponseField:
         BIODOME = "bundle"
 
 
+# TODO: this being an enum doesn't actually help that much
+# TODO: figure out possible down-sides
 @unique
 class ResponseType(Enum):
     WELCOME = auto()
