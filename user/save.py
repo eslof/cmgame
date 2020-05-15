@@ -38,7 +38,7 @@ class Save(RequestHandler):
             response = table.update_item(
                 Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
                 UpdateExpression="set #name = :value",
-                ConditionExpression=f"attribute_exists(#id)",  # TODO: user_state != banned
+                ConditionExpression=f"attribute_exists(#id) AND user_state <> {UserState.BANNED.value}",
                 ExpressionAttributeValues=expression_values,
                 ExpressionAttributeNames=expression_names,
                 ReturnValues="UPDATED_NEW",
@@ -47,10 +47,7 @@ class Save(RequestHandler):
             error = e.response["Error"]["Code"]
             if error != "ConditionalCheckFailedException":
                 end("Error: " + error)
-
-            # TODO: add banned to condition check and treat it the same (?)
-            # TODO: return View.response(ResponseType.BANNED) ?
-            # TODO: does that mean we change View.generic(data) to View.response(Type.GENERIC, data) ?
+            # TODO: figure out if we tell the client he's banned or whatever
             return False
         else:
             return True
