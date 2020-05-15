@@ -1,7 +1,7 @@
 from typing import Union
 
 from country import Country
-from internal import validate_field, end
+from internal import validate_field, end, generate_id
 from properties import RequestField, TableKey, TablePartition, Secret
 from properties import Constants, UserState, QueueState, UserAttr
 from encrypt import password_decrypt
@@ -56,7 +56,7 @@ class User:
         except ClientError as e:
             error = e.response["Error"]["Code"]
             if error == "ConditionalCheckFailedException":
-                end("banned or nonexistant user?")
+                end("banned or nonexistent user?")
             end("Error: " + error)  # TODO: fix some of this error handling
         else:
             if len(response["Item"]) == 0:
@@ -90,3 +90,20 @@ class User:
             return False
 
         return True
+
+    @staticmethod
+    def attempt_new(name, flag) -> str:
+        new_id = generate_id()
+        try:
+            # TODO: rework database model
+            response = table.put_item(
+                Item=User.template_new(new_id=new_id, name=name, flag=flag),
+                ConditionExpression="attribute_not_exists(#id)",
+                ExpressionAttributeNames={"#id": TableKey.PARTITION},
+            )
+        except ClientError as e:
+            error = e.response["Error"]["Code"]
+            if error != "ConditionalCheckFailedException":
+                end("Error: " + error)  # TODO: error handling
+            return ""
+        return new_id

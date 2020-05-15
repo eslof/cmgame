@@ -24,20 +24,14 @@ class New(RequestHandler):
     def run(name: str, flag: int) -> str:
         """Generate new ID and push User.template_new with given name and flag into DB.
         Returns the user id on successful entry TODO: why cant dynamodb just give me an auto id"""
-        new_id = generate_id()
-        try:
-            # TODO: rework database model
-            response = table.put_item(
-                Item=User.template_new(new_id=new_id, name=name, flag=flag),
-                ConditionExpression="attribute_not_exists(#id)",
-                ExpressionAttributeNames={"#id": TableKey.PARTITION},
-            )
-        except ClientError as e:
-            error = e.response["Error"]["Code"]
-            if error != "ConditionalCheckFailedException":
-                end("Error: " + error)  # TODO: error handling
+        new_id = ""
+        max_attempts = 5
+        while not new_id and max_attempts > 0:
+            new_id = User.attempt_new(name, flag)
+            max_attempts -= 1
 
-            return New.run(name, flag)  # TODO: recursion limit
+        if not new_id:
+            end("Unable to successfully create new user")
 
         return b64encode(password_encrypt(new_id, Secret.USER_ID)).decode("ascii")
 
