@@ -7,6 +7,7 @@ from properties import (
     Secret,
     RequestField,
     QueueState,
+    Constants,
 )
 from internal import validate_field, generate_id, end, RequestHandler
 from encrypt import password_encrypt
@@ -47,7 +48,8 @@ class New(RequestHandler):
         validate_field(
             event,
             RequestField.User.NAME,
-            lambda value: isinstance(value, str) and 0 < len(value) < 24,
+            lambda value: isinstance(value, str)
+            and 0 < len(value) < Constants.User.NAME_MAX_LENGTH,
             "User New API (NAME)",
         )
         validate_field(
