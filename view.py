@@ -17,7 +17,7 @@ class View:
         return json.loads(data)
 
     @staticmethod
-    def construct(response_type: Type[Enum], data: dict) -> str:
+    def construct(response_type: Enum, data: dict) -> str:
         """Create and return a .serialize'd response of given type with given data."""
         data[PacketHeader.RESPONSE] = response_type.value
         return View.serialize(data)

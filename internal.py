@@ -4,7 +4,7 @@ from enum import Enum
 from inspect import isclass
 from secrets import token_bytes
 from sys import exit as sys_exit
-from typing import Type, Callable, Union, List
+from typing import Callable, Union, List
 
 from properties import Constants, PacketHeader
 from view import View
@@ -56,7 +56,7 @@ def generate_id() -> str:
     return b64encode(token_bytes(Constants.ID_TOKEN_BYTE_COUNT)).decode("ascii")
 
 
-def validate_request(target: dict, request_enum: Type[Enum]) -> None:
+def validate_request(target: dict, request_enum: Enum) -> None:
     """validate_field wrapper for given enum used for base requests in all lambda_function.py files."""
     validate_field(
         target=target,
