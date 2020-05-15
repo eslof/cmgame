@@ -102,15 +102,15 @@ class ResponseField:
         BIODOME = "bundle"
 
 
-# TODO: we can probably make this an enum as long as we rework View to take an enum and then grab its .value
-class ResponseType:
-    WELCOME = 1
-    GENERIC = 2
-    USER_DATA = 3
-    HOME_DATA = 4
-    ITEM_BOX = 5
-    ITEM_DATA = 6
-    QUEUE = 7
+@unique
+class ResponseType(Enum):
+    WELCOME = auto()
+    GENERIC = auto()
+    USER_DATA = auto()
+    HOME_DATA = auto()
+    ITEM_BOX = auto()
+    ITEM_DATA = auto()
+    QUEUE = auto()
 
 
 # endregion

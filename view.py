@@ -1,4 +1,7 @@
 import json
+from enum import Enum
+from typing import Type
+
 from properties import PacketHeader, ResponseType, ResponseField
 
 
@@ -14,17 +17,17 @@ class View:
         return json.loads(data)
 
     @staticmethod
-    def construct(response_type: int, data: dict) -> str:
-        """Create and return a serialized response of given type with given data."""
-        data[PacketHeader.RESPONSE] = response_type
+    def construct(response_type: Type[Enum], data: dict) -> str:
+        """Create and return a .serialize'd response of given type with given data."""
+        data[PacketHeader.RESPONSE] = response_type.value
         return View.serialize(data)
 
     @staticmethod
     def generic(result: bool) -> str:
-        """Create and return a serialized boolean response as per given result."""
+        """Create and return a .serialize'd boolean response as per given result."""
         return View.serialize(
             {
-                PacketHeader.RESPONSE: ResponseType.GENERIC,
+                PacketHeader.RESPONSE: ResponseType.GENERIC.value,
                 ResponseField.Generic.RESULT: result,
             }
         )
