@@ -16,7 +16,7 @@ class Place(RequestHandler):
                 ConditionExpression=f"attribute_exists(#id)",
                 ExpressionAttributeNames={
                     "#id": TableKey.PARTITION,
-                    "#item_grid": HomeAttr.ITEM_GRID,
+                    "#item_grid": HomeAttr.GRID,
                     "#item_meta": HomeAttr.ITEM_META,
                     "#grid_index": grid_index,
                     "#item_index": item_index,

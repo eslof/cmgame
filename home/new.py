@@ -21,7 +21,7 @@ class New(RequestHandler):
                     TableKey.PARTITION: {"S": new_id},
                     HomeAttr.NAME: {"S": name},
                     HomeAttr.BIODOME: {"N": biodome},
-                    HomeAttr.ITEM_GRID: {"M": {}},
+                    HomeAttr.GRID: {"M": {}},
                     HomeAttr.ITEM_META: {"M": {}},
                 },
                 ConditionExpression="attribute_not_exists(#id)",

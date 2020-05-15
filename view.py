@@ -1,6 +1,5 @@
 import json
 from enum import Enum
-from typing import Type
 
 from properties import PacketHeader, ResponseType, ResponseField
 

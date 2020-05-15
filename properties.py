@@ -183,7 +183,7 @@ class HomeAttr:
     BIODOME = "biodome"
     META = "meta"
     ITEM_META = "item_meta"
-    ITEM_GRID = "item_grid"
+    GRID = "item_grid"
 
 
 # endregion

@@ -1,5 +1,6 @@
-from properties import TableKey, TablePartition, HomeAttr, RequestField
+from properties import TableKey, TablePartition, HomeAttr, RequestField, UserAttr
 from internal import validate_field, end, RequestHandler
+from user import User
 
 
 class Go(RequestHandler):
@@ -14,21 +15,26 @@ class Go(RequestHandler):
             # TODO: rework database model also dont forget to get home meta data
             response = table.get_item(
                 Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
-                ProjectionExpression="#GRID",
-                ExpressionAttributeNames={"#GRID": HomeAttr.ITEM_GRID},
+                ProjectionExpression="#GRID, #META, #ITEM_META",
+                ExpressionAttributeNames={
+                    "#GRID": HomeAttr.GRID,
+                    "#META": HomeAttr.META,
+                    "#ITEM_META": HomeAttr.ITEM_META,
+                },
             )
         except ClientError as e:
             end(e.response["Error"]["Message"])  # TODO: error-handling
             # this avoids complains about unassigned reference to response return var
             return []
         else:
-            if "Item" not in response:
+            if "Item" not in response or len(response["Item"]) < 1:
                 # TODO: figure this out
                 end("No such user found")
-        # TODO: meta data
+
         # TODO: also update user current home
-        # TODO: biodome is delivered at welcome and could be delivered at match found but we might as well always send
-        return response["Item"][HomeAttr.ITEM_GRID]
+        response = User.update(UserAttr.CURRENT_HOME, home_id)
+
+        return response["Item"][HomeAttr.GRID]
 
     @staticmethod
     def validate(event: dict, home_count: int) -> None:

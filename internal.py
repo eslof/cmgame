@@ -56,15 +56,18 @@ def generate_id() -> str:
     return b64encode(token_bytes(Constants.ID_TOKEN_BYTE_COUNT)).decode("ascii")
 
 
-def validate_request(target: dict, request_enum: Type[Enum]) -> None:
+def validate_request(
+    target: dict, request_enum: Type[Enum], field: str = PacketHeader.REQUEST
+) -> Enum:
     """validate_field wrapper for given enum used for base requests in all lambda_function.py files."""
     validate_field(
         target=target,
-        field=PacketHeader.REQUEST,
+        field=field,
         validation=lambda value: isinstance(value, int)
         and value in request_enum._value2member_map_,
         message=f"Request API ({request_enum.__name__})",
     )
+    return request_enum(target[field])
 
 
 def validate_field(

@@ -21,8 +21,7 @@ def lambda_handler(event, context):
     """High-level overview: Request is validated, user is authenticated, and
     for each request we .validate the contents and .run the requested action."""
 
-    validate_request(target=event, request_enum=QueueRequest)
-    req = QueueRequest(event[PacketHeader.REQUEST])
+    req = validate_request(target=event, request_enum=QueueRequest)
     user_id = User.validate_id(event)
 
     if req == QueueRequest.ENLIST:

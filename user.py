@@ -1,21 +1,16 @@
+from typing import Union
+
 from country import Country
 from internal import validate_field, end
-from properties import (
-    RequestField,
-    TableKey,
-    TablePartition,
-    Secret,
-    Constants,
-    UserState,
-    QueueState,
-    UserAttr,
-)
+from properties import RequestField, TableKey, TablePartition, Secret
+from properties import Constants, UserState, QueueState, UserAttr
 from encrypt import password_decrypt
 
 
 class User:
     @staticmethod
     def template_new(new_id: str, name: str, flag: int) -> dict:
+        """Database item template for a new User, assumes given parameters are valid."""
         return {
             TableKey.PARTITION: TablePartition.USER,
             TableKey.SORT: new_id,
@@ -29,7 +24,7 @@ class User:
 
     @staticmethod
     def validate_id(event: dict) -> str:
-        """TODO: user authentication + store user state + queue state"""
+        """TODO: user authentication"""
         validate_field(
             target=event,
             field=RequestField.User.ID,
@@ -44,15 +39,15 @@ class User:
 
     @staticmethod
     def get(user_id: str, attributes: str) -> dict:
-        """TODO: is this even useful shouldn't I grab this and cache it at auth()?
-        TODO: do we... add user_state != banned to conditionexpression?"""
+        """Get and return given attributes for given user_id unless banned."""
+        global table
         try:
             # TODO: rework db
             response = table.get_item(
                 Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
                 ProjectionExpression=attributes,
                 ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
-                ExpressionAttributeValues={":banned": UserState.BANNED.value,},
+                ExpressionAttributeValues={":banned": UserState.BANNED.value},
                 ExpressionAttributeNames={
                     "#id": TableKey.PARTITION,
                     "#state": UserAttr.STATE,
@@ -60,9 +55,38 @@ class User:
             )
         except ClientError as e:
             error = e.response["Error"]["Code"]
-            end("Error: " + error)
+            if error == "ConditionalCheckFailedException":
+                end("banned or nonexistant user?")
+            end("Error: " + error)  # TODO: fix some of this error handling
         else:
             if len(response["Item"]) == 0:
                 end("Unable to find user for given UUID.")
 
             return response["Item"]
+
+    @staticmethod
+    def update(user_id: str, attribute: str, value: Union[int, str, bool]) -> bool:
+        global table
+        try:
+            response = table.update_item(
+                Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
+                UpdateExpression="set #name = :value",
+                ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
+                ExpressionAttributeValues={
+                    ":value": value,
+                    ":banned": UserState.BANNED.value,
+                },
+                ExpressionAttributeNames={
+                    "#name": attribute,
+                    "#id": TableKey.PARTITION,
+                    "#state": UserAttr.STATE,
+                },
+            )
+        except ClientError as e:
+            # error = e.response["Error"]["Code"]
+            # if error == "ConditionalCheckFailedException":
+            #    end("banned or nonexistant user?")
+            # end("Error: " + error)  # TODO: fix some of this error handling
+            return False
+
+        return True
