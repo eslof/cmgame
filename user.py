@@ -40,7 +40,6 @@ class User:
     @staticmethod
     def get(user_id: str, attributes: str) -> dict:
         """Get and return given attributes for given user_id unless banned."""
-        global table
         try:
             # TODO: rework db
             response = table.get_item(
@@ -65,8 +64,7 @@ class User:
             return response["Item"]
 
     @staticmethod
-    def update(user_id: str, attribute: str, value: Union[int, str, bool]) -> bool:
-        global table
+    def update(user_id: str, attribute: str, value: Union[int, str, bool, set]) -> bool:
         try:
             response = table.update_item(
                 Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},

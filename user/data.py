@@ -29,18 +29,20 @@ class Data(RequestHandler):
             UserAttr.HOMES,
             UserAttr.INVENTORY,
         ]
-        response_item = User.get(user_id=user_id, attributes=", ".join(attributes))
+        user_data = User.get(user_id=user_id, attributes=", ".join(attributes))
 
         return {
-            ResponseField.User.NAME: response_item[UserAttr.NAME],
-            ResponseField.User.FLAG: response_item[UserAttr.FLAG],
-            ResponseField.User.META: response_item[UserAttr.META],
+            ResponseField.User.NAME: user_data[UserAttr.NAME],
+            ResponseField.User.FLAG: user_data[UserAttr.FLAG],
+            ResponseField.User.META: user_data[UserAttr.META],
             ResponseField.User.HOMES: {
                 key: value
-                for key, value in response_item[UserAttr.HOMES].items()
+                for key, value in sorted(
+                    user_data[UserAttr.HOMES].items(), key=UserAttr.Home.HOME_ID
+                )
                 if key == HomeAttr.BIODOME or key == HomeAttr.NAME
             },
             ResponseField.User.INVENTORY: [
-                Item.get_template(value) for value in response_item[UserAttr.INVENTORY]
+                Item.get_template(value) for value in user_data[UserAttr.INVENTORY]
             ],
         }

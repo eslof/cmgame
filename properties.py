@@ -173,7 +173,14 @@ class UserAttr:
     FLAG = "flag"
     SELECTED = "selected"
     INVENTORY = "inventory"
-    HOMES = "home_info"
+
+    HOMES = "homes"
+
+    class Home:
+        BIODOME = "biodome"
+        HOME_ID = "home_id"
+        NAME = "name"
+
     KEY_COUNT = "key_count"
     USED_KEY_COUNT = "used_key_count"
     INVENTORY_COUNT = "inventory_count"
