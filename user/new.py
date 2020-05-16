@@ -1,18 +1,8 @@
 from country import Country
-from properties import (
-    TableKey,
-    TablePartition,
-    UserAttr,
-    UserState,
-    Secret,
-    RequestField,
-    QueueState,
-    Constants,
-)
-from internal import validate_field, generate_id, end, RequestHandler
+from properties import Secret, RequestField, Constants
+from internal import validate_field, end, RequestHandler
 from encrypt import password_encrypt
 from base64 import b64encode
-
 from user import User
 
 

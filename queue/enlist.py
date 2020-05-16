@@ -1,8 +1,10 @@
 from datetime import datetime
 
 from internal import RequestHandler, end
-from properties import QueueState, UserAttr, TableKey, TablePartition, QueueAttr
+from properties import TableKey, TablePartition, QueueState
+from properties import UserAttr, QueueAttr
 from user import User
+from database import *
 
 
 class Enlist(RequestHandler):

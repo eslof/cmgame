@@ -1,6 +1,7 @@
 from properties import TableKey, TablePartition, HomeAttr, RequestField, UserAttr
 from internal import validate_field, end, RequestHandler
 from user import User
+from database import *
 
 
 class Go(RequestHandler):

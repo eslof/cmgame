@@ -3,6 +3,7 @@ from encrypt import password_encrypt
 
 from properties import RequestField, TableKey, HomeAttr, Secret, Constants, Biodome
 from internal import validate_field, generate_id, end, RequestHandler
+from database import *
 
 
 class New(RequestHandler):

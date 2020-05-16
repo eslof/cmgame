@@ -1,6 +1,7 @@
 from internal import RequestHandler, end
 from properties import QueueState, UserAttr, TablePartition, TableKey
 from user import User
+from database import *
 
 
 class Find(RequestHandler):

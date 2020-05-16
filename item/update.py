@@ -1,5 +1,6 @@
 from properties import TableKey, TablePartition, HomeAttr, Constants, RequestField
 from internal import validate_field, validate_meta, RequestHandler
+from database import *
 
 
 class Update(RequestHandler):

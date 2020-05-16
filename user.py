@@ -1,6 +1,6 @@
 from typing import Union
 
-from country import Country
+from database import *
 from internal import validate_field, end, generate_id
 from properties import RequestField, TableKey, TablePartition, Secret
 from properties import Constants, UserState, QueueState, UserAttr

@@ -1,5 +1,6 @@
 from properties import TableKey, TablePartition, HomeAttr, RequestField
 from internal import validate_meta, RequestHandler
+from database import *
 
 
 class Save(RequestHandler):
