@@ -1,12 +1,11 @@
-import json
-
 from request_handler import RequestHandler
 from internal import validate_field
 from properties import UserAttr, RequestField, Constants
 from user import User
 from database import *
 
-
+# TODO: research maybe using glacier to store deleted entries?
+#   although it really doesn't matter since homes can be freely replicated at no expense
 class Delete(RequestHandler):
     """Delete documentation"""
 

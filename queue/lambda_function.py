@@ -1,8 +1,9 @@
 from enum import Enum, unique, auto
 
 from request_handler import RequestHandler
-from internal import validate_request, assert_inheritance
+from internal import validate_request, assert_inheritance, end
 from properties import ResponseType, ResponseField
+from database import *
 from user import User
 from view import View
 
@@ -24,6 +25,9 @@ def lambda_handler(event, context):
 
     req = validate_request(target=event, request_enum=QueueRequest)
     user_id = User.validate_id(event)
+    match_server = web_socket_endpoint()
+    if not 200 <= match_server["response_code"] <= 299:
+        end("Chat server is down")  # TODO: this needs work
 
     if req == QueueRequest.ENLIST:
         queue_state = Enlist.validate(user_id)
@@ -33,14 +37,14 @@ def lambda_handler(event, context):
     elif req == QueueRequest.FIND:
         queue_state = Find.validate(user_id)
         listing = Find.run(user_id, queue_state)
+        # TODO: create match and send websocket ip
         if listing:
             return View.construct(
                 response_type=ResponseType.QUEUE,
-                data={ResponseField.Queue.MATCH: listing},
+                data={ResponseField.Queue.MATCH: match_server["address"]},
             )
         else:
             View.generic(False)
-        # TODO: if you find someone we will tell you where to connect the websocket
 
 
 # breaking up your current matching will be entirely automatic by client closing connection to websocket server
