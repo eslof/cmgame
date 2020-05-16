@@ -5,11 +5,12 @@ from properties import PacketHeader, RequestField, ResponseType, ResponseField
 from user import User
 from view import View
 
-from .new import New
 from .data import Data
+from .delete import Delete
+from .new import New
 from .save import Save
 
-assert_inheritance([New, Data, Save], RequestHandler)
+assert_inheritance([Data, Delete, New, Save], RequestHandler)
 
 
 @unique
@@ -17,6 +18,7 @@ class UserRequest(Enum):
     NEW = auto()
     DATA = auto()
     SAVE = auto()
+    DELETE = auto()
 
 
 def lambda_handler(event, context):
@@ -27,9 +29,7 @@ def lambda_handler(event, context):
 
     if req == UserRequest.NEW:
         New.validate(event)
-        encrypted_uuid = New.run(
-            name=event[RequestField.User.NAME], flag=event[RequestField.User.FLAG]
-        )
+        encrypted_uuid = New.run(event)
         return View.construct(
             response_type=ResponseType.WELCOME,
             data={ResponseField.User.ID: encrypted_uuid},
@@ -45,6 +45,11 @@ def lambda_handler(event, context):
         )
 
     elif req == UserRequest.SAVE:
-        save_request = Save.validate(event)
-        result = Save.run(request=save_request, user_id=user_id, event=event)
+        Save.validate(event)
+        result = Save.run(event, user_id)
+        return View.generic(result)
+
+    elif req == UserRequest.DELETE:
+        Delete.validate(event)
+        result = Delete.run(user_id)
         return View.generic(result)

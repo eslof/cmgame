@@ -11,13 +11,15 @@ class New(RequestHandler):
     New user is added and receive: A list of starting items and a list of biodomes for a home."""
 
     @staticmethod
-    def run(name: str, flag: int) -> str:
+    def run(event: dict) -> str:
         """Generate new ID and push User.template_new with given name and flag into DB.
         Returns the user id on successful entry TODO: why cant dynamodb just give me an auto id"""
         new_id = ""
         max_attempts = 5
         while not new_id and max_attempts > 0:
-            new_id = User.attempt_new(name, flag)
+            new_id = User.attempt_new(
+                event[RequestField.User.NAME], event[RequestField.User.FLAG]
+            )
             max_attempts -= 1
 
         if not new_id:

@@ -18,8 +18,9 @@ class Save(RequestHandler):
     """User requests to save changes made to one of the user's settings or profile."""
 
     @staticmethod
-    def run(request: Enum, user_id: str, event: dict) -> bool:
+    def run(event: dict, user_id: str) -> bool:
         """Set requested user property to requested value for given user id."""
+        request = SaveRequest(event[RequestField.User.SAVE])
         attribute, value = None, None
         if request == SaveRequest.NAME:
             attribute, value = UserAttr.NAME, RequestField.User.NAME
@@ -30,7 +31,7 @@ class Save(RequestHandler):
         return User.update(user_id, attribute, value)
 
     @staticmethod
-    def validate(event) -> SaveRequest:
+    def validate(event) -> None:
         """Confirm name or meta to be of appropriate size or confirm existence of country."""
         req = validate_request(event, SaveRequest, RequestField.User.SAVE)
         field, validation, message = None, None, None
@@ -57,4 +58,3 @@ class Save(RequestHandler):
             message = "User Save API (META)"
 
         validate_field(event, field, validation, message)
-        return SaveRequest(req)
