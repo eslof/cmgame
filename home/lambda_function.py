@@ -58,6 +58,6 @@ def lambda_handler(event, context):
             response_type=ResponseType.HOME_DATA, data={ResponseField.Home.DATA: grid}
         )
     elif req == HomeRequest.DELETE:
-        user_data = User.get(user_id, f"{UserAttr.HOMES}")
-        Delete.validate(event, len(user_data[UserAttr.HOMES]))
-        Delete.run(user_data[UserAttr.HOMES], event[RequestField.User.HOME_INDEX])
+        user_data = Delete.validate(event, user_id)
+        result = Delete.run(event, user_data, user_id)
+        return View.generic(result)
