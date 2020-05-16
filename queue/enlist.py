@@ -37,6 +37,7 @@ class Enlist(RequestHandler):
 
     @staticmethod
     def validate(user_id: str) -> dict:
+        # TODO: check if LIST_ID is empty to determine if user is enlisted
         user_data = User.get(
             user_id=user_id, attributes=f"{UserAttr.QUEUE_STATE}, {UserAttr.LIST_ID}",
         )

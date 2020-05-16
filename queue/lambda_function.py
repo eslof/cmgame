@@ -21,6 +21,7 @@ class QueueRequest(Enum):
     STOP = auto()
 
 
+# TODO: this could probably be built into a router
 def lambda_handler(event, context):
     """High-level overview: Request is validated, user is authenticated, and
     for each request we .validate the contents and .run the requested action."""
@@ -32,13 +33,13 @@ def lambda_handler(event, context):
         end("Chat server is down")  # TODO: this needs work
 
     if req == QueueRequest.ENLIST:
-        queue_state = Enlist.validate(user_id)
-        result = Enlist.run(user_id, queue_state)
+        user_data = Enlist.validate(user_id)
+        result = Enlist.run(user_data, user_id)
         return View.generic(result)
 
     elif req == QueueRequest.FIND:
         user_data = Find.validate(user_id)
-        listing = Find.run(user_id, queue_state)
+        listing = Find.run(user_data, user_id)
         # TODO: this needs work probably
         if listing:
             return View.construct(

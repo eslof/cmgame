@@ -9,7 +9,7 @@ class Find(RequestHandler):
     """User requests to find an enlisted user to visit."""
 
     @staticmethod
-    def run(user_data: str, user_id: str) -> dict:
+    def run(user_data: dict, user_id: str) -> bool:
         """Find enlistment with a recent timestamp and create a match between enlisted user and given user id."""
         # TODO: look for enlisted other
         response = table.get_item(
@@ -33,12 +33,11 @@ class Find(RequestHandler):
             listing = response["Item"][0]
             # TODO: update listing's state to matched, and prompt for accept by finder
             # TODO: then as the enlisters code comes to update its enlistment we look for this
-        else:
-            return {}
-        return listing
+            return True
+        return False
 
     @staticmethod
-    def validate(user_id: str) -> QueueState:
+    def validate(user_id: str) -> dict:
         """Get and return queue state for given user id.
         Confirm queue state not to be already matched."""
         user_data = User.get(user_id, UserAttr.QUEUE_STATE)
