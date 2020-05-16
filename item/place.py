@@ -1,5 +1,12 @@
 from request_handler import RequestHandler
-from properties import TableKey, TablePartition, HomeAttr, Constants, RequestField
+from properties import (
+    TableKey,
+    TablePartition,
+    HomeAttr,
+    Constants,
+    RequestField,
+    UserAttr,
+)
 from internal import validate_field, validate_meta
 from database import *
 
@@ -8,8 +15,12 @@ class Place(RequestHandler):
     """User requests to change the contents of a grid slot in the user's selected home."""
 
     @staticmethod
-    def run(home_id: str, item_index: int, grid_index: int, item_meta: str) -> bool:
+    def run(event: dict, user_data: dict) -> bool:
         """Sets a grid slot for given home id to contain a requested item with given meta data."""
+        home_id = user_data[UserAttr.CURRENT_HOME]
+        item_index = event[RequestField.User.ITEM_INDEX]
+        grid_index = event[RequestField.Home.GRID_INDEX]
+        item_meta = event[RequestField.Item.META]
         try:
             # TODO: rework database model
             response = table.update_item(
@@ -38,15 +49,16 @@ class Place(RequestHandler):
         return True
 
     @staticmethod
-    def validate(event: dict, inventory_size: int) -> None:
+    def validate(event: dict, user_data: dict) -> None:
         """Confirm item index to be in range of inventory size.
         Confirm target grid index to be in range of home size.
         Confirm that item meta-data follows correct format and TODO: apply size limitation in case of misuse."""
+        inventory_count = user_data[UserAttr.INVENTORY_COUNT]
         validate_field(
             target=event,
             field=RequestField.User.ITEM_INDEX,
             validation=lambda value: isinstance(value, int)
-            and 0 < value <= inventory_size,
+            and 0 < value <= inventory_count,
             message="Item Place API (ITEM_INDEX)",
         )
         validate_field(

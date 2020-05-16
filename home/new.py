@@ -2,7 +2,7 @@ from base64 import b64encode
 from encrypt import password_encrypt
 
 from request_handler import RequestHandler
-from properties import RequestField, TableKey, HomeAttr
+from properties import RequestField, TableKey, HomeAttr, UserAttr
 from properties import Secret, Constants, Biodome
 from internal import validate_field, generate_id, end
 from database import *
@@ -12,10 +12,12 @@ class New(RequestHandler):
     """User requests to create a new home."""
 
     @staticmethod
-    def run(user_id: str, name: str, biodome: int):
+    def run(event: dict, user_id: str):
         """TODO: this entire thing needs a rework: there need be a template for user item
         TODO: should it be recursive or is there a better way?"""
-
+        user_id = user_id
+        name = event[RequestField.Home.NAME]
+        biodome = event[RequestField.Home.BIODOME]
         new_id = generate_id()
         try:
             # TODO: rework database model template.
@@ -39,8 +41,9 @@ class New(RequestHandler):
             return b64encode(password_encrypt(new_id, Secret.USER_ID)).decode("ascii")
 
     @staticmethod
-    def validate(event: dict, home_count: int) -> None:
+    def validate(event: dict, user_data: dict) -> None:
         """Confirm name to be of appropriate length, and existence of requested Biodome."""
+        home_count = len(user_data[UserAttr.HOMES])
         if home_count > Constants.User.HOME_COUNT_MAX:
             end("Maximum homes reached")  # TODO: error handling
         validate_field(

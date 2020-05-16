@@ -10,10 +10,10 @@ class Go(RequestHandler):
     """User requests to be moved to one of the user's own homes."""
 
     @staticmethod
-    def run(user_id: str, home_id: str) -> list:
+    def run(event: dict, user_data: dict) -> list:
         """Set selected home of given user id to given home id.
          Get and return grid and associated meta-data for given home id."""
-
+        home_id = user_data[UserAttr.HOMES][event[RequestField.User.HOME_INDEX]]
         try:
             # TODO: rework database model also dont forget to get home meta data
             response = table.get_item(
@@ -40,9 +40,9 @@ class Go(RequestHandler):
         return response["Item"][HomeAttr.GRID]
 
     @staticmethod
-    def validate(event: dict, home_count: int) -> None:
+    def validate(event: dict, user_data: dict) -> None:
         """Confirm requested index to be in range of user's home count."""
-
+        home_count = len(user_data[UserAttr.HOMES])
         validate_field(
             target=event,
             field=RequestField.User.HOME_INDEX,

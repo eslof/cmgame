@@ -26,35 +26,26 @@ def lambda_handler(event, context):
     """High-level overview: Request is validated, user is authenticated, and
     for each request we .validate the contents and .run the requested action."""
 
-    req = validate_request(target=event, request_enum=HomeRequest)
+    req = validate_request(event, HomeRequest)
     user_id = User.validate_id(event)
 
     if req == HomeRequest.NEW:
-        user_data = User.get(user_id, f"{UserAttr.HOMES}")
-        New.validate(event, len(user_data[UserAttr.HOMES]))
-        result = New.run(
-            user_id=user_id,
-            name=event[RequestField.Home.NAME],
-            biodome=event[RequestField.Home.BIODOME],
-        )
+        user_data = User.get(user_id, UserAttr.HOMES)
+        New.validate(event, user_data)
+        result = New.run(event, user_id)
         return View.generic(result)
 
     elif req == HomeRequest.SAVE:
         user_data = User.get(user_id, UserAttr.CURRENT_HOME)
         Save.validate(event)
-        result = Save.run(
-            home_id=user_data[UserAttr.CURRENT_HOME],
-            meta_data=event[RequestField.Home.META],
-        )
+        result = Save.run(event, user_data)
         return View.generic(result)
 
     elif req == HomeRequest.GO:
         # TODO: also get home meta data
-        user_data = User.get(user_id=user_id, attributes=UserAttr.HOMES)
-        Go.validate(event=event, home_count=len(user_data[UserAttr.HOMES]))
-        grid = Go.run(
-            home_id=user_data[UserAttr.HOMES][event[RequestField.User.HOME_INDEX]]
-        )
+        user_data = User.get(user_id, UserAttr.HOMES)
+        Go.validate(event, user_data)
+        grid = Go.run(event, user_data)
         return View.construct(
             response_type=ResponseType.HOME_DATA, data={ResponseField.Home.DATA: grid}
         )

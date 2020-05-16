@@ -1,5 +1,6 @@
 from request_handler import RequestHandler
-from properties import TableKey, TablePartition, HomeAttr, Constants, RequestField
+from properties import TableKey, TablePartition, HomeAttr
+from properties import Constants, RequestField, UserAttr
 from internal import validate_field, validate_meta
 from database import *
 
@@ -8,8 +9,11 @@ class Update(RequestHandler):
     """User requests to update the meta-data of an item in the user's selected home."""
 
     @staticmethod
-    def run(home_id: str, grid_index: int, item_meta: str) -> bool:
+    def run(event: dict, user_data: dict) -> bool:
         """Sets given item meta-data at requested grid index for the given home id"""
+        home_id = (user_data[UserAttr.CURRENT_HOME],)
+        grid_index = (event[RequestField.Home.GRID_INDEX],)
+        item_meta = event[RequestField.Item.META]
         try:
             # TODO: rework database model
             response = table.update_item(
