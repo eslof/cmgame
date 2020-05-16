@@ -1,5 +1,6 @@
+from request_handler import RequestHandler
 from properties import TableKey, TablePartition, HomeAttr, RequestField
-from internal import validate_meta, RequestHandler
+from internal import validate_meta
 from database import *
 
 

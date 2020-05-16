@@ -1,6 +1,7 @@
 import json
 
-from internal import RequestHandler, validate_field
+from request_handler import RequestHandler
+from internal import validate_field
 from properties import UserAttr, RequestField, Constants
 from user import User
 from database import *
@@ -11,10 +12,10 @@ class Delete(RequestHandler):
 
     @staticmethod
     def run(event: dict, user_data: dict, user_id: str) -> bool:
-        """Run documentation"""
+        """Run documentation TODO: stuff"""
         homes = user_data[UserAttr.HOMES]
-        del home_list[event[RequestField.User.HOME_INDEX]]
-        User.update(user_id, UserAttr.HOMES, set(home_list))
+        del homes[event[RequestField.User.HOME_INDEX]]
+        User.update(user_id, UserAttr.HOMES, set(homes))
         pass
 
     @staticmethod

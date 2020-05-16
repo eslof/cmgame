@@ -1,8 +1,10 @@
 from base64 import b64encode
 from encrypt import password_encrypt
 
-from properties import RequestField, TableKey, HomeAttr, Secret, Constants, Biodome
-from internal import validate_field, generate_id, end, RequestHandler
+from request_handler import RequestHandler
+from properties import RequestField, TableKey, HomeAttr
+from properties import Secret, Constants, Biodome
+from internal import validate_field, generate_id, end
 from database import *
 
 

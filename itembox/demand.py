@@ -1,7 +1,8 @@
 from random import Random
 
+from request_handler import RequestHandler
 from item import Item
-from internal import end, RequestHandler
+from internal import end
 
 
 class Demand(RequestHandler):

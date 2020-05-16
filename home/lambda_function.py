@@ -1,7 +1,8 @@
 from enum import Enum, unique, auto
 
-from internal import validate_request, assert_inheritance, RequestHandler
-from properties import PacketHeader, RequestField, ResponseField, ResponseType, UserAttr
+from request_handler import RequestHandler
+from internal import validate_request, assert_inheritance
+from properties import RequestField, ResponseField, ResponseType, UserAttr
 from user import User
 from view import View
 

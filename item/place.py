@@ -1,5 +1,6 @@
-from properties import TableKey, TablePartition, HomeAttr, RequestField, Constants
-from internal import validate_field, validate_meta, RequestHandler
+from request_handler import RequestHandler
+from properties import TableKey, TablePartition, HomeAttr, Constants, RequestField
+from internal import validate_field, validate_meta
 from database import *
 
 

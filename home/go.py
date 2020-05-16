@@ -1,5 +1,7 @@
-from properties import TableKey, TablePartition, HomeAttr, RequestField, UserAttr
-from internal import validate_field, end, RequestHandler
+from request_handler import RequestHandler
+from properties import TableKey, TablePartition, RequestField
+from properties import HomeAttr, UserAttr
+from internal import validate_field, end
 from user import User
 from database import *
 

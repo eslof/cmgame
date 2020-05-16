@@ -1,9 +1,9 @@
 from enum import Enum, unique, auto
 
-# TODO: figure out a prettier way, black forces line split for each class
-from properties import PacketHeader, RequestField, ResponseField, ResponseType
+from request_handler import RequestHandler
+from properties import RequestField, ResponseField, ResponseType
 from properties import UserAttr, ItemAttr
-from internal import validate_request, RequestHandler, assert_inheritance
+from internal import validate_request, assert_inheritance
 from user import User
 from view import View
 

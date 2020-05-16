@@ -1,4 +1,5 @@
-from internal import RequestHandler, end
+from request_handler import RequestHandler
+from internal import end
 from properties import QueueState, UserAttr, TablePartition, TableKey
 from user import User
 from database import *

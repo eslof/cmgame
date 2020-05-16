@@ -1,4 +1,4 @@
-from internal import RequestHandler
+from requesthandler import RequestHandler
 #set($camel_case_name = ${StringUtils.removeUnderScores($NAME)})
 
 class $camel_case_name(RequestHandler):

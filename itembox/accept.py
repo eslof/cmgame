@@ -1,5 +1,6 @@
+from request_handler import RequestHandler
 from properties import RequestField
-from internal import validate_field, RequestHandler
+from internal import validate_field
 
 
 class Accept(RequestHandler):

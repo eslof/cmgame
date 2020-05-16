@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from internal import RequestHandler, end
+from request_handler import RequestHandler
+from internal import end
 from properties import TableKey, TablePartition, QueueState
 from properties import UserAttr, QueueAttr
 from user import User

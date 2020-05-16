@@ -1,4 +1,3 @@
-from abc import ABC, abstractmethod
 from base64 import b64encode
 from enum import Enum
 from inspect import isclass
@@ -25,23 +24,6 @@ def assert_inheritance(target: Union[type, List[type]], base: type):
         end(f"Misuse of assert_inheritance (Not a class)")
     elif not issubclass(target, base):
         end(f"Architecture broken ({target} != {base})")
-
-
-# TODO: metaclass=abc.ABCMeta ? research
-class RequestHandler(ABC):
-    """Modules used by our AWS Lambda functions inherit this ABC.
-    This to help maintain the architecture of the application.
-    Refer to RequestHandlerTemplate.py"""
-
-    @staticmethod
-    @abstractmethod
-    def validate(*args, **kwargs):
-        pass
-
-    @staticmethod
-    @abstractmethod
-    def run(*args, **kwargs):
-        pass
 
 
 def end(message: str = "", code: int = 0) -> None:
