@@ -162,6 +162,8 @@ class ItemAttr:
 
 class QueueAttr:
     DATE = "date"
+    STATE = "state"
+    USER_ID = "user_id"
 
 
 class UserAttr:
@@ -169,6 +171,7 @@ class UserAttr:
     CURRENT_HOME = "current_home"
     NAME = "name"
     STATE = "state"
+    LIST_ID = "match"
     QUEUE_STATE = "queue_state"
     FLAG = "flag"
     SELECTED = "selected"

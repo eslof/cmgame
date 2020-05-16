@@ -35,9 +35,9 @@ def lambda_handler(event, context):
         return View.generic(result)
 
     elif req == QueueRequest.FIND:
-        queue_state = Find.validate(user_id)
+        user_data = Find.validate(user_id)
         listing = Find.run(user_id, queue_state)
-        # TODO: create match and send websocket ip
+        # TODO: this needs work probably
         if listing:
             return View.construct(
                 response_type=ResponseType.QUEUE,
