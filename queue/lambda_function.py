@@ -9,14 +9,16 @@ from view import View
 
 from .enlist import Enlist
 from .find import Find
+from .stop import Stop
 
-assert_inheritance([Enlist, Find], RequestHandler)
+assert_inheritance([Enlist, Find, Stop], RequestHandler)
 
 
 @unique
 class QueueRequest(Enum):
     ENLIST = auto()
     FIND = auto()
+    STOP = auto()
 
 
 def lambda_handler(event, context):
@@ -45,6 +47,10 @@ def lambda_handler(event, context):
             )
         else:
             View.generic(False)
+    elif req == QueueRequest.STOP:
+        user_data = Stop.validate(user_id)
+        result = Stop.run(user_data, user_id)
+        return View.generic(result)
 
 
 # breaking up your current matching will be entirely automatic by client closing connection to websocket server
