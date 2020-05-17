@@ -1,12 +1,11 @@
 from typing import Any
 
-from request_handler import RequestHandler
-from properties import TableKey, TablePartition, RequestField
-from properties import UserAttr, UserState
-from internal import validate_field, end
-from user import User
-from database import *
 from .helpers.item_helper import ItemHelper
+from database import table, TableKey, TablePartition, UserAttr
+from internal import validate_field, end
+from properties import RequestField, UserState
+from request_handler import RequestHandler
+from user import User
 
 
 class Accept(RequestHandler):

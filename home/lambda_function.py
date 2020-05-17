@@ -1,7 +1,6 @@
-from properties import HomeAttr
+from database import HomeAttr
 from default_imports import *
-
-from router import *
+from router import route, Route
 
 from .delete import Delete
 from .go import Go

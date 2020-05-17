@@ -1,8 +1,7 @@
-from request_handler import RequestHandler
-from properties import RequestField, TableKey, TablePartition
-from properties import HomeAttr, UserAttr
+from database import table, TableKey, TablePartition, UserAttr, HomeAttr
 from internal import validate_meta
-from database import *
+from properties import RequestField
+from request_handler import RequestHandler
 from user import User
 
 
@@ -12,7 +11,7 @@ class Save(RequestHandler):
     @staticmethod
     def run(event: dict, user_id: str, data: dict) -> bool:
         """Set meta data for given home id."""
-        home_id = user_data[UserAttr.CURRENT_HOME]
+        home_id = data[UserAttr.CURRENT_HOME]
         meta_data = event[RequestField.Home.META]
         try:
             # TODO: rework database model

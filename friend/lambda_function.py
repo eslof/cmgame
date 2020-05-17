@@ -1,5 +1,5 @@
 from default_imports import *
-from router import *
+from router import route, Route
 
 from .add import Add
 from .invite import Invite

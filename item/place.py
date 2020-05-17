@@ -1,14 +1,7 @@
-from request_handler import RequestHandler
-from properties import (
-    TableKey,
-    TablePartition,
-    HomeAttr,
-    Constants,
-    RequestField,
-    UserAttr,
-)
+from database import table, TableKey, TablePartition, UserAttr, HomeAttr
 from internal import validate_field, validate_meta
-from database import *
+from properties import Constants, RequestField
+from request_handler import RequestHandler
 from user import User
 
 
@@ -20,7 +13,7 @@ class Place(RequestHandler):
         """Sets a grid slot for given home id to contain a requested item with given meta data."""
         home_id = data[UserAttr.CURRENT_HOME]
         item_index = event[RequestField.User.ITEM] - 1
-        grid_index = event[RequestField.Home.GRID_INDEX] - 1
+        grid_index = event[RequestField.Home.GRID] - 1
         item_meta = event[RequestField.Item.META]
         try:
             # TODO: rework database model
@@ -65,10 +58,10 @@ class Place(RequestHandler):
         )
         validate_field(
             target=event,
-            field=RequestField.Home.GRID_INDEX,
+            field=RequestField.Home.GRID,
             validation=lambda value: isinstance(value, int)
             and 0 < value <= Constants.Home.SIZE,
-            message="Item Place API (GRID_INDEX)",
+            message="Item Place API (GRID)",
         )
         validate_meta(
             target=event, field=RequestField.Item.META, message="Item Place API (META)",

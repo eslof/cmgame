@@ -1,9 +1,9 @@
 from .helper.home_helper import HomeHelper
+from database import UserAttr
+from internal import validate_field
+from properties import RequestField
 from request_handler import RequestHandler
-from internal import validate_field, end
-from properties import UserAttr, RequestField, Constants, TableKey, TablePartition
 from user import User
-from database import *
 
 
 # TODO: research maybe using glacier to store deleted entries?

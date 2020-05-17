@@ -1,12 +1,11 @@
 from datetime import datetime
 from typing import Optional, Any
 
-from request_handler import RequestHandler
+from database import table, TableKey, TablePartition, UserAttr, QueueAttr
 from internal import end
-from properties import TableKey, TablePartition, QueueState
-from properties import UserAttr, QueueAttr
+from properties import QueueState
+from request_handler import RequestHandler
 from user import User
-from database import *
 
 
 class Enlist(RequestHandler):

@@ -1,13 +1,9 @@
-from base64 import b64encode
-from encrypt import password_encrypt
-
-from request_handler import RequestHandler
-from properties import RequestField, TableKey, HomeAttr, UserAttr, TablePartition
-from properties import Seed, Constants, Biodome
-from internal import validate_field, generate_id, end
-from database import *
-from user import User
 from .helper.home_helper import HomeHelper
+from database import UserAttr
+from internal import validate_field, end
+from properties import RequestField, Constants, Biodome
+from request_handler import RequestHandler
+from user import User
 
 
 class New(RequestHandler):

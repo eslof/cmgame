@@ -1,8 +1,7 @@
-from request_handler import RequestHandler
-from properties import TableKey, TablePartition, HomeAttr
-from properties import Constants, RequestField, UserAttr
+from database import table, TableKey, TablePartition, UserAttr
 from internal import validate_field, validate_meta
-from database import *
+from properties import Constants, RequestField
+from request_handler import RequestHandler
 from user import User
 
 
@@ -13,7 +12,7 @@ class Update(RequestHandler):
     def run(event: dict, user_id: str, data: dict) -> bool:
         """Sets given item meta-data at requested grid index for the given home id"""
         home_id = (data[UserAttr.CURRENT_HOME],)
-        grid_index = (event[RequestField.Home.GRID_INDEX],)
+        grid_index = (event[RequestField.Home.GRID],)
         item_meta = event[RequestField.Item.META]
         try:
             # TODO: rework database model
@@ -45,10 +44,10 @@ class Update(RequestHandler):
         user_data = User.get(user_id, UserAttr.CURRENT_HOME)
         validate_field(
             target=event,
-            field=RequestField.Home.GRID_INDEX,
+            field=RequestField.Home.GRID,
             validation=lambda value: isinstance(value, int)
             and 0 < value <= Constants.Home.SIZE,
-            message="Item Update API (GRID_INDEX)",
+            message="Item Update API (GRID)",
         )
         validate_meta(
             target=event,

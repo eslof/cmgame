@@ -1,10 +1,9 @@
 from typing import Optional
-
 from botocore.exceptions import ClientError
 
-from internal import generate_id, end, end_unless_conditional
-from properties import TableKey, HomeAttr, TablePartition, Constants
-from database import *
+from database import table, TableKey, TablePartition, HomeAttr
+from internal import generate_id, end_unless_conditional
+from properties import Constants
 
 
 class HomeHelper:

@@ -1,9 +1,8 @@
-from request_handler import RequestHandler
-from properties import TableKey, TablePartition, RequestField
-from properties import HomeAttr, UserAttr
+from database import table, TableKey, TablePartition, UserAttr, HomeAttr
 from internal import validate_field, end
+from properties import RequestField
+from request_handler import RequestHandler
 from user import User
-from database import *
 
 
 class Go(RequestHandler):

@@ -1,18 +1,10 @@
+from botocore.exceptions import ClientError
 from typing import Optional
 
-from botocore.exceptions import ClientError
-
+from database import table, TableKey, TablePartition, UserAttr
 from internal import generate_id, end_unless_conditional
-from properties import (
-    TablePartition,
-    TableKey,
-    UserAttr,
-    UserState,
-    ResponseField,
-    ItemAttr,
-)
-from properties import QueueState, Constants, starting_inventory
-from database import *
+from properties import Constants, QueueState, ResponseField
+from properties import starting_inventory, UserState
 
 
 class UserHelper:
