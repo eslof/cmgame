@@ -10,10 +10,10 @@ class Go(RequestHandler):
     """User requests to be moved to one of the user's own homes."""
 
     @staticmethod
-    def run(event: dict, user_data: dict, user_id: str) -> dict:
+    def run(event: dict, user_id: str, data: dict) -> dict:
         """Set selected home of given user id to given home id.
          Get and return grid and associated meta-data for given home id."""
-        home_id = user_data[UserAttr.HOMES][event[RequestField.User.HOME_INDEX]]
+        home_id = data[UserAttr.HOMES][event[RequestField.User.HOME_INDEX]]
         try:
             # TODO: rework database model also dont forget to get home meta data
             home_data = table.get_item(

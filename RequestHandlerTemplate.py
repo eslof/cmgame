@@ -7,11 +7,11 @@ class $camel_case_name(RequestHandler):
     """$class_doc"""
 
     @staticmethod
-    def validate(event: dict, user_id: str) -> Optional[dict]:
-        """$validate_doc"""
+    def run(event: dict, user_id: str, data: Any) -> Any:
+        """$run_doc"""
         pass
 
     @staticmethod
-    def run(event: dict, user_data: dict, user_id: str) -> Any:
-        """$run_doc"""
+    def validate(event: dict, user_id: str) -> Optional[dict]:
+        """$validate_doc"""
         pass

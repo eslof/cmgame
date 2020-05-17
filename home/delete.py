@@ -11,11 +11,11 @@ class Delete(RequestHandler):
     """Delete documentation"""
 
     @staticmethod
-    def run(event: dict, user_data: dict, user_id: str) -> bool:
+    def run(event: dict, user_id: str, data: dict) -> bool:
         """Run documentation TODO: stuff"""
         home_index = event[RequestField.User.HOME_INDEX]
         User.update(user_id, UserAttr.HOMES, home_index, "REMOVE #name[:value]")
-        home_id = user_data[UserAttr.HOMES][home_index]
+        home_id = data[UserAttr.HOMES][home_index]
         try:
             table.delete_item(
                 Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id}

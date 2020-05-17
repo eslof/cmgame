@@ -1,20 +1,20 @@
 from default_imports import *
 
-from .place import Place
-from .update import Update
+from .accept import Accept
+from .demand import Demand
 
-assert_inheritance([Place, Update], RequestHandler)
+assert_inheritance([Accept, Demand], RequestHandler)
 
 
 @unique
-class ItemRequest(Enum):
-    PLACE = auto()
-    UPDATE = auto()
+class ItemBoxRequest(Enum):
+    ACCEPT = auto()
+    DEMAND = auto()
 
 
 routes = {
-    ItemRequest.PLACE: Route(Place, View.generic),
-    ItemRequest.UPDATE: Route(Update, View.generic),
+    ItemBoxRequest.ACCEPT: Route(Accept, View.generic),
+    ItemBoxRequest.DEMAND: Route(Demand, View.generic),
 }
 
 
@@ -23,7 +23,7 @@ def lambda_handler(event, context):
     Finally the return value of 'handler.run()' is passed to associated 'route.output()'."""
 
     user_id = User.validate_id(event)
-    req = validate_request(event, ItemRequest)
+    req = validate_request(event, ItemBoxRequest)
 
     with routes[req] as route:
         handler = route.handler

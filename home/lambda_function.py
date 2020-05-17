@@ -20,7 +20,7 @@ class HomeRequest(Enum):
 routes = {
     HomeRequest.DELETE: Route(Delete, View.generic),
     HomeRequest.GO: Route(
-        handler=Delete,
+        handler=Go,
         output=lambda value: View.construct(
             response_type=ResponseType.HOME_DATA,
             data={
@@ -29,15 +29,21 @@ routes = {
             },
         ),
     ),
-    HomeRequest.NEW: Route(Delete, View.generic),
-    HomeRequest.SAVE: Route(Delete, View.generic),
+    HomeRequest.NEW: Route(New, View.generic),
+    HomeRequest.SAVE: Route(Save, View.generic),
 }
 
 
 def lambda_handler(event, context):
-    """High-level overview: Request is validated, user is authenticated, and
-    for each request we .validate the contents and .run the requested action."""
+    """Return of 'handler.validate()' is passed to 'handler.run()'.
+    Finally the return value of 'handler.run()' is passed to associated 'route.output()'."""
 
-    req = validate_request(event, HomeRequest)
     user_id = User.validate_id(event)
-    Router.handle(routes[req], event, user_id)
+    req = validate_request(event, HomeRequest)
+
+    with routes[req] as route:
+        handler = route.handler
+        output = route.output
+
+    valid_data = handler.validate(event, user_id)
+    output(handler.run(event, user_id, valid_data))

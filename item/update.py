@@ -3,15 +3,16 @@ from properties import TableKey, TablePartition, HomeAttr
 from properties import Constants, RequestField, UserAttr
 from internal import validate_field, validate_meta
 from database import *
+from user import User
 
 
 class Update(RequestHandler):
     """User requests to update the meta-data of an item in the user's selected home."""
 
     @staticmethod
-    def run(event: dict, user_data: dict) -> bool:
+    def run(event: dict, user_id: str, data: dict) -> bool:
         """Sets given item meta-data at requested grid index for the given home id"""
-        home_id = (user_data[UserAttr.CURRENT_HOME],)
+        home_id = (data[UserAttr.CURRENT_HOME],)
         grid_index = (event[RequestField.Home.GRID_INDEX],)
         item_meta = event[RequestField.Item.META]
         try:
@@ -38,9 +39,10 @@ class Update(RequestHandler):
         return True
 
     @staticmethod
-    def validate(event: dict) -> None:
+    def validate(event: dict, user_id: str) -> dict:
         """Confirm target grid index to be in range of home size.
         Confirm that item meta-data follows correct format and TODO: apply size limitation in case of misuse."""
+        user_data = User.get(user_id, UserAttr.CURRENT_HOME)
         validate_field(
             target=event,
             field=RequestField.Home.GRID_INDEX,
@@ -53,3 +55,4 @@ class Update(RequestHandler):
             field=RequestField.Item.META,
             message="Item Update API (META)",
         )
+        return user_data

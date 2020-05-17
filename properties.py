@@ -12,7 +12,7 @@ from typing import Union
 
 class Secret:
     USER_ID = "something random"
-    ITEM_BOX_SEED = 133769420
+    ITEMBOX = 133769420
 
 
 # endregion

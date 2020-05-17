@@ -9,15 +9,16 @@ from properties import (
 )
 from internal import validate_field, validate_meta
 from database import *
+from user import User
 
 
 class Place(RequestHandler):
     """User requests to change the contents of a grid slot in the user's selected home."""
 
     @staticmethod
-    def run(event: dict, user_data: dict) -> bool:
+    def run(event: dict, user_id: str, data: dict) -> bool:
         """Sets a grid slot for given home id to contain a requested item with given meta data."""
-        home_id = user_data[UserAttr.CURRENT_HOME]
+        home_id = data[UserAttr.CURRENT_HOME]
         item_index = event[RequestField.User.ITEM_INDEX]
         grid_index = event[RequestField.Home.GRID_INDEX]
         item_meta = event[RequestField.Item.META]
@@ -30,7 +31,7 @@ class Place(RequestHandler):
                 ExpressionAttributeNames={
                     "#id": TableKey.PARTITION,
                     "#item_grid": HomeAttr.GRID,
-                    "#item_meta": HomeAttr.ITEM_META,
+                    "#item_meta": HomeAttr.META,
                     "#grid_index": grid_index,
                     "#item_index": item_index,
                 },
@@ -49,10 +50,14 @@ class Place(RequestHandler):
         return True
 
     @staticmethod
-    def validate(event: dict, user_data: dict) -> None:
+    def validate(event: dict, user_id: str) -> dict:
         """Confirm item index to be in range of inventory size.
         Confirm target grid index to be in range of home size.
         Confirm that item meta-data follows correct format and TODO: apply size limitation in case of misuse."""
+        user_data = User.get(
+            user_id=user_id,
+            attributes=f"{UserAttr.INVENTORY_COUNT}, {UserAttr.CURRENT_HOME}",
+        )
         inventory_count = user_data[UserAttr.INVENTORY_COUNT]
         validate_field(
             target=event,
@@ -71,3 +76,4 @@ class Place(RequestHandler):
         validate_meta(
             target=event, field=RequestField.Item.META, message="Item Place API (META)",
         )
+        return user_data

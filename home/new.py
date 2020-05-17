@@ -13,9 +13,7 @@ class New(RequestHandler):
     """User requests to create a new home."""
 
     @staticmethod
-    def run(
-        event: dict, user_data: dict, user_id: str, recursion_limit: int = 3
-    ) -> bool:
+    def run(event: dict, user_id: str, data: dict, recursion_limit: int = 3) -> bool:
         """TODO: this entire thing needs a rework: there need be a template for user item
         TODO: should it be recursive or is there a better way?"""
         home_id = generate_id()
