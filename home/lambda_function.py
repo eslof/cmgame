@@ -1,5 +1,4 @@
 from enum import Enum, unique, auto
-from typing import Callable, Type, Optional
 
 from request_handler import RequestHandler
 from internal import validate_request, assert_inheritance
@@ -25,7 +24,7 @@ class HomeRequest(Enum):
 
 
 routes = {
-    HomeRequest.DELETE: Route(Delete, lambda value: View.generic(value)),
+    HomeRequest.DELETE: Route(Delete, View.generic),
     HomeRequest.GO: Route(
         handler=Delete,
         output=lambda value: View.construct(
@@ -36,8 +35,8 @@ routes = {
             },
         ),
     ),
-    HomeRequest.NEW: Route(Delete, lambda value: View.generic(value)),
-    HomeRequest.SAVE: Route(Delete, lambda value: View.generic(value)),
+    HomeRequest.NEW: Route(Delete, View.generic),
+    HomeRequest.SAVE: Route(Delete, View.generic),
 }
 
 
@@ -45,6 +44,6 @@ def lambda_handler(event, context):
     """High-level overview: Request is validated, user is authenticated, and
     for each request we .validate the contents and .run the requested action."""
 
-    req = HomeRequest(validate_request(event, HomeRequest))
+    req = validate_request(event, HomeRequest)
     user_id = User.validate_id(event)
     Router.handle(routes[req], event, user_id)
