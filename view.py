@@ -1,5 +1,6 @@
 import json
 from enum import Enum
+from typing import Any
 
 from properties import PacketHeader, ResponseType, ResponseField
 
@@ -16,7 +17,7 @@ class View:
         return json.loads(data)
 
     @staticmethod
-    def construct(response_type: Enum, data: dict) -> str:
+    def response(response_type: Enum, data: dict) -> str:
         """Create and return a .serialize'd response of given type with given data."""
         data[PacketHeader.RESPONSE] = response_type.value
         return View.serialize(data)
@@ -28,5 +29,15 @@ class View:
             {
                 PacketHeader.RESPONSE: ResponseType.GENERIC.value,
                 ResponseField.Generic.RESULT: result,
+            }
+        )
+
+    @staticmethod
+    def error(message: str) -> str:
+        """Create and return a .serialize'd error response with given message."""
+        return View.serialize(
+            {
+                PacketHeader.RESPONSE: ResponseType.ERROR.value,
+                ResponseField.Generic.ERROR: message,
             }
         )
