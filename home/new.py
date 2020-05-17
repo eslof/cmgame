@@ -3,42 +3,32 @@ from encrypt import password_encrypt
 
 from request_handler import RequestHandler
 from properties import RequestField, TableKey, HomeAttr, UserAttr, TablePartition
-from properties import Secret, Constants, Biodome
+from properties import Seed, Constants, Biodome
 from internal import validate_field, generate_id, end
 from database import *
 from user import User
+from .helper.home_helper import HomeHelper
 
 
 class New(RequestHandler):
     """User requests to create a new home."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: dict, recursion_limit: int = 3) -> bool:
+    def run(event: dict, user_id: str, data: dict, recursion_limit: int = 3) -> str:
         """TODO: this entire thing needs a rework: there need be a template for user item
         TODO: should it be recursive or is there a better way?"""
-        home_id = generate_id()
-        home = {
-            TableKey.PARTITION: TablePartition.HOME,
-            TableKey.SORT: home_id,
-            HomeAttr.META: "",
-            HomeAttr.GRID: [{HomeAttr.Grid.ITEM: 0, HomeAttr.Grid.META: ""}]
-            * Constants.Home.SIZE,
-        }
-        try:
-            # TODO: rework database model template.
-            response = table.put_item(
-                Item=home,
-                ConditionExpression="attribute_not_exists(#id)",
-                ExpressionAttributeNames={"#id": TableKey.PARTITION},
-            )
-        except ClientError as e:
-            error = e.response["Error"]["Code"]  # TODO: error handling
-            if error == "ConditionalCheckFailedException" and recursion_limit > 0:
-                recursion_limit -= 1
-                return New.run(event, user_data, user_id, recursion_limit)
-            return False
-        User.add_home(user_id, home_id)
-        return True
+        new_id = None
+        max_attempts = 5
+        while not new_id and max_attempts > 0:
+            new_id = HomeHelper.attempt_new()
+            max_attempts -= 1
+
+        if not new_id:
+            end("Unable to successfully create new home")
+
+        return User.add_home(
+            user_id, UserAttr.HOMES, home_index, "REMOVE #name[:value]"
+        )
 
     @staticmethod
     def validate(event: dict, user_id: str) -> dict:

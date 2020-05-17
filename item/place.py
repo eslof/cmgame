@@ -19,26 +19,23 @@ class Place(RequestHandler):
     def run(event: dict, user_id: str, data: dict) -> bool:
         """Sets a grid slot for given home id to contain a requested item with given meta data."""
         home_id = data[UserAttr.CURRENT_HOME]
-        item_index = event[RequestField.User.ITEM_INDEX]
-        grid_index = event[RequestField.Home.GRID_INDEX]
+        item_index = event[RequestField.User.ITEM] - 1
+        grid_index = event[RequestField.Home.GRID_INDEX] - 1
         item_meta = event[RequestField.Item.META]
         try:
             # TODO: rework database model
             response = table.update_item(
                 Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
-                UpdateExpression=f"SET #item_grid.#grid_index = :item_index, #item_meta.#grid_index = :item_meta",
+                UpdateExpression=f"SET #grid[#index].#item = :item, #grid[#index].#meta = :meta",
                 ConditionExpression=f"attribute_exists(#id)",
                 ExpressionAttributeNames={
                     "#id": TableKey.PARTITION,
-                    "#item_grid": HomeAttr.GRID,
-                    "#item_meta": HomeAttr.META,
-                    "#grid_index": grid_index,
-                    "#item_index": item_index,
+                    "#grid": HomeAttr.GRID,
+                    "#item": HomeAttr.Grid.ITEM,
+                    "#meta": HomeAttr.Grid.META,
+                    "#index": grid_index,
                 },
-                ExpressionAttributeValues={
-                    ":item_index": item_index,
-                    ":item_meta": item_meta,
-                },
+                ExpressionAttributeValues={":index": item_index, ":meta": item_meta,},
             )
         except ClientError as e:
             # TODO: error handling
@@ -61,7 +58,7 @@ class Place(RequestHandler):
         inventory_count = user_data[UserAttr.INVENTORY_COUNT]
         validate_field(
             target=event,
-            field=RequestField.User.ITEM_INDEX,
+            field=RequestField.User.ITEM,
             validation=lambda value: isinstance(value, int)
             and 0 < value <= inventory_count,
             message="Item Place API (ITEM_INDEX)",

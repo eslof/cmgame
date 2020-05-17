@@ -1,18 +1,12 @@
-from typing import Optional, Any
+from typing import Any
 
-from item import Item
 from request_handler import RequestHandler
-from properties import (
-    RequestField,
-    UserAttr,
-    Secret,
-    UserState,
-    TableKey,
-    TablePartition,
-)
+from properties import TableKey, TablePartition, RequestField
+from properties import UserAttr, UserState
 from internal import validate_field, end
 from user import User
 from database import *
+from .helpers.item_helper import ItemHelper
 
 
 class Accept(RequestHandler):
@@ -21,10 +15,10 @@ class Accept(RequestHandler):
     @staticmethod
     def run(event: dict, user_id: str, data: dict) -> Any:
         inventory = data[UserAttr.INVENTORY]
-        seed = Item.itembox_seed(
+        seed = ItemHelper.itembox_seed(
             user_id, data[UserAttr.KEY_COUNT], data[UserAttr.USED_KEY_COUNT]
         )
-        choices = Item.itembox(3, seed, inventory)
+        choices = ItemHelper.itembox(3, seed, inventory)
         table.update_item(
             Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
             UpdateExpression=(

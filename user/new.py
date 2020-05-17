@@ -1,9 +1,11 @@
+from typing import Optional, Any
+
 from country import Country
-from properties import Secret, RequestField, Constants
-from internal import validate_field, end, RequestHandler
-from encrypt import password_encrypt
-from base64 import b64encode
-from user import User
+from properties import Seed, RequestField, Constants
+from internal import validate_field, end
+from request_handler import RequestHandler
+from .helper.user_helper import UserHelper
+from random import Random
 
 
 class New(RequestHandler):
@@ -11,13 +13,11 @@ class New(RequestHandler):
     New user is added and receive: A list of starting items and a list of biodomes for a home."""
 
     @staticmethod
-    def run(event: dict) -> str:
-        """Generate new ID and push User.template_new with given name and flag into DB.
-        Returns the user id on successful entry TODO: why cant dynamodb just give me an auto id"""
+    def run(event: dict, user_id: str = None, data: Any = None) -> str:
         new_id = ""
         max_attempts = 5
         while not new_id and max_attempts > 0:
-            new_id = User.attempt_new(
+            new_id = UserHelper.attempt_new(
                 event[RequestField.User.NAME], event[RequestField.User.FLAG]
             )
             max_attempts -= 1
@@ -25,12 +25,10 @@ class New(RequestHandler):
         if not new_id:
             end("Unable to successfully create new user")
 
-        return b64encode(password_encrypt(new_id, Secret.USER_ID)).decode("ascii")
+        return new_id
 
     @staticmethod
-    def validate(event) -> None:
-        """Confirm name to be of appropriate length.
-        Confirm country/flag to exist (yes we decide what countries exist, deal with it)."""
+    def validate(event: dict, user_id: str = None) -> None:
         validate_field(
             target=event,
             field=RequestField.User.NAME,
@@ -45,3 +43,4 @@ class New(RequestHandler):
             and value in Country._value2member_map_,
             message="User New API (FLAG)",
         )
+        return None

@@ -9,7 +9,7 @@ class Find(RequestHandler):
     """User requests to find an enlisted user to visit."""
 
     @staticmethod
-    def run(user_data: dict, user_id: str) -> bool:
+    def run(event: dict, user_id: str, data: dict) -> Optional[str]:
         """Find enlistment with a recent timestamp and create a match between enlisted user and given user id."""
         # TODO: look for enlisted other
         response = table.get_item(
@@ -28,13 +28,12 @@ class Find(RequestHandler):
             ScanIndexForward=False,
             Limit=1,
         )
-        listing = None
+        # TODO: error handling
         if len(response["Item"] > 0):
-            listing = response["Item"][0]
-            # TODO: update listing's state to matched, and prompt for accept by finder
+            # TODO: update listing's state to pending, and prompt for accept by finder
             # TODO: then as the enlisters code comes to update its enlistment we look for this
-            return True
-        return False
+            return web_socket_endpoint()["address"]
+        return None
 
     @staticmethod
     def validate(user_id: str) -> dict:

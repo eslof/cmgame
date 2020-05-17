@@ -1,4 +1,5 @@
 from default_imports import *
+from router import *
 
 from .place import Place
 from .update import Update
@@ -18,16 +19,6 @@ routes = {
 }
 
 
+@route(routes, ItemRequest)
 def lambda_handler(event, context):
-    """Return of 'handler.validate()' is passed to 'handler.run()'.
-    Finally the return value of 'handler.run()' is passed to associated 'route.output()'."""
-
-    user_id = User.validate_id(event)
-    req = validate_request(event, ItemRequest)
-
-    with routes[req] as route:
-        handler = route.handler
-        output = route.output
-
-    valid_data = handler.validate(event, user_id)
-    output(handler.run(event, user_id, valid_data))
+    pass

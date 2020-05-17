@@ -13,7 +13,7 @@ class Go(RequestHandler):
     def run(event: dict, user_id: str, data: dict) -> dict:
         """Set selected home of given user id to given home id.
          Get and return grid and associated meta-data for given home id."""
-        home_id = data[UserAttr.HOMES][event[RequestField.User.HOME_INDEX]]
+        home_id = data[UserAttr.HOMES][event[RequestField.User.HOME]]
         try:
             # TODO: rework database model also dont forget to get home meta data
             home_data = table.get_item(
@@ -45,7 +45,7 @@ class Go(RequestHandler):
         home_count = len(user_data[UserAttr.HOMES])
         validate_field(
             target=event,
-            field=RequestField.User.HOME_INDEX,
+            field=RequestField.User.HOME,
             validation=lambda value: isinstance(value, int) and 0 < value <= home_count,
             message="Home select API",
         )

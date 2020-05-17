@@ -1,11 +1,9 @@
-from random import Random
-from typing import Optional, Any
-
-from properties import UserAttr, Secret
+from properties import UserAttr
 from request_handler import RequestHandler
-from item import Item
+
 from internal import end
 from user import User
+from .helpers.item_helper import ItemHelper
 
 
 class Demand(RequestHandler):
@@ -15,10 +13,10 @@ class Demand(RequestHandler):
     def run(event: dict, user_id: str, data: dict) -> list:
         """Produce a count of items not already owned for the user to choose between."""
         inventory = data[UserAttr.INVENTORY]
-        seed = Item.itembox_seed(
+        seed = ItemHelper.itembox_seed(
             user_id, data[UserAttr.KEY_COUNT], data[UserAttr.USED_KEY_COUNT]
         )
-        return Item.itembox(3, seed, inventory)
+        return ItemHelper.itembox(3, seed, inventory)
 
     @staticmethod
     def validate(event: dict, user_id: str) -> dict:

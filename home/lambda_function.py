@@ -1,5 +1,7 @@
-from default_imports import *
 from properties import HomeAttr
+from default_imports import *
+
+from router import *
 
 from .delete import Delete
 from .go import Go
@@ -21,7 +23,7 @@ routes = {
     HomeRequest.DELETE: Route(Delete, View.generic),
     HomeRequest.GO: Route(
         handler=Go,
-        output=lambda value: View.construct(
+        output=lambda value: View.response(
             response_type=ResponseType.HOME_DATA,
             data={
                 ResponseField.Home.GRID: value[HomeAttr.GRID],
@@ -34,16 +36,6 @@ routes = {
 }
 
 
+@route(routes, HomeRequest)
 def lambda_handler(event, context):
-    """Return of 'handler.validate()' is passed to 'handler.run()'.
-    Finally the return value of 'handler.run()' is passed to associated 'route.output()'."""
-
-    user_id = User.validate_id(event)
-    req = validate_request(event, HomeRequest)
-
-    with routes[req] as route:
-        handler = route.handler
-        output = route.output
-
-    valid_data = handler.validate(event, user_id)
-    output(handler.run(event, user_id, valid_data))
+    pass

@@ -1,3 +1,4 @@
+from .helper.home_helper import HomeHelper
 from request_handler import RequestHandler
 from internal import validate_field, end
 from properties import UserAttr, RequestField, Constants, TableKey, TablePartition
@@ -13,18 +14,10 @@ class Delete(RequestHandler):
     @staticmethod
     def run(event: dict, user_id: str, data: dict) -> bool:
         """Run documentation TODO: stuff"""
-        home_index = event[RequestField.User.HOME_INDEX]
-        User.update(user_id, UserAttr.HOMES, home_index, "REMOVE #name[:value]")
+        home_index = event[RequestField.User.HOME]
         home_id = data[UserAttr.HOMES][home_index]
-        try:
-            table.delete_item(
-                Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id}
-            )
-        except ClientError as e:
-            error = e.response["Error"]["Code"]
-            end(error)
-            return False
-        return True
+        HomeHelper.attempt_delete(home_id)
+        return User.update(user_id, UserAttr.HOMES, home_index, "REMOVE #name[:value]")
 
     @staticmethod
     def validate(event: dict, user_id: str) -> dict:
@@ -32,7 +25,7 @@ class Delete(RequestHandler):
         user_data = User.get(user_id, UserAttr.HOMES)
         validate_field(
             event,
-            RequestField.User.HOME_INDEX,
+            RequestField.User.HOME,
             lambda value: isinstance(value, int)
             and 0 < value <= len(user_data[UserAttr.HOMES]),
             "Home delete API",
