@@ -13,7 +13,7 @@ class New(RequestHandler):
     New user is added and receive: A list of starting items and a list of biodomes for a home."""
 
     @staticmethod
-    def run(event: dict, user_id: str = None, data: Any = None) -> str:
+    def run(event: dict, user_id: Optional[str], data: Optional[Any]) -> str:
         new_id = ""
         max_attempts = 5
         while not new_id and max_attempts > 0:

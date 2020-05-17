@@ -1,6 +1,8 @@
 from typing import Optional
 
-from internal import generate_id, end
+from botocore.exceptions import ClientError
+
+from internal import generate_id, end_unless_conditional
 from properties import (
     TablePartition,
     TableKey,
@@ -57,7 +59,7 @@ class UserHelper:
         }
 
     @classmethod
-    def attempt_new(cls, name, flag) -> Optional[str]:
+    def attempt_new(cls, name: str, flag: int) -> Optional[str]:
         new_id = generate_id(UserAttr.SORT_KEY_PREFIX)
         try:
             # TODO: rework database model
@@ -67,8 +69,6 @@ class UserHelper:
                 ExpressionAttributeNames={"#id": TableKey.PARTITION},
             )
         except ClientError as e:
-            error = e.response["Error"]["Code"]
-            if error != "ConditionalCheckFailedException":
-                end("Error: " + error)  # TODO: error handling
+            end_unless_conditional(e)
             return None
         return new_id

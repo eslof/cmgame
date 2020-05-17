@@ -1,6 +1,5 @@
 import json
 from enum import Enum
-from typing import Any
 
 from properties import PacketHeader, ResponseType, ResponseField
 
@@ -16,26 +15,26 @@ class View:
         """Deserialize data using current standard format."""
         return json.loads(data)
 
-    @staticmethod
-    def response(response_type: Enum, data: dict) -> str:
+    @classmethod
+    def response(cls, response_type: Enum, data: dict) -> str:
         """Create and return a .serialize'd response of given type with given data."""
         data[PacketHeader.RESPONSE] = response_type.value
-        return View.serialize(data)
+        return cls.serialize(data)
 
-    @staticmethod
-    def generic(result: bool) -> str:
+    @classmethod
+    def generic(cls, result: bool) -> str:
         """Create and return a .serialize'd boolean response as per given result."""
-        return View.serialize(
+        return cls.serialize(
             {
                 PacketHeader.RESPONSE: ResponseType.GENERIC.value,
                 ResponseField.Generic.RESULT: result,
             }
         )
 
-    @staticmethod
-    def error(message: str) -> str:
+    @classmethod
+    def error(cls, message: str) -> str:
         """Create and return a .serialize'd error response with given message."""
-        return View.serialize(
+        return cls.serialize(
             {
                 PacketHeader.RESPONSE: ResponseType.ERROR.value,
                 ResponseField.Generic.ERROR: message,

@@ -1,4 +1,4 @@
-from typing import Type, Callable, Any
+from typing import Type, Callable, Any, Optional
 from internal import validate_request
 from request_handler import RequestHandler
 from user import User
@@ -11,7 +11,7 @@ class Route(object):
         self.output = output
 
 
-def lambda_handler(event: dict, context: Any, router: Route):
+def lambda_handler(event: dict, context: Optional[Any], router: Route):
     user_id = User.validate_id(event)
     valid_data = router.handler.validate(event, user_id)
     output = router.handler.run(event, user_id, valid_data)

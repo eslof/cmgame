@@ -1,3 +1,5 @@
+from typing import Optional, Any
+
 from request_handler import RequestHandler
 from internal import end
 from properties import QueueState, UserAttr, TablePartition, TableKey, QueueAttr
@@ -9,9 +11,7 @@ class Find(RequestHandler):
     """User requests to find an enlisted user to visit."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: dict) -> Optional[str]:
-        """Find enlistment with a recent timestamp and create a match between enlisted user and given user id."""
-        # TODO: look for enlisted other
+    def run(event: dict, user_id: str, data: Optional[Any]) -> Optional[str]:
         response = table.get_item(
             Key={TableKey.PARTITION: TablePartition.QUEUE},
             IndexName="date",
@@ -36,11 +36,12 @@ class Find(RequestHandler):
         return None
 
     @staticmethod
-    def validate(user_id: str) -> dict:
+    def validate(event: dict, user_id: Optional[str]) -> Optional[dict]:
         """Get and return queue state for given user id.
         Confirm queue state not to be already matched."""
         user_data = User.get(user_id, UserAttr.QUEUE_STATE)
         queue_state = QueueState(user_data[UserAttr.QUEUE_STATE])
         if queue_state == QueueState.MATCHED:
+            # TODO: respond with match data?
             end("Queue request API (ENLIST): Currently in a matching.")
         return user_data

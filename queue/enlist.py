@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional, Any
 
 from request_handler import RequestHandler
 from internal import end
@@ -12,12 +13,12 @@ class Enlist(RequestHandler):
     """User requests to open his home for a possible visitor."""
 
     @staticmethod
-    def run(user_data: dict, user_id: str) -> bool:
+    def run(event: dict, user_id: str, data: dict) -> Optional[Any]:
         """If an enlistment for the given user_id exists then we update its timestamp.
         If there is no enlistment for the given user_id then we add one."""
         time_now = datetime.now()
         new_id = time_now.strftime("%m-%d-%H-%M-%S") + user_id
-        list_id = user_data[UserAttr.LIST_ID] or new_id
+        list_id = data[UserAttr.LIST_ID] or new_id
 
         response = table.update_item(
             Key={TableKey.PARTITION: TablePartition.QUEUE, TableKey.SORT: list_id},
@@ -31,12 +32,10 @@ class Enlist(RequestHandler):
                 ":list_id": new_id,
             },
         )
-        User.update(user_id, UserAttr.LIST_ID, list_id)
-        # TODO: error handling
-        return True
+        return User.update(user_id, UserAttr.LIST_ID, list_id)
 
     @staticmethod
-    def validate(user_id: str) -> dict:
+    def validate(event: dict, user_id: str) -> dict:
         # TODO: check if LIST_ID is empty to determine if user is enlisted
         user_data = User.get(
             user_id=user_id, attributes=f"{UserAttr.QUEUE_STATE}, {UserAttr.LIST_ID}",

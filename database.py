@@ -1,5 +1,5 @@
 import boto3
-from botocore.exceptions import ClientError
+
 
 # TODO: create cloudfront distributed s3 bucket for config data like ws url
 def web_socket_endpoint():

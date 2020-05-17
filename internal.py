@@ -1,12 +1,10 @@
 import string
-from base64 import b64encode
+import secrets
 from enum import Enum
 from inspect import isclass
-import secrets
+from properties import Constants, PacketHeader
 from sys import exit as sys_exit
 from typing import Callable, Union, List, Type
-
-from properties import Constants, PacketHeader, ResponseType, ResponseField
 from view import View
 
 

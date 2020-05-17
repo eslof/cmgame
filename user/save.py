@@ -21,7 +21,7 @@ class Save(RequestHandler):
     """User requests to save changes made to one of the user's settings or profile."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: Any = None) -> Any:
+    def run(event: dict, user_id: str, data: Optional[Any]) -> bool:
         request = SaveRequest(event[RequestField.User.SAVE])
         attribute, value = None, None
         if request == SaveRequest.NAME:
@@ -33,7 +33,7 @@ class Save(RequestHandler):
         return User.update(user_id, attribute, value)
 
     @staticmethod
-    def validate(event: dict, user_id: str) -> None:
+    def validate(event: dict, user_id: Optional[str]) -> None:
         req = validate_request(event, SaveRequest, RequestField.User.SAVE)
         field, validation, message = None, None, None
         if req == SaveRequest.NAME:
