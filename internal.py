@@ -6,7 +6,7 @@ import secrets
 from sys import exit as sys_exit
 from typing import Callable, Union, List, Type
 
-from properties import Constants, PacketHeader
+from properties import Constants, PacketHeader, ResponseType, ResponseField
 from view import View
 
 
@@ -30,15 +30,17 @@ def assert_inheritance(target: Union[type, List[type]], base: type):
 def end(message: str = "", code: int = 0) -> None:
     """Wrapper for exit at case outcomes that are not expected by client without possible misuse or corruption."""
     if message:
-        # TODO: does logging have a place here? does this method even make sense?
-        print(View.serialize({"debug": message}))
+        View.error(message)
     sys_exit(code)
 
 
-def generate_id() -> str:
+def generate_id(prefix: str, length: int = Constants.ID_CHAR_LENGTH) -> str:
     """TODO: what's good"""
-    return "".join(
-        secrets.choice(string.ascii_letters + string.digits + "-_") for i in range(21)
+    return prefix + (
+        "".join(
+            secrets.choice(string.ascii_letters + string.digits + "-_")
+            for i in range(length - 1)
+        )
     )
 
 
