@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Optional, Any
 
 # TODO: metaclass=abc.ABCMeta ? research
 
@@ -10,10 +11,10 @@ class RequestHandler(ABC):
 
     @staticmethod
     @abstractmethod
-    def validate(*args, **kwargs):
+    def validate(event: dict, user_id: str) -> Optional[dict]:
         pass
 
     @staticmethod
     @abstractmethod
-    def run(*args, **kwargs):
+    def run(event: dict, user_data: dict, user_id: str) -> Any:
         pass

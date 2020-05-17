@@ -35,14 +35,15 @@ class Data(RequestHandler):
             ResponseField.User.NAME: user_data[UserAttr.NAME],
             ResponseField.User.FLAG: user_data[UserAttr.FLAG],
             ResponseField.User.META: user_data[UserAttr.META],
-            ResponseField.User.HOMES: {
-                key: value
-                for key, value in sorted(
-                    user_data[UserAttr.HOMES].items(), key=UserAttr.Home.HOME_ID
-                )
-                if key == HomeAttr.BIODOME or key == HomeAttr.NAME
-            },
+            ResponseField.User.HOMES: [
+                {
+                    key: value
+                    for key, value in home.items()
+                    if key != UserAttr.Home.HOME_ID
+                }
+                for home in user_data[UserAttr.HOMES]
+            ],
             ResponseField.User.INVENTORY: [
-                Item.get_template(value) for value in user_data[UserAttr.INVENTORY]
+                Item.get_template(item_id) for item_id in user_data[UserAttr.INVENTORY]
             ],
         }

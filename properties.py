@@ -7,6 +7,7 @@ from enum import Enum, unique, auto
 # TODO: a lot of stuff here, figure something out
 
 # region Base
+from typing import Union
 
 
 class Secret:
@@ -124,7 +125,7 @@ class ResponseField:
         VERSION = "version"
 
     class Home:
-        DATA = "data"
+        META = "meta"
         GRID = "grid"
         NAME = "name"
         BIODOME = "bundle"
