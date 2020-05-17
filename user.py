@@ -1,12 +1,11 @@
 from typing import Union
 from collections.abc import Iterable
+from botocore.exceptions import ClientError
 
 from database import *
-from internal import validate_field, end, generate_id
+from internal import validate_field, end
 from properties import TableKey, TablePartition, RequestField
-from properties import Seed, Constants, starting_inventory
-from properties import UserState, QueueState, UserAttr
-from encrypt import password_decrypt
+from properties import UserState, UserAttr, Constants
 
 
 class User:
@@ -21,9 +20,7 @@ class User:
             message="User authentication API",
         )
 
-        return password_decrypt(
-            token=event[RequestField.User.ID], password=Seed.USER_ID
-        )
+        return event[RequestField.User.ID]
 
     @staticmethod
     def get(user_id: str, attributes: str) -> dict:
@@ -47,7 +44,7 @@ class User:
             end("Error: " + error)  # TODO: fix some of this error handling
         else:
             if len(response["Item"]) == 0:
-                end("Unable to find user for given UUID.")
+                end("Shouldn't be possible, attribute exists...")
 
             return response["Item"]
 
@@ -74,10 +71,8 @@ class User:
                 },
             )
         except ClientError as e:
-            # error = e.response["Error"]["Code"]
-            # if error == "ConditionalCheckFailedException":
-            #    end("banned or nonexistant user?")
-            # end("Error: " + error)  # TODO: fix some of this error handling
-            return False
-
+            error = e.response["Error"]["Code"]
+            if error == "ConditionalCheckFailedException":
+                end("banned or nonexistant user?")
+            end("Error: " + error)
         return True
