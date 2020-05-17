@@ -10,9 +10,9 @@ from enum import Enum, unique, auto
 from typing import Union
 
 
-class Secret:
-    USER_ID = "something random"
-    ITEMBOX = 133769420
+class Seed:
+    USER_ID = 677983735
+    ITEMBOX = 232837927
 
 
 # endregion
@@ -29,21 +29,19 @@ starting_inventory = [
 
 
 class Constants:
-    ID_TOKEN_BYTE_COUNT = 62
+    ID_CHAR_LENGTH = 22
 
     class User:
         HOME_COUNT_MAX = 5
-        META_MAX_LENGTH = 1024
+        META_MAX_LENGTH = 99328
         STARTING_KEY_COUNT = 3
         EXPECTED_ID_LENGTH = 42
-        NAME_MAX_LENGTH = 128
+        NAME_MAX_LENGTH = 32
 
     class Home:
         SIZE = 49
-        NAME_MAX_LENGTH = 255
-
-    class Item:
-        ID_CHAR_LENGTH = 12
+        META_MAX_LENGTH = 199680
+        NAME_MAX_LENGTH = 32
 
 
 @unique
@@ -87,8 +85,8 @@ class RequestField:
 
     class User:
         META = "meta"
-        ITEM_INDEX = "item"
-        HOME_INDEX = "home"
+        ITEM = "item"
+        HOME = "home"
         SAVE = "save"
         ID = "id"
         NAME = "name"
@@ -96,7 +94,7 @@ class RequestField:
 
     class Home:
         META = "meta"
-        GRID_INDEX = "grid"
+        GRID = "grid"
         BIODOME = "biodome"
         NAME = "name"
 
@@ -109,6 +107,7 @@ class ResponseField:
         DATA = "data"
 
     class Generic:
+        ERROR = "error"
         RESULT = "results"
 
     class User:
@@ -135,6 +134,7 @@ class ResponseField:
 # TODO: figure out possible down-sides
 @unique
 class ResponseType(Enum):
+    ERROR = auto()
     WELCOME = auto()
     GENERIC = auto()
     USER_DATA = auto()
@@ -176,6 +176,8 @@ class QueueAttr:
 
 
 class UserAttr:
+    SORT_KEY_PREFIX = "U"
+
     STATE = "state"
     NAME = "name"
     FLAG = "flag"
@@ -196,6 +198,8 @@ class UserAttr:
 
 
 class HomeAttr:
+    SORT_KEY_PREFIX = "H"
+
     NAME = "name"
     BIODOME = "biodome"
     META = "meta"
