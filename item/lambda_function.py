@@ -1,10 +1,5 @@
-from enum import Enum, unique, auto
-
-from request_handler import RequestHandler
-from internal import validate_request, assert_inheritance
-from properties import UserAttr, RequestField
-from user import User
-from view import View
+from default_imports import *
+from properties import UserAttr
 
 from .place import Place
 from .update import Update

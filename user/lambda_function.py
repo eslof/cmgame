@@ -1,9 +1,4 @@
-from enum import Enum, unique, auto
-
-from internal import validate_request, RequestHandler, assert_inheritance
-from properties import PacketHeader, RequestField, ResponseType, ResponseField
-from user import User
-from view import View
+from default_imports import *
 
 from .data import Data
 from .delete import Delete

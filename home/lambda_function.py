@@ -1,11 +1,5 @@
-from enum import Enum, unique, auto
-
-from request_handler import RequestHandler
-from internal import validate_request, assert_inheritance
-from properties import ResponseField, ResponseType, HomeAttr
-from router import Router, Route
-from user import User
-from view import View
+from default_imports import *
+from properties import HomeAttr
 
 from .delete import Delete
 from .go import Go
