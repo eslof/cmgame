@@ -2,7 +2,7 @@ from typing import Optional
 
 from botocore.exceptions import ClientError
 
-from internal import generate_id, end
+from internal import generate_id, end, end_unless_conditional
 from properties import TableKey, HomeAttr, TablePartition, Constants
 from database import *
 
@@ -30,9 +30,7 @@ class HomeHelper:
                 ExpressionAttributeNames={"#id": TableKey.PARTITION},
             )
         except ClientError as e:
-            error = e.response["Error"]["Code"]
-            if error != "ConditionalCheckFailedException":
-                end("Error: " + error)  # TODO: error handling
+            end_unless_conditional(e)
             return None
         return new_id
 
@@ -46,8 +44,6 @@ class HomeHelper:
                 ExpressionAttributeNames={"#id": TableKey.SORT},
             )
         except ClientError as e:
-            error = e.response["Error"]["Code"]
-            if error != "ConditionalCheckFailedException":
-                end("Error: " + error)  # TODO: error handling
+            end_unless_conditional(e)
             return False
         return True

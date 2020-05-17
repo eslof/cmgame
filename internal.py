@@ -11,6 +11,12 @@ from view import View
 # TODO: Move some of these hard coded strings somewhere maybe
 
 
+def end_unless_conditional(e):
+    error = e.response["Error"]["Code"]
+    if e.response["Error"]["Code"] != "ConditionalCheckFailedException":
+        end(error)  # TODO: error handling
+
+
 def assert_inheritance(target: Union[type, List[type]], base: type):
     """Assert that given class, or list of classes, inherit from given base class."""
     if isinstance(target, list):
