@@ -19,6 +19,14 @@ class Secret:
 # region Game
 
 
+starting_inventory = [
+    "q1H7AD0zllObeidAEwvui",
+    "eMg5ltDhJ7Yy3jhjG6Svt",
+    "D4JlrGOb_wNdNgj16vv_d",
+    "1-Zlb-R0OGLfmqbBpSwL2",
+]
+
+
 class Constants:
     ID_TOKEN_BYTE_COUNT = 62
 
@@ -167,16 +175,17 @@ class QueueAttr:
 
 
 class UserAttr:
+    STATE = "state"
+    NAME = "name"
+    FLAG = "flag"
     META = "meta"
     CURRENT_HOME = "current_home"
-    NAME = "name"
-    STATE = "state"
-    LIST_ID = "match"
     QUEUE_STATE = "queue_state"
-    FLAG = "flag"
-    SELECTED = "selected"
+    LIST_ID = "match"
+    KEY_COUNT = "keys"
+    USED_KEY_COUNT = "used_keys"
+    INVENTORY_COUNT = "inventory_count"
     INVENTORY = "inventory"
-
     HOMES = "homes"
 
     class Home:
@@ -184,17 +193,16 @@ class UserAttr:
         HOME_ID = "home_id"
         NAME = "name"
 
-    KEY_COUNT = "key_count"
-    USED_KEY_COUNT = "used_key_count"
-    INVENTORY_COUNT = "inventory_count"
-
 
 class HomeAttr:
     NAME = "name"
     BIODOME = "biodome"
     META = "meta"
-    ITEM_META = "item_meta"
-    GRID = "item_grid"
+    GRID = "grid"
+
+    class Grid:
+        ITEM = "item"
+        META = "meta"
 
 
 # endregion

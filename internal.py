@@ -1,7 +1,8 @@
+import string
 from base64 import b64encode
 from enum import Enum
 from inspect import isclass
-from secrets import token_bytes
+import secrets
 from sys import exit as sys_exit
 from typing import Callable, Union, List, Type
 
@@ -36,7 +37,9 @@ def end(message: str = "", code: int = 0) -> None:
 
 def generate_id() -> str:
     """TODO: what's good"""
-    return b64encode(token_bytes(Constants.ID_TOKEN_BYTE_COUNT)).decode("ascii")
+    return "".join(
+        secrets.choice(string.ascii_letters + string.digits + "-_") for i in range(21)
+    )
 
 
 def validate_request(

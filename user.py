@@ -2,9 +2,31 @@ from typing import Union
 
 from database import *
 from internal import validate_field, end, generate_id
-from properties import RequestField, TableKey, TablePartition, Secret
+from item import Item
+from properties import (
+    RequestField,
+    TableKey,
+    TablePartition,
+    Secret,
+    starting_inventory,
+)
 from properties import Constants, UserState, QueueState, UserAttr
 from encrypt import password_decrypt
+
+"""
+    STATE = "state"
+    NAME = "name"
+    FLAG = "flag"
+    META = "meta"
+    CURRENT_HOME = "current_home"
+    QUEUE_STATE = "queue_state"
+    LIST_ID = "match"
+    KEY_COUNT = "keys"
+    USED_KEY_COUNT = "used_keys"
+    INVENTORY_COUNT = "inventory_count"
+    INVENTORY = "inventory"
+    HOMES = "homes"
+    """
 
 
 class User:
@@ -15,11 +37,17 @@ class User:
             TableKey.PARTITION: TablePartition.USER,
             TableKey.SORT: new_id,
             UserAttr.STATE: UserState.NEW.value,
-            UserAttr.QUEUE_STATE: QueueState.NONE.value,
-            UserAttr.INVENTORY: {"SS": []},
             UserAttr.NAME: name,
             UserAttr.FLAG: flag,
+            UserAttr.META: "{}",
+            UserAttr.CURRENT_HOME: "",
+            UserAttr.QUEUE_STATE: QueueState.NONE.value,
+            UserAttr.LIST_ID: "",
             UserAttr.KEY_COUNT: Constants.User.STARTING_KEY_COUNT,
+            UserAttr.USED_KEY_COUNT: 0,
+            UserAttr.INVENTORY: starting_inventory,
+            UserAttr.INVENTORY_COUNT: len(starting_inventory),
+            UserAttr.HOMES: [],
         }
 
     @staticmethod
@@ -64,11 +92,22 @@ class User:
             return response["Item"]
 
     @staticmethod
-    def update(user_id: str, attribute: str, value: Union[int, str, bool, set]) -> bool:
+    def add_home(user_id: str, home_id: str):
+        return User.update(
+            user_id, UserAttr.HOMES, home_id, "set #homes = list_append(#homes, :value)"
+        )
+
+    @staticmethod
+    def update(
+        user_id: str,
+        attribute: str,
+        value: Union[int, str, bool, set],
+        expression: str = "set #name = :value",
+    ) -> bool:
         try:
-            response = table.update_item(
+            table.update_item(
                 Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
-                UpdateExpression="set #name = :value",
+                UpdateExpression=expression,
                 ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
                 ExpressionAttributeValues={
                     ":value": value,

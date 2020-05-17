@@ -6,39 +6,40 @@ from properties import RequestField, TableKey, HomeAttr, UserAttr
 from properties import Secret, Constants, Biodome
 from internal import validate_field, generate_id, end
 from database import *
+from user import User
 
 
 class New(RequestHandler):
     """User requests to create a new home."""
 
     @staticmethod
-    def run(event: dict, user_id: str):
+    def run(event: dict, user_id: str, recursion_limit: int = 3):
         """TODO: this entire thing needs a rework: there need be a template for user item
         TODO: should it be recursive or is there a better way?"""
-        user_id = user_id
-        name = event[RequestField.Home.NAME]
-        biodome = event[RequestField.Home.BIODOME]
-        new_id = generate_id()
+        home_id = generate_id()
+        home = {
+            TableKey.PARTITION: TablePartition.HOME,
+            TableKey.SORT: home_id,
+            HomeAttr.NAME: event[RequestField.Home.NAME],
+            HomeAttr.BIODOME: event[RequestField.Home.BIODOME],
+            HomeAttr.META: "",
+            HomeAttr.GRID: [{HomeAttr.Grid.ITEM: 0, HomeAttr.Grid.META: ""}]
+            * Constants.Home.SIZE,
+        }
         try:
             # TODO: rework database model template.
             response = table.put_item(
-                Item={
-                    TableKey.PARTITION: {"S": new_id},
-                    HomeAttr.NAME: {"S": name},
-                    HomeAttr.BIODOME: {"N": biodome},
-                    HomeAttr.GRID: {"M": {}},
-                    HomeAttr.ITEM_META: {"M": {}},
-                },
+                Item=home,
                 ConditionExpression="attribute_not_exists(#id)",
-                ExpressionAttributeNames={"#id": {"S": TableKey.PARTITION}},
+                ExpressionAttributeNames={"#id": TableKey.PARTITION},
             )
         except ClientError as e:
             error = e.response["Error"]["Code"]  # TODO: error handling
             if error == "ConditionalCheckFailedException":
-                return New.run(user_id=user_id, name=name, biodome=biodome)
+                recursion_limit -= 1
+                return New.run(event, user_id, recursion_limit)
             end(error)
-        else:
-            return b64encode(password_encrypt(new_id, Secret.USER_ID)).decode("ascii")
+        User.add_home(user_id, home_id)
 
     @staticmethod
     def validate(event: dict, user_data: dict) -> None:
