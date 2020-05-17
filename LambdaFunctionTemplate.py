@@ -1,4 +1,5 @@
 from default_imports import *
+from router import *
 #set($request = "")
 #set($sc = ${StringUtils.removeUnderScores($service)})
 #set($ns = $requests.replace(" ", ""))
@@ -31,7 +32,7 @@ class ${sc}Request(Enum):
         ${request.upper} = auto()
 #end
 
-
+# TODO: Update route output (Callable/default=View.generic)
 routes = {
 #foreach($request in $rm)
     ${sc}Request.${request.upper}: Route(${request.camel}, View.generic),
@@ -39,16 +40,6 @@ routes = {
 }
 
 
+@route(routes, ${sc}Request)
 def lambda_handler(event, context):
-    """Return of 'handler.validate()' is passed to 'handler.run()'.
-    Finally the return value of 'handler.run()' is passed to associated 'route.output()'."""
-
-    user_id = User.validate_id(event)
-    req = validate_request(event, ${sc}Request)
-
-    with routes[req] as route:
-        handler = route.handler
-        output = route.output
-
-    valid_data = handler.validate(event, user_id)
-    output(handler.run(event, user_id, valid_data))
+    pass
