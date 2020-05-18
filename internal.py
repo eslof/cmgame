@@ -38,7 +38,7 @@ def end(message: str = "", code: int = 0) -> None:
     sys_exit(code)
 
 
-def generate_id(prefix: str, length: int = Constants.ID_CHAR_LENGTH) -> str:
+def generate_id(prefix: str, length: int = Constants.ID_GEN_LENGTH) -> str:
     """TODO: what's good"""
     return prefix + (
         "".join(

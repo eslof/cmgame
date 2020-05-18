@@ -1,13 +1,8 @@
-# import boto3
-# from botocore.exceptions import ClientError
-#  dynamodb = boto3.resource('dynamodb')
-#  table = dynamodb.Table('staff')
 from enum import Enum, unique, auto
 
 # TODO: a lot of stuff here, figure something out
 
 # region Base
-from typing import Union
 
 
 class Seed:
@@ -29,7 +24,9 @@ starting_inventory = [
 
 
 class Constants:
-    ID_CHAR_LENGTH = 22
+    ID_GEN_LENGTH = 22
+    # Certain partitions have 1 char prefix added (U for User, H for Home)
+    EXPECTED_ID_LEN = ID_GEN_LENGTH + 1
 
     class User:
         HOME_COUNT_MAX = 5
