@@ -1,19 +1,39 @@
 import json
+from json import JSONDecodeError
 from enum import Enum
 
+from internal import end
 from properties import PacketHeader, ResponseType, ResponseField
 
 
 class View:
-    @staticmethod
-    def serialize(data: dict) -> str:
-        """Serialize data using current standard format."""
-        return json.dumps(data)
+    """todo: look into how base64 would fit in here"""
 
-    @staticmethod
-    def deserialize(data: str) -> dict:
+    encode = json.dumps
+    decode = json.loads
+    decode_error = JSONDecodeError
+    return_type = dict
+
+    @classmethod
+    def serialize(cls, data: dict) -> str:
+        """Serialize data using current standard format."""
+        return cls.encode(data)
+
+    @classmethod
+    def try_deserialize(cls, data: str) -> return_type:
+        """Try to return deserialized data using current standard format and exit on except."""
+        try:
+            if not data:
+                raise cls.decode_error
+            return json.loads(data)
+        except cls.decode_error as e:
+            end(e.msg)
+        return cls.decode(data)
+
+    @classmethod
+    def deserialize(cls, data: str) -> return_type:
         """Deserialize data using current standard format."""
-        return json.loads(data)
+        return cls.decode(data)
 
     @classmethod
     def response(cls, response_type: Enum, data: dict) -> str:
