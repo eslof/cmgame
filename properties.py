@@ -24,6 +24,7 @@ starting_inventory = [
 
 
 class Constants:
+    LAMBDA_HANDLER_NAME = "lambda_handler"
     ID_GEN_LENGTH = 22
     # Certain partitions have 1 char prefix added (U for User, H for Home)
     EXPECTED_ID_LEN = ID_GEN_LENGTH + 1
