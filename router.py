@@ -1,6 +1,5 @@
 from typing import Type, Callable, Any, Optional
 from internal import validate_request
-from properties import RequestField
 from request_handler import RequestHandler
 from user import User
 from enum import Enum
@@ -22,7 +21,7 @@ def lambda_handler(event: dict, context: Optional[Any], route: Route):
         user_id = User.validate_id(event)
     valid_data = route.handler.validate(event, user_id)
     output = route.handler.run(event, user_id, valid_data or None)
-    route.output(output)
+    return route.output(output)
 
 
 def route(routers: dict, request_enum: Type[Enum]):
