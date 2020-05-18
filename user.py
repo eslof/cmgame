@@ -2,10 +2,9 @@ from typing import Union
 from collections.abc import Iterable
 from botocore.exceptions import ClientError
 
-from database import table
+from database import table, TableKey, TablePartition, UserAttr
 from internal import validate_field, end
-from properties import TableKey, TablePartition, RequestField
-from properties import UserState, UserAttr, Constants
+from properties import RequestField, UserState, Constants
 
 
 class User:
