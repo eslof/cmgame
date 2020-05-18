@@ -30,6 +30,7 @@ routes = {
         output=lambda value: View.response(
             response_type=ResponseType.WELCOME, data={ResponseField.User.ID: value},
         ),
+        require_id=False,
     ),
     UserRequest.SAVE: Route(Save, View.generic),
 }

@@ -1,21 +1,27 @@
 from typing import Type, Callable, Any, Optional
 from internal import validate_request
+from properties import RequestField
 from request_handler import RequestHandler
 from user import User
 from enum import Enum
 
 
 class Route(object):
-    def __init__(self, handler: Type[RequestHandler], output: Callable):
+    def __init__(
+        self, handler: Type[RequestHandler], output: Callable, require_id: bool = False
+    ):
         self.handler = handler
         self.output = output
+        self.require_id = require_id
 
 
-def lambda_handler(event: dict, context: Optional[Any], router: Route):
-    user_id = User.validate_id(event)
-    valid_data = router.handler.validate(event, user_id)
-    output = router.handler.run(event, user_id, valid_data)
-    router.output(output)
+def lambda_handler(event: dict, context: Optional[Any], route: Route):
+    user_id = None
+    if route.require_id:
+        user_id = User.validate_id(event)
+    valid_data = route.handler.validate(event, user_id)
+    output = route.handler.run(event, user_id, valid_data or None)
+    route.output(output)
 
 
 def route(routers: dict, request_enum: Type[Enum]):
