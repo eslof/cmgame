@@ -57,7 +57,10 @@ def assert_route(routes: dict, enum: Enum):
 
 
 # todo: move to unit test (?)
-def assert_routing(routes: dict, request_enum: type(Enum)):
+def assert_routing(f_name: str, routes: dict, request_enum: type(Enum)):
+    assert (
+        f_name == Constants.LAMBDA_HANDLER_NAME
+    ), f"Invalid function: '{f.__name__}' for '{request_enum}', should be '{Constants.LAMBDA_HANDLER_NAME}'."
     assert routes and type(routes) is dict, f"Invalid routes dict: '{routes}'."
     assert (
         request_enum and isclass(request_enum) and len(request_enum)
@@ -77,12 +80,9 @@ def route(routes: dict, request_enum: type(Enum)):
             # region Server (todo: move to unit test)
             if __debug__:
                 assert (
-                    f.__name__ == Constants.LAMBDA_HANDLER_NAME
-                ), f"Route decorator misuse on '{f.__name__}' for '{request_enum}', should be '{Constants.LAMBDA_HANDLER_NAME}'."
-                assert (
                     len(args) > 0 and args[0] and type(args[0]) is dict
                 ), f"Missing argument for '{Constants.LAMBDA_HANDLER_NAME}' in '{request_enum}', should be '{Constants.LAMBDA_HANDLER_NAME}(event, context)'."
-                assert_routing(routes, request_enum)
+                assert_routing(f.__name__, routes, request_enum)
             # endregion
 
             # region Client authoritive (keep this)
