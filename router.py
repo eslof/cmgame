@@ -7,7 +7,7 @@ from user import User
 from enum import Enum
 
 
-class Route(object):
+class Route:
     def __init__(
         self, handler: type(RequestHandler), output: Callable, require_id: bool = False
     ):
@@ -37,6 +37,7 @@ def route(routers: dict, request_enum: type(Enum)):
             assert (
                 len(args) > 0 and args[0] and type(args[0]) is dict
             ), f"Missing argument in '{Constants.LAMBDA_HANDLER_NAME}' in '{request_enum}', should be '{Constants.LAMBDA_HANDLER_NAME}(event, context)'."
+            assert isclass(request_enum), ""
             # endregion
 
             # region Client
@@ -44,12 +45,17 @@ def route(routers: dict, request_enum: type(Enum)):
             # endregion
 
             # region Server (todo: move to unit test)
-            assert req in routers, f"Request '{req}' not present in routers dict."
+            assert (
+                routers and type(routers) is dict and req in routers
+            ), f"Request '{req}' not present in routers dict."
             _route = routers[req]
 
-            assert isclass(_route) and isinstance(
-                _route, Route
-            ), f"Value for {req} in routers dict not of class Route"
+            assert (
+                _route
+                and isclass(type(_route))
+                and not isclass(_route)
+                and isinstance(_route, Route)
+            ), f"Value for {req} in routers dict not of class Route."
             # endregion
 
             args = args + (_route,)
