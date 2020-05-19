@@ -1,3 +1,5 @@
+from botocore.exceptions import ClientError
+
 from database import table, TableKey, TablePartition, UserAttr, HomeAttr
 from internal import validate_meta
 from properties import RequestField
@@ -40,6 +42,6 @@ class Save(RequestHandler):
         """Confirm that home meta-data follows correct format and TODO: apply size limitation in case of misuse."""
         user_data = User.get(user_id, UserAttr.CURRENT_HOME)
         validate_meta(
-            target=event, field=RequestField.Home.META, message="Home Save API"
+            target=event, field=RequestField.Home.META, message="Home Save API (META)"
         )
         return user_data

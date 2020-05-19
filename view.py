@@ -8,7 +8,7 @@ from properties import PacketHeader, ResponseType, ResponseField
 
 
 class View:
-    """todo: look into how base64 would fit in here"""
+    """todo: look into how base64/binary oc would fit in here"""
 
     encode = json.dumps
     decode = json.loads
