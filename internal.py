@@ -20,16 +20,16 @@ def end_unless_conditional(e):
 def assert_inheritance(target: Union[type, List[type]], base: type):
     """Assert that given class, or list of classes, inherit from given base class.
     todo: current implementation of these I guess could be moved to unit testing"""
-    if isinstance(target, list):
+    if type(target) is list:
         for obj in target:
             if not isclass(obj):
                 end(f"Misuse of assert_inheritance (Not a class)")
-            elif not issubclass(obj, base):
-                end(f"Architecture broken ({target} != {base})")
+            elif not issubclass(obj, base) or obj is base or type(target) is base:
+                end(f"Architecture broken ({obj} != {base})")
     elif not isclass(target):
         end(f"Misuse of assert_inheritance (Not a class)")
-    elif not issubclass(target, base):
-        end(f"Architecture broken ({target} != {base})")
+    elif not issubclass(target, base) or target is base or type(target) is base:
+        end(f"Architecture broken ({target} should extend {base})")
 
 
 def end(message: str = "", code: int = 0) -> None:
@@ -56,7 +56,7 @@ def validate_request(
     validate_field(
         target=target,
         field=field,
-        validation=lambda value: isinstance(value, int)
+        validation=lambda value: type(value) is int
         and value in request_enum._value2member_map_,
         message=f"Request API ({request_enum.__name__})",
     )
@@ -78,7 +78,7 @@ def validate_meta(target: dict, field: str, message: str = "") -> None:
     validate_field(
         target=target,
         field=field,
-        validation=lambda value: isinstance(value, str) and value,
+        validation=lambda value: value and type(value) is str,
         message=message,
     )
     try:

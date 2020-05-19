@@ -40,21 +40,20 @@ class Save(RequestHandler):
         if req == SaveRequest.NAME:
             field = RequestField.User.NAME
             validation = (
-                lambda value: isinstance(value, str)
+                lambda value: type(value) is str
                 and len(value) < Constants.User.NAME_MAX_LENGTH
             )
             message = "User Save API (NAME)"
         elif req == SaveRequest.FLAG:
             field = RequestField.User.FLAG
             validation = (
-                lambda value: isinstance(value, int)
-                and value in Country._value2member_map_
+                lambda value: type(value) is int and value in Country._value2member_map_
             )
             message = "User Save API (FLAG)"
         elif req == SaveRequest.META:
             field = RequestField.User.META
             validation = (
-                lambda value: isinstance(value, str)
+                lambda value: type(value) is str
                 and len(value) < Constants.User.META_MAX_LENGTH
             )
             message = "User Save API (META)"

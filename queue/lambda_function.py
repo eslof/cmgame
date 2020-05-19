@@ -16,7 +16,14 @@ class QueueRequest(Enum):
 
 
 routes = {
-    QueueRequest.ENLIST: Route(Enlist, View.generic),
+    QueueRequest.ENLIST: Route(
+        handler=Enlist,
+        output=lambda value: View.response(
+            response_type=ResponseType.QUEUE, data={ResponseField.Queue.MATCH: value},
+        )
+        if not type(value) is bool
+        else View.generic(value),
+    ),
     QueueRequest.FIND: Route(
         handler=Find,
         output=lambda value: View.response(

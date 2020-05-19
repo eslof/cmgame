@@ -54,14 +54,14 @@ class Place(RequestHandler):
         validate_field(
             target=event,
             field=RequestField.User.ITEM,
-            validation=lambda value: isinstance(value, int)
+            validation=lambda value: type(value) is int
             and 0 < value <= inventory_count,
             message="Item Place API (ITEM_INDEX)",
         )
         validate_field(
             target=event,
             field=RequestField.Home.GRID,
-            validation=lambda value: isinstance(value, int)
+            validation=lambda value: type(value) is int
             and 0 < value <= Constants.Home.SIZE,
             message="Item Place API (GRID)",
         )

@@ -5,7 +5,6 @@ from properties import Constants
 from request_handler import RequestHandler
 from user import User
 from enum import Enum
-from view import View
 
 
 class Route(object):
@@ -48,7 +47,7 @@ def route(routers: dict, request_enum: type(Enum)):
             assert req in routers, f"Request '{req}' not present in routers dict."
             _route = routers[req]
 
-            assert isclass(_route) and issubclass(
+            assert isclass(_route) and isinstance(
                 _route, Route
             ), f"Value for {req} in routers dict not of class Route"
             # endregion

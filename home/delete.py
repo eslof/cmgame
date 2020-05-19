@@ -26,7 +26,7 @@ class Delete(RequestHandler):
         validate_field(
             event,
             RequestField.User.HOME,
-            lambda value: isinstance(value, int)
+            lambda value: type(value) is int
             and 0 < value <= len(user_data[UserAttr.HOMES]),
             "Home delete API",
         )

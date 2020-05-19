@@ -1,6 +1,7 @@
 import json
 from json import JSONDecodeError
 from enum import Enum
+from typing import Optional
 
 from internal import end
 from properties import PacketHeader, ResponseType, ResponseField
@@ -43,12 +44,12 @@ class View:
         return cls.serialize(data)
 
     @classmethod
-    def generic(cls, result: bool) -> str:
+    def generic(cls, result: Optional[bool]) -> str:
         """Create and return a .serialize'd boolean response as per given result."""
         return cls.serialize(
             {
                 PacketHeader.RESPONSE: ResponseType.GENERIC.value,
-                ResponseField.Generic.RESULT: result,
+                ResponseField.Generic.RESULT: False if result is None else result,
             }
         )
 

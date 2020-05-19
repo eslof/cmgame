@@ -45,7 +45,7 @@ class Update(RequestHandler):
         validate_field(
             target=event,
             field=RequestField.Home.GRID,
-            validation=lambda value: isinstance(value, int)
+            validation=lambda value: type(value) is int
             and 0 < value <= Constants.Home.SIZE,
             message="Item Update API (GRID)",
         )

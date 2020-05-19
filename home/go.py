@@ -47,7 +47,7 @@ class Go(RequestHandler):
         validate_field(
             target=event,
             field=RequestField.User.HOME,
-            validation=lambda value: isinstance(value, int) and 0 < value <= home_count,
+            validation=lambda value: type(value) is int and 0 < value <= home_count,
             message="Home select API",
         )
         return user_data

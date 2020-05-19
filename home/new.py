@@ -39,14 +39,14 @@ class New(RequestHandler):
         validate_field(
             target=event,
             field=RequestField.Home.NAME,
-            validation=lambda value: isinstance(value, str)
+            validation=lambda value: type(value) is str
             and 0 < len(value) <= Constants.Home.NAME_MAX_LENGTH,
             message="Home Create API (NAME)",
         )
         validate_field(
             target=event,
             field=RequestField.Home.BIODOME,
-            validation=lambda value: isinstance(value, int)
+            validation=lambda value: type(value) is int
             and value in Biodome._value2member_map_,
             message="Home Create API (BIODOME)",
         )

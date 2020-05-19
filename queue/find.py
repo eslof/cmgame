@@ -1,4 +1,4 @@
-from typing import Optional, Any
+from typing import Optional, Any, Union
 
 from database import *
 from internal import end
@@ -11,10 +11,12 @@ class Find(RequestHandler):
     """User requests to find an enlisted user to visit."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: Optional[Any]) -> Optional[str]:
+    def run(event: dict, user_id: str, data: dict) -> Union[str, bool]:
+        queue_state = QueueState(data[UserAttr.QUEUE_STATE])
+        if queue_state == QueueState.MATCHED:
+            return web_socket_endpoint()["address"]
         response = table.get_item(
             Key={TableKey.PARTITION: TablePartition.QUEUE},
-            IndexName="date",
             # TODO: condition expression: state != matched
             ConditionExpression="#state <> :matched AND #enlisted_id <> :finder_id",
             ExpressionAttributeNames={
@@ -32,16 +34,13 @@ class Find(RequestHandler):
         if len(response["Item"] > 0):
             # TODO: update listing's state to pending, and prompt for accept by finder
             # TODO: then as the enlisters code comes to update its enlistment we look for this
+
             return web_socket_endpoint()["address"]
-        return None
+        return False
 
     @staticmethod
-    def validate(event: dict, user_id: Optional[str]) -> Optional[dict]:
+    def validate(event: dict, user_id: Optional[str]) -> dict:
         """Get and return queue state for given user id.
         Confirm queue state not to be already matched."""
         user_data = User.get(user_id, UserAttr.QUEUE_STATE)
-        queue_state = QueueState(user_data[UserAttr.QUEUE_STATE])
-        if queue_state == QueueState.MATCHED:
-            # TODO: respond with match data?
-            end("Queue request API (ENLIST): Currently in a matching.")
         return user_data

@@ -32,14 +32,14 @@ class New(RequestHandler):
         validate_field(
             target=event,
             field=RequestField.User.NAME,
-            validation=lambda value: isinstance(value, str)
+            validation=lambda value: type(value) is str
             and 0 < len(value) < Constants.User.NAME_MAX_LENGTH,
             message="User New API (NAME)",
         )
         validate_field(
             target=event,
             field=RequestField.User.FLAG,
-            validation=lambda value: isinstance(value, int)
+            validation=lambda value: type(value) is int
             and value in Country._value2member_map_,
             message="User New API (FLAG)",
         )

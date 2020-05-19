@@ -14,7 +14,7 @@ class User:
         validate_field(
             target=event,
             field=RequestField.User.ID,
-            validation=lambda value: isinstance(value, str)
+            validation=lambda value: type(value) is str
             and len(value) == Constants.EXPECTED_ID_LEN,
             message="User authentication API",
         )

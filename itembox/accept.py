@@ -50,7 +50,7 @@ class Accept(RequestHandler):
         validate_field(
             target=event,
             field=RequestField.ItemBox.CHOICE,
-            validation=lambda value: isinstance(value, int) and 1 <= value <= 3,
+            validation=lambda value: type(value) is int and 1 <= value <= 3,
             message="ItemBox Accept API",
         )
         if user_data[UserAttr.KEY_COUNT] <= 0:
