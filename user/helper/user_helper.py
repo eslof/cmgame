@@ -21,6 +21,13 @@ class UserHelper:
         )
 
     @staticmethod
+    def template_home(name: str, biodome: int):
+        return {
+            ResponseField.Home.NAME: name,
+            ResponseField.Home.BIODOME: biodome,
+        }
+
+    @staticmethod
     def template_welcome(user_data: dict, homes: list, inventory: list):
         return {
             ResponseField.User.NAME: user_data[UserAttr.NAME],
@@ -48,6 +55,7 @@ class UserHelper:
             UserAttr.INVENTORY: starting_inventory,
             UserAttr.INVENTORY_COUNT: len(starting_inventory),
             UserAttr.HOMES: [],
+            UserAttr.HOME_COUNT: 0,
         }
 
     @classmethod

@@ -53,6 +53,7 @@ class UserAttr:
     USED_KEY_COUNT = "used_keys"
     INVENTORY_COUNT = "inventory_count"
     INVENTORY = "inventory"
+    HOME_COUNT = "home_count"
     HOMES = "homes"
 
     class Home:

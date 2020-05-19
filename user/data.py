@@ -13,10 +13,9 @@ class Data(RequestHandler):
     @staticmethod
     def run(event: dict, user_id: str, data: dict) -> dict:
         homes = [
-            {
-                ResponseField.Home.NAME: home[UserAttr.Home.NAME],
-                ResponseField.Home.BIODOME: home[UserAttr.Home.BIODOME],
-            }
+            UserHelper.template_home(
+                home[UserAttr.Home.NAME], home[UserAttr.Home.BIODOME]
+            )
             for home in data[UserAttr.HOMES]
         ]
         inventory = [ItemHelper.template_inv(item) for item in data[UserAttr.INVENTORY]]

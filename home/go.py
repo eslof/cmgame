@@ -1,3 +1,5 @@
+from botocore.exceptions import ClientError
+
 from database import table, TableKey, TablePartition, UserAttr, HomeAttr
 from internal import validate_field, end
 from properties import RequestField
@@ -26,7 +28,7 @@ class Go(RequestHandler):
         except ClientError as e:
             end(e.response["Error"]["Message"])  # TODO: error-handling
             # this avoids complains about unassigned reference to response return var
-            return []
+            return {}
         else:
             if "Item" not in home_data or len(home_data["Item"]) < 1:
                 # TODO: figure this out

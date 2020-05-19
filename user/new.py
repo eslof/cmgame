@@ -28,7 +28,7 @@ class New(RequestHandler):
         return new_id
 
     @staticmethod
-    def validate(event: dict, user_id: str = None) -> None:
+    def validate(event: dict, user_id: Optional[str]) -> None:
         validate_field(
             target=event,
             field=RequestField.User.NAME,
