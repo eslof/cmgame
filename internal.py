@@ -4,7 +4,7 @@ from enum import Enum
 from inspect import isclass
 from properties import Constants, PacketHeader
 from sys import exit as sys_exit
-from typing import Callable, Union, List
+from typing import Callable, Union, List, Any
 
 from request_handler import RequestHandler
 from router import Route
@@ -20,37 +20,38 @@ def end_unless_conditional(e):
         end(error)  # TODO: error handling
 
 
-def validate_routing(routes: dict, request_enum: type(Enum)):
+def validate_routing(_routes: dict, request_enum: type(Enum)):
     for enum in request_enum:
-        assert enum in routes, f"{enum} not represented in routes dict."
-        assert routes[
+        assert enum in _routes, f"{enum} not represented in routes dict."
+        assert _routes[
             enum
         ], f"{enum} value in routes dict missing, should be Route object."
-        assert_inheritance(routes[enum], Route)
-        assert_inheritance(routes[enum].handler, RequestHandler)
-        assert type(routes[enum].output) is Callable
-    for enum, route in routes:
+        assert isinstance(_routes[enum], Route)
+        assert_inheritance(_routes[enum].handler, RequestHandler)
+        assert callable(_routes[enum].output)
+    for enum in _routes:
         assert (
             enum in request_enum
         ), f"{enum} in routes dict not present in {request_enum}."
-        assert_inheritance(route, Route)
-        assert_inheritance(route.handler, RequestHandler)
-        assert type(route.output) is Callable
+        assert _routes[enum]
+        assert isinstance(_routes[enum], Route)
+        assert_inheritance(_routes[enum].handler, RequestHandler)
+        assert callable(_routes[enum].output)
 
 
 def assert_inheritance(target: Union[type, List[type]], base: type):
     """Assert that given class, or list of classes, inherit from given base class.
     todo: current implementation of these I guess could be moved to unit testing"""
     if not isclass(base):
-        end(f"Failed assert_inheritance: {base} is not a class")
+        end(f"Failed assert_inheritance: {base} is not a class type (base).")
     if type(target) is list:
         for obj in target:
-            if not isclass(obj):
-                end(f"Failed assert_inheritance: {obj} is not a class.")
+            if not isclass(type(obj)):
+                end(f"Failed assert_inheritance: {obj} is not an instance of a class.")
             elif not issubclass(obj, base) or obj is base or type(target) is base:
                 end(f"Failed assert_inheritance: {obj} does not inherit from {base}.")
-    elif not isclass(target):
-        end(f"Failed assert_inheritance: {target} is not a class.")
+    elif not isclass(type(target)):
+        end(f"Failed assert_inheritance: {target} is not an instance of a class.")
     elif not issubclass(target, base) or target is base or type(target) is base:
         end(f"Failed assert_inheritance: {target} does not inherit from {base}.")
 
@@ -87,7 +88,7 @@ def validate_request(
 
 
 def validate_field(
-    target: dict, field: str, validation: Callable, message: str = ""
+    target: dict, field: str, validation: Callable[[Any], bool], message: str = ""
 ) -> None:
     """Confirm that the given field exists in target and perform given validation on its content."""
     if not hasattr(target, field) and field not in target:
