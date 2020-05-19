@@ -20,7 +20,9 @@ class Go(RequestHandler):
             home_data = table.get_item(
                 Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
                 ProjectionExpression="#GRID, #META",
+                ConditionExpression="attribute_exists(#id)",
                 ExpressionAttributeNames={
+                    "#ID": TableKey.SORT,
                     "#GRID": HomeAttr.GRID,
                     "#META": HomeAttr.META,
                 },
