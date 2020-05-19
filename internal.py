@@ -16,23 +16,6 @@ def end_unless_conditional(e):
         end(error)  # TODO: error handling
 
 
-def assert_inheritance(target: Union[type, List[type]], base: type):
-    """Assert that given class, or list of classes, inherit from given base class.
-    todo: current implementation of these I guess could be moved to unit testing"""
-    if not isclass(base):
-        end(f"Failed assert_inheritance: {base} is not a class type (base).")
-    if type(target) is list:
-        for obj in target:
-            if not isclass(type(obj)):
-                end(f"Failed assert_inheritance: {obj} is not an instance of a class.")
-            elif not issubclass(obj, base) or obj is base or type(target) is base:
-                end(f"Failed assert_inheritance: {obj} does not inherit from {base}.")
-    elif not isclass(type(target)):
-        end(f"Failed assert_inheritance: {target} is not an instance of a class.")
-    elif not issubclass(target, base) or target is base or type(target) is base:
-        end(f"Failed assert_inheritance: {target} does not inherit from {base}.")
-
-
 def end(message: str = "", code: int = 0) -> None:
     """Wrapper for exit at case outcomes that are not expected by client without possible misuse or corruption."""
     if message:
