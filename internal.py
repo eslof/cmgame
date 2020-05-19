@@ -4,7 +4,7 @@ from enum import Enum
 from inspect import isclass
 from properties import Constants, PacketHeader
 from sys import exit as sys_exit
-from typing import Callable, Union, List, Type
+from typing import Callable, Union, List
 from view import View
 
 
@@ -49,7 +49,7 @@ def generate_id(prefix: str, length: int = Constants.ID_GEN_LENGTH) -> str:
 
 
 def validate_request(
-    target: dict, request_enum: Type[Enum], field: str = PacketHeader.REQUEST
+    target: dict, request_enum: type(Enum), field: str = PacketHeader.REQUEST
 ) -> Enum:
     """validate_field wrapper for given enum used for base requests in all lambda_function.py files."""
     validate_field(

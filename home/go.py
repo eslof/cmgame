@@ -9,10 +9,10 @@ class Go(RequestHandler):
     """User requests to be moved to one of the user's own homes."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: dict) -> dict:
+    def run(body: dict, user_id: str, data: dict) -> dict:
         """Set selected home of given user id to given home id.
          Get and return grid and associated meta-data for given home id."""
-        home_id = data[UserAttr.HOMES][event[RequestField.User.HOME]]
+        home_id = data[UserAttr.HOMES][body[RequestField.User.HOME]]
         try:
             # TODO: rework database model also dont forget to get home meta data
             home_data = table.get_item(
@@ -37,13 +37,13 @@ class Go(RequestHandler):
         return home_data["Item"]
 
     @staticmethod
-    def validate(event: dict, user_id: str) -> dict:
+    def validate(body: dict, user_id: str) -> dict:
         """Confirm requested index to be in range of user's home count."""
         # TODO: possibly batch write update_item to set current home with a condition?
         user_data = User.get(user_id, UserAttr.HOMES)
         home_count = len(user_data[UserAttr.HOMES])
         validate_field(
-            target=event,
+            target=body,
             field=RequestField.User.HOME,
             validation=lambda value: isinstance(value, int) and 0 < value <= home_count,
             message="Home select API",

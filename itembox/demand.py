@@ -10,7 +10,7 @@ class Demand(RequestHandler):
     """User demands an itembox, this is the part where we sell our souls for money."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: dict) -> list:
+    def run(body: dict, user_id: str, data: dict) -> list:
         """Produce a count of items not already owned for the user to choose between."""
         inventory = data[UserAttr.INVENTORY]
         seed = ItemHelper.itembox_seed(
@@ -19,7 +19,7 @@ class Demand(RequestHandler):
         return ItemHelper.itembox(3, seed, inventory)
 
     @staticmethod
-    def validate(event: dict, user_id: str) -> dict:
+    def validate(body: dict, user_id: str) -> dict:
         """Confirm that the user has the amount of keys needed for an itembox."""
         user_data = User.get(
             user_id=user_id,

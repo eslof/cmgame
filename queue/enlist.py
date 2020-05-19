@@ -12,7 +12,7 @@ class Enlist(RequestHandler):
     """User requests to open his home for a possible visitor."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: dict) -> Optional[Any]:
+    def run(body: dict, user_id: str, data: dict) -> Optional[Any]:
         """If an enlistment for the given user_id exists then we update its timestamp.
         If there is no enlistment for the given user_id then we add one."""
         time_now = datetime.now()
@@ -34,7 +34,7 @@ class Enlist(RequestHandler):
         return User.update(user_id, UserAttr.LIST_ID, list_id)
 
     @staticmethod
-    def validate(event: dict, user_id: str) -> dict:
+    def validate(body: dict, user_id: str) -> dict:
         # TODO: check if LIST_ID is empty to determine if user is enlisted
         user_data = User.get(
             user_id=user_id, attributes=f"{UserAttr.QUEUE_STATE}, {UserAttr.LIST_ID}",

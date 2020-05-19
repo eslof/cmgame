@@ -9,11 +9,11 @@ class Update(RequestHandler):
     """User requests to update the meta-data of an item in the user's selected home."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: dict) -> bool:
+    def run(body: dict, user_id: str, data: dict) -> bool:
         """Sets given item meta-data at requested grid index for the given home id"""
         home_id = (data[UserAttr.CURRENT_HOME],)
-        grid_index = (event[RequestField.Home.GRID],)
-        item_meta = event[RequestField.Item.META]
+        grid_index = (body[RequestField.Home.GRID],)
+        item_meta = body[RequestField.Item.META]
         try:
             # TODO: rework database model
             response = table.update_item(
@@ -38,20 +38,18 @@ class Update(RequestHandler):
         return True
 
     @staticmethod
-    def validate(event: dict, user_id: str) -> dict:
+    def validate(body: dict, user_id: str) -> dict:
         """Confirm target grid index to be in range of home size.
         Confirm that item meta-data follows correct format and TODO: apply size limitation in case of misuse."""
         user_data = User.get(user_id, UserAttr.CURRENT_HOME)
         validate_field(
-            target=event,
+            target=body,
             field=RequestField.Home.GRID,
             validation=lambda value: isinstance(value, int)
             and 0 < value <= Constants.Home.SIZE,
             message="Item Update API (GRID)",
         )
         validate_meta(
-            target=event,
-            field=RequestField.Item.META,
-            message="Item Update API (META)",
+            target=body, field=RequestField.Item.META, message="Item Update API (META)",
         )
         return user_data

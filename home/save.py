@@ -9,10 +9,10 @@ class Save(RequestHandler):
     """User requests to save meta data of the user's selected home."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: dict) -> bool:
+    def run(body: dict, user_id: str, data: dict) -> bool:
         """Set meta data for given home id."""
         home_id = data[UserAttr.CURRENT_HOME]
-        meta_data = event[RequestField.Home.META]
+        meta_data = body[RequestField.Home.META]
         try:
             # TODO: rework database model
             response = table.update_item(
@@ -36,10 +36,10 @@ class Save(RequestHandler):
             return True
 
     @staticmethod
-    def validate(event: dict, user_id: str) -> dict:
+    def validate(body: dict, user_id: str) -> dict:
         """Confirm that home meta-data follows correct format and TODO: apply size limitation in case of misuse."""
         user_data = User.get(user_id, UserAttr.CURRENT_HOME)
         validate_meta(
-            target=event, field=RequestField.Home.META, message="Home Save API"
+            target=body, field=RequestField.Home.META, message="Home Save API"
         )
         return user_data

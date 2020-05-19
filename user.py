@@ -9,17 +9,17 @@ from properties import RequestField, UserState, Constants
 
 class User:
     @staticmethod
-    def validate_id(event: dict) -> str:
+    def validate_id(body: dict) -> str:
         """TODO: user authentication"""
         validate_field(
-            target=event,
+            target=body,
             field=RequestField.User.ID,
             validation=lambda value: isinstance(value, str)
             and len(value) == Constants.EXPECTED_ID_LEN,
             message="User authentication API",
         )
 
-        return event[RequestField.User.ID]
+        return body[RequestField.User.ID]
 
     @staticmethod
     def get(user_id: str, attributes: str) -> dict:

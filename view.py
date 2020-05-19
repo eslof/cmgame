@@ -12,7 +12,7 @@ class View:
     encode = json.dumps
     decode = json.loads
     decode_error = JSONDecodeError
-    return_type = dict
+    type = dict
     valid_empty = "{}"
 
     @classmethod
@@ -21,7 +21,7 @@ class View:
         return cls.encode(data)
 
     @classmethod
-    def try_deserialize(cls, data: str) -> return_type:
+    def try_deserialize(cls, data: str) -> type:
         """Try to return deserialized data using current standard format and exit on except."""
         try:
             if not data:
@@ -32,7 +32,7 @@ class View:
         return cls.decode(data)
 
     @classmethod
-    def deserialize(cls, data: str) -> return_type:
+    def deserialize(cls, data: str) -> type:
         """Deserialize data using current standard format."""
         return cls.decode(data)
 
