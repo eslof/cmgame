@@ -19,7 +19,7 @@ class TableKey:
 class TablePartition:
     USER = "user"
     HOME = "home"
-    QUEUE = "queue"
+    MATCH = "queue"
 
 
 class ItemAttr:
@@ -27,9 +27,8 @@ class ItemAttr:
     VERSION = "version"
 
 
-class QueueAttr:
+class MatchAttr:
     DATE = "date"
-    STATE = "state"
     LISTER_ID = "lister_id"
     FINDER_ID = "finder_id"
 
@@ -41,7 +40,7 @@ class UserAttr:
     NAME = "name"
     FLAG = "flag"
     META = "meta"
-    QUEUE_ID = "queue_id"
+    MATCH_ID = "match_id"
     CURRENT_HOME = "current_home"
     HOMES = "homes"
     HOME_COUNT = "home_count"

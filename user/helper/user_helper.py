@@ -46,7 +46,7 @@ class UserHelper:
             UserAttr.NAME: name,
             UserAttr.FLAG: flag,
             UserAttr.META: "{}",
-            UserAttr.QUEUE_ID: "",
+            UserAttr.MATCH_ID: "",
             UserAttr.CURRENT_HOME: "",
             UserAttr.HOMES: [],
             UserAttr.HOME_COUNT: 0,

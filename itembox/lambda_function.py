@@ -2,10 +2,8 @@ from default_imports import *
 from database import ItemAttr
 from router import route, Route
 
-from .accept import Accept
-from .demand import Demand
-
-assert_inheritance([Accept, Demand], RequestHandler)
+from itembox.accept import Accept
+from itembox.demand import Demand
 
 
 @unique

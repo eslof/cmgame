@@ -43,12 +43,6 @@ class Constants:
 
 
 @unique
-class QueueState(Enum):
-    NORMAL = auto()
-    MATCHED = auto()
-
-
-@unique
 class UserState(Enum):
     NORMAL = auto()
     MATCHED = auto()

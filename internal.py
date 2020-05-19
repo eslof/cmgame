@@ -6,10 +6,6 @@ from properties import Constants, PacketHeader
 from sys import exit as sys_exit
 from typing import Callable, Union, List, Any
 
-from request_handler import RequestHandler
-from router import Route
-from view import View
-
 
 # TODO: Move some of these hard coded strings somewhere maybe
 
@@ -18,27 +14,6 @@ def end_unless_conditional(e):
     error = e.response["Error"]["Code"]
     if e.response["Error"]["Code"] != "ConditionalCheckFailedException":
         end(error)  # TODO: error handling
-
-
-# todo: move to unit test (?)
-def validate_routing(_routes: dict, request_enum: type(Enum)):
-    assert _routes
-    assert type(_routes) is dict
-    assert len(_routes)
-    assert isclass(request_enum)
-    assert len(request_enum)
-    for enum in _routes:
-        assert enum in request_enum
-        assert _routes[enum]
-        assert isinstance(_routes[enum], Route)
-        assert_inheritance(_routes[enum].handler, RequestHandler)
-        assert callable(_routes[enum].output)
-    for enum in request_enum:
-        assert enum in _routes
-        assert _routes[enum]
-        assert isinstance(_routes[enum], Route)
-        assert_inheritance(_routes[enum].handler, RequestHandler)
-        assert callable(_routes[enum].output)
 
 
 def assert_inheritance(target: Union[type, List[type]], base: type):
@@ -61,7 +36,8 @@ def assert_inheritance(target: Union[type, List[type]], base: type):
 def end(message: str = "", code: int = 0) -> None:
     """Wrapper for exit at case outcomes that are not expected by client without possible misuse or corruption."""
     if message:
-        View.error(message)
+        pass
+        # View.error(message)
     sys_exit(code)
 
 
@@ -108,6 +84,7 @@ def validate_meta(target: dict, field: str, message: str = "") -> None:
         message=message,
     )
     try:
-        View.deserialize(target[field])
+        # View.deserialize(target[field])
+        hi = 1 + 2
     except ValueError as e:
         end(f"Failed validation of meta during decoding: {target[field]} {e}")

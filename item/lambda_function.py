@@ -1,11 +1,9 @@
 from default_imports import *
 from router import route, Route
 
-from .clear import Clear
-from .place import Place
-from .update import Update
-
-assert_inheritance([Place, Update], RequestHandler)
+from item.clear import Clear
+from item.place import Place
+from item.update import Update
 
 
 @unique

@@ -2,12 +2,10 @@ from database import HomeAttr
 from default_imports import *
 from router import route, Route
 
-from .delete import Delete
-from .go import Go
-from .new import New
-from .save import Save
-
-assert_inheritance([Delete, Go, New, Save], RequestHandler)
+from home.delete import Delete
+from home.go import Go
+from home.new import New
+from home.save import Save
 
 
 @unique
