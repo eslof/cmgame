@@ -10,8 +10,6 @@ def web_socket_endpoint():
 dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table("cmgame")
 
-# region Database
-
 
 class TableKey:
     PARTITION = "type"
@@ -69,6 +67,3 @@ class HomeAttr:
     class Grid:
         ITEM = "item"
         META = "meta"
-
-
-# endregion
