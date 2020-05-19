@@ -22,8 +22,8 @@ class Save(RequestHandler):
     """User requests to save changes made to one of the user's settings or profile."""
 
     @staticmethod
-    def run(body: View.type, user_id: str, data: Optional[Any]) -> bool:
-        request = SaveRequest(body[RequestField.User.SAVE])
+    def run(event: View.type, user_id: str, data: Optional[Any]) -> bool:
+        request = SaveRequest(event[RequestField.User.SAVE])
         attribute, value = None, None
         if request == SaveRequest.NAME:
             attribute, value = UserAttr.NAME, RequestField.User.NAME
@@ -34,8 +34,8 @@ class Save(RequestHandler):
         return User.update(user_id, attribute, value)
 
     @staticmethod
-    def validate(body: dict, user_id: Optional[str]) -> None:
-        req = validate_request(body, SaveRequest, RequestField.User.SAVE)
+    def validate(event: dict, user_id: Optional[str]) -> None:
+        req = validate_request(event, SaveRequest, RequestField.User.SAVE)
         field, validation, message = None, None, None
         if req == SaveRequest.NAME:
             field = RequestField.User.NAME
@@ -59,4 +59,4 @@ class Save(RequestHandler):
             )
             message = "User Save API (META)"
 
-        validate_field(body, field, validation, message)
+        validate_field(event, field, validation, message)

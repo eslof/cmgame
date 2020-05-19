@@ -18,7 +18,8 @@ def end_unless_conditional(e):
 
 
 def assert_inheritance(target: Union[type, List[type]], base: type):
-    """Assert that given class, or list of classes, inherit from given base class."""
+    """Assert that given class, or list of classes, inherit from given base class.
+    todo: current implementation of these I guess could be moved to unit testing"""
     if isinstance(target, list):
         for obj in target:
             if not isclass(obj):

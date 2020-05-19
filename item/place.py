@@ -11,12 +11,12 @@ class Place(RequestHandler):
     """User requests to change the contents of a grid slot in the user's selected home."""
 
     @staticmethod
-    def run(body: dict, user_id: str, data: dict) -> bool:
+    def run(event: dict, user_id: str, data: dict) -> bool:
         """Sets a grid slot for given home id to contain a requested item with given meta data."""
         home_id = data[UserAttr.CURRENT_HOME]
-        item_index = body[RequestField.User.ITEM] - 1
-        grid_index = body[RequestField.Home.GRID] - 1
-        item_meta = body[RequestField.Item.META]
+        item_index = event[RequestField.User.ITEM] - 1
+        grid_index = event[RequestField.Home.GRID] - 1
+        item_meta = event[RequestField.Item.META]
         try:
             # TODO: rework database model
             response = table.update_item(
@@ -42,7 +42,7 @@ class Place(RequestHandler):
         return True
 
     @staticmethod
-    def validate(body: dict, user_id: str) -> dict:
+    def validate(event: dict, user_id: str) -> dict:
         """Confirm item index to be in range of inventory size.
         Confirm target grid index to be in range of home size.
         Confirm that item meta-data follows correct format and TODO: apply size limitation in case of misuse."""
@@ -52,20 +52,20 @@ class Place(RequestHandler):
         )
         inventory_count = user_data[UserAttr.INVENTORY_COUNT]
         validate_field(
-            target=body,
+            target=event,
             field=RequestField.User.ITEM,
             validation=lambda value: isinstance(value, int)
             and 0 < value <= inventory_count,
             message="Item Place API (ITEM_INDEX)",
         )
         validate_field(
-            target=body,
+            target=event,
             field=RequestField.Home.GRID,
             validation=lambda value: isinstance(value, int)
             and 0 < value <= Constants.Home.SIZE,
             message="Item Place API (GRID)",
         )
         validate_meta(
-            target=body, field=RequestField.Item.META, message="Item Place API (META)",
+            target=event, field=RequestField.Item.META, message="Item Place API (META)",
         )
         return user_data

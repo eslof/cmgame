@@ -11,10 +11,10 @@ class RequestHandler(ABC):
 
     @staticmethod
     @abstractmethod
-    def run(body: dict, user_id: Optional[str], data: Optional[Any]) -> Optional[Any]:
+    def run(event: dict, user_id: Optional[str], data: Optional[Any]) -> Optional[Any]:
         pass
 
     @staticmethod
     @abstractmethod
-    def validate(body: dict, user_id: Optional[str]) -> Optional[dict]:
+    def validate(event: dict, user_id: Optional[str]) -> Optional[dict]:
         pass

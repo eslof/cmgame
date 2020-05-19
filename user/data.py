@@ -11,7 +11,7 @@ class Data(RequestHandler):
     """Returning user requests a welcome package containing: Profile, inventory, home names and their biodomes."""
 
     @staticmethod
-    def run(body: dict, user_id: str, data: dict) -> dict:
+    def run(event: dict, user_id: str, data: dict) -> dict:
         homes = [
             {
                 ResponseField.Home.NAME: home[UserAttr.Home.NAME],
@@ -23,5 +23,5 @@ class Data(RequestHandler):
         return UserHelper.template_welcome(data, homes, inventory)
 
     @staticmethod
-    def validate(body: dict, user_id: str) -> dict:
+    def validate(event: dict, user_id: str) -> dict:
         return User.get(user_id, UserHelper.welcome_attributes())

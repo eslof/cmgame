@@ -12,11 +12,11 @@ class $camel_case_name(RequestHandler):
     """TODO:${desc}"""
 
     @staticmethod
-    def run(body: View.type, user_id: Optional[str], data: Optional[Any]) -> Optional[Any]:
+    def run(event: View.type, user_id: Optional[str], data: Optional[Any]) -> Optional[Any]:
         """TODO:${camel_case_name}.run implementation."""
         pass
 
     @staticmethod
-    def validate(body: View.type, user_id: Optional[str]) -> Optional[Any]:
+    def validate(event: View.type, user_id: Optional[str]) -> Optional[Any]:
         """TODO:${camel_case_name}.validate implementation."""
         pass

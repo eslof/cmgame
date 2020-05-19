@@ -12,19 +12,19 @@ class Delete(RequestHandler):
     """Delete documentation"""
 
     @staticmethod
-    def run(body: dict, user_id: str, data: dict) -> bool:
+    def run(event: dict, user_id: str, data: dict) -> bool:
         """Run documentation TODO: stuff"""
-        home_index = body[RequestField.User.HOME]
+        home_index = event[RequestField.User.HOME]
         home_id = data[UserAttr.HOMES][home_index]
         HomeHelper.attempt_delete(home_id)
         return User.update(user_id, UserAttr.HOMES, home_index, "REMOVE #name[:value]")
 
     @staticmethod
-    def validate(body: dict, user_id: str) -> dict:
+    def validate(event: dict, user_id: str) -> dict:
         """User.get HOMES """
         user_data = User.get(user_id, UserAttr.HOMES)
         validate_field(
-            body,
+            event,
             RequestField.User.HOME,
             lambda value: isinstance(value, int)
             and 0 < value <= len(user_data[UserAttr.HOMES]),

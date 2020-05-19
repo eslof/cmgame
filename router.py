@@ -17,14 +17,14 @@ class Route(object):
         self.require_id = require_id
 
 
-def _handler(body: View.type, context: Optional[Any], route: Route):
+def _handler(event: dict, context: Optional[Any], _route: Route):
     """Todo: this is actually part of the model even though it's routing requests... figure something out"""
     user_id = None
-    if route.require_id:
-        user_id = User.validate_id(body)
-    valid_data = route.handler.validate(body, user_id)
-    output = route.handler.run(body, user_id, valid_data or None)
-    return route.output(output)
+    if _route.require_id:
+        user_id = User.validate_id(event)
+    valid_data = _route.handler.validate(event, user_id)
+    output = _route.handler.run(event, user_id, valid_data or None)
+    return _route.output(output)
 
 
 # TODO: collect error messages
@@ -38,17 +38,10 @@ def route(routers: dict, request_enum: type(Enum)):
             assert (
                 len(args) > 0 and args[0] and type(args[0]) is dict
             ), f"Missing argument in '{Constants.LAMBDA_HANDLER_NAME}' in '{request_enum}', should be '{Constants.LAMBDA_HANDLER_NAME}(event, context)'."
-            assert (
-                "body" in args[0]
-                and args[0]["body"]
-                and args[0]["body"] is str
-                and args[0]["body"].replace(" ", "") != View.valid_empty
-            ), "Missing or invalid request body."
             # endregion
 
             # region Client
-            body = View.try_deserialize(args[0]["body"])
-            req = validate_request(body, request_enum)
+            req = validate_request(args[0], request_enum)
             # endregion
 
             # region Server (todo: move to unit test)

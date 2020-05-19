@@ -13,12 +13,12 @@ class New(RequestHandler):
     New user is added and receive: A list of starting items and a list of biodomes for a home."""
 
     @staticmethod
-    def run(body: dict, user_id: Optional[str], data: Optional[Any]) -> str:
+    def run(event: dict, user_id: Optional[str], data: Optional[Any]) -> str:
         new_id = ""
         max_attempts = 5
         while not new_id and max_attempts > 0:
             new_id = UserHelper.attempt_new(
-                body[RequestField.User.NAME], body[RequestField.User.FLAG]
+                event[RequestField.User.NAME], event[RequestField.User.FLAG]
             )
             max_attempts -= 1
 
@@ -28,16 +28,16 @@ class New(RequestHandler):
         return new_id
 
     @staticmethod
-    def validate(body: dict, user_id: str = None) -> None:
+    def validate(event: dict, user_id: str = None) -> None:
         validate_field(
-            target=body,
+            target=event,
             field=RequestField.User.NAME,
             validation=lambda value: isinstance(value, str)
             and 0 < len(value) < Constants.User.NAME_MAX_LENGTH,
             message="User New API (NAME)",
         )
         validate_field(
-            target=body,
+            target=event,
             field=RequestField.User.FLAG,
             validation=lambda value: isinstance(value, int)
             and value in Country._value2member_map_,

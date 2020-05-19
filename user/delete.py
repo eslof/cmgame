@@ -7,11 +7,11 @@ class Delete(RequestHandler):
     """User requests to close the user's own account."""
 
     @staticmethod
-    def run(body: dict, user_id: str, data: Any) -> Any:
+    def run(event: dict, user_id: str, data: Any) -> Any:
         pass
 
     @staticmethod
-    def validate(body: dict, user_id: str) -> Optional[dict]:
+    def validate(event: dict, user_id: str) -> Optional[dict]:
         pass
 
     @staticmethod

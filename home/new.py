@@ -10,7 +10,7 @@ class New(RequestHandler):
     """User requests to create a new home."""
 
     @staticmethod
-    def run(body: dict, user_id: str, data: dict, recursion_limit: int = 3) -> str:
+    def run(event: dict, user_id: str, data: dict, recursion_limit: int = 3) -> str:
         """TODO: this entire thing needs a rework: there need be a template for user item
         TODO: should it be recursive or is there a better way?"""
         new_id = None
@@ -27,21 +27,21 @@ class New(RequestHandler):
         )
 
     @staticmethod
-    def validate(body: dict, user_id: str) -> dict:
+    def validate(event: dict, user_id: str) -> dict:
         """Confirm name to be of appropriate length, and existence of requested Biodome."""
         user_data = User.get(user_id, UserAttr.HOMES)
         home_count = len(user_data[UserAttr.HOMES])
         if home_count > Constants.User.HOME_COUNT_MAX:
             end("Maximum homes reached")  # TODO: error handling
         validate_field(
-            target=body,
+            target=event,
             field=RequestField.Home.NAME,
             validation=lambda value: isinstance(value, str)
             and 0 < len(value) <= Constants.Home.NAME_MAX_LENGTH,
             message="Home Create API (NAME)",
         )
         validate_field(
-            target=body,
+            target=event,
             field=RequestField.Home.BIODOME,
             validation=lambda value: isinstance(value, int)
             and value in Biodome._value2member_map_,

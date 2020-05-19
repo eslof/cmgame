@@ -12,7 +12,7 @@ class Accept(RequestHandler):
     """User responds to a demanded itembox with requested choice."""
 
     @staticmethod
-    def run(body: dict, user_id: str, data: dict) -> Any:
+    def run(event: dict, user_id: str, data: dict) -> Any:
         inventory = data[UserAttr.INVENTORY]
         seed = ItemHelper.itembox_seed(
             user_id, data[UserAttr.KEY_COUNT], data[UserAttr.USED_KEY_COUNT]
@@ -28,7 +28,7 @@ class Accept(RequestHandler):
             ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
             ExpressionAttributeValues={
                 ":banned": UserState.BANNED.value,
-                ":item_id": choices[body[RequestField.ItemBox.CHOICE]],
+                ":item_id": choices[event[RequestField.ItemBox.CHOICE]],
             },
             ExpressionAttributeNames={
                 "#id": TableKey.PARTITION,
@@ -38,17 +38,17 @@ class Accept(RequestHandler):
                 "#used_key_count": UserAttr.USED_KEY_COUNT,
             },
         )
-        return choices[body[RequestField.ItemBox.CHOICE] - 1]
+        return choices[event[RequestField.ItemBox.CHOICE] - 1]
         pass
 
     @staticmethod
-    def validate(body: dict, user_id: str) -> dict:
+    def validate(event: dict, user_id: str) -> dict:
         user_data = User.get(
             user_id=user_id,
             attributes=f"{UserAttr.INVENTORY}, {UserAttr.KEY_COUNT}, {UserAttr.USED_KEY_COUNT}",
         )
         validate_field(
-            target=body,
+            target=event,
             field=RequestField.ItemBox.CHOICE,
             validation=lambda value: isinstance(value, int) and 1 <= value <= 3,
             message="ItemBox Accept API",

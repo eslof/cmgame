@@ -11,7 +11,7 @@ class Find(RequestHandler):
     """User requests to find an enlisted user to visit."""
 
     @staticmethod
-    def run(body: dict, user_id: str, data: Optional[Any]) -> Optional[str]:
+    def run(event: dict, user_id: str, data: Optional[Any]) -> Optional[str]:
         response = table.get_item(
             Key={TableKey.PARTITION: TablePartition.QUEUE},
             IndexName="date",
@@ -36,7 +36,7 @@ class Find(RequestHandler):
         return None
 
     @staticmethod
-    def validate(body: dict, user_id: Optional[str]) -> Optional[dict]:
+    def validate(event: dict, user_id: Optional[str]) -> Optional[dict]:
         """Get and return queue state for given user id.
         Confirm queue state not to be already matched."""
         user_data = User.get(user_id, UserAttr.QUEUE_STATE)
