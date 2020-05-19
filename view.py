@@ -13,6 +13,7 @@ class View:
     decode = json.loads
     decode_error = JSONDecodeError
     return_type = dict
+    valid_empty = "{}"
 
     @classmethod
     def serialize(cls, data: dict) -> str:
