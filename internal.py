@@ -34,18 +34,16 @@ def generate_id(prefix: str, length: int = Constants.ID_GEN_LENGTH) -> str:
     )
 
 
-def validate_request(
-    target: dict, request_enum: type(Enum), field: str = PacketHeader.REQUEST
-) -> Enum:
+def validate_request(target: dict, request_enum: type(Enum)) -> Enum:
     """validate_field wrapper for given enum used for base requests in all lambda_function.py files."""
     validate_field(
         target=target,
-        field=field,
+        field=PacketHeader.REQUEST,
         validation=lambda value: type(value) is int
         and value in request_enum._value2member_map_,
         message=f"Request API ({request_enum.__name__})",
     )
-    return request_enum(target[field])
+    return request_enum(target[PacketHeader.REQUEST])
 
 
 def validate_field(
@@ -53,7 +51,7 @@ def validate_field(
 ) -> None:
     """Confirm that the given field exists in target and perform given validation on its content."""
     if not hasattr(target, field) and field not in target:
-        end(f"No valid attribute present ({message}): {View.serialize(target)}")
+        end(f"No valid attribute present ({message})")
     elif not validation(target[field]):
         end(f"Failed validation ({message}): {field} = {str(target[field])}")
 

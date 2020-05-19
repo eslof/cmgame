@@ -9,7 +9,7 @@ from enum import Enum
 
 class Route:
     def __init__(
-        self, handler: type(RequestHandler), output: Callable, require_id: bool = False
+        self, handler: type(RequestHandler), output: Callable, require_id: bool = True
     ):
         self.handler = handler
         self.output = output
@@ -78,7 +78,7 @@ def route(routes: dict, request_enum: type(Enum)):
     def inner(f):
         def wrapped_f(*args):
             # region Server (todo: move to unit test)
-            if __debug__:
+            if True:  # __debug__
                 assert (
                     len(args) > 0 and args[0] and type(args[0]) is dict
                 ), f"Missing argument for '{Constants.LAMBDA_HANDLER_NAME}' in '{request_enum}', should be '{Constants.LAMBDA_HANDLER_NAME}(event, context)'."
