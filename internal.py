@@ -20,19 +20,21 @@ def end_unless_conditional(e):
         end(error)  # TODO: error handling
 
 
+# todo: move to unit test (?)
 def validate_routing(_routes: dict, request_enum: type(Enum)):
-    for enum in request_enum:
-        assert enum in _routes, f"{enum} not represented in routes dict."
-        assert _routes[
-            enum
-        ], f"{enum} value in routes dict missing, should be Route object."
+    assert _routes
+    assert type(_routes) is dict
+    assert len(_routes)
+    assert isclass(request_enum)
+    assert len(request_enum)
+    for enum in _routes:
+        assert enum in request_enum
+        assert _routes[enum]
         assert isinstance(_routes[enum], Route)
         assert_inheritance(_routes[enum].handler, RequestHandler)
         assert callable(_routes[enum].output)
-    for enum in _routes:
-        assert (
-            enum in request_enum
-        ), f"{enum} in routes dict not present in {request_enum}."
+    for enum in request_enum:
+        assert enum in _routes
         assert _routes[enum]
         assert isinstance(_routes[enum], Route)
         assert_inheritance(_routes[enum].handler, RequestHandler)
