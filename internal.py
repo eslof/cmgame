@@ -41,16 +41,18 @@ def validate_routing(routes: dict, request_enum: type(Enum)):
 def assert_inheritance(target: Union[type, List[type]], base: type):
     """Assert that given class, or list of classes, inherit from given base class.
     todo: current implementation of these I guess could be moved to unit testing"""
+    if not isclass(base):
+        end(f"Failed assert_inheritance: {base} is not a class")
     if type(target) is list:
         for obj in target:
             if not isclass(obj):
-                end(f"Misuse of assert_inheritance (Not a class)")
+                end(f"Failed assert_inheritance: {obj} is not a class.")
             elif not issubclass(obj, base) or obj is base or type(target) is base:
-                end(f"Architecture broken ({obj} != {base})")
+                end(f"Failed assert_inheritance: {obj} does not inherit from {base}.")
     elif not isclass(target):
-        end(f"Misuse of assert_inheritance (Not a class)")
+        end(f"Failed assert_inheritance: {target} is not a class.")
     elif not issubclass(target, base) or target is base or type(target) is base:
-        end(f"Architecture broken ({target} should extend {base})")
+        end(f"Failed assert_inheritance: {target} does not inherit from {base}.")
 
 
 def end(message: str = "", code: int = 0) -> None:
