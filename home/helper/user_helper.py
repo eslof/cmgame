@@ -6,7 +6,7 @@ class UserHelper:
     @staticmethod
     def template_home(home_id: str, name: str, biodome: int):
         return {
-            UserAttr.Home.HOME_ID: home_id,
+            UserAttr.Home.ID: home_id,
             UserAttr.Home.NAME: name,
             UserAttr.Home.BIODOME: biodome,
         }

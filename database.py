@@ -21,22 +21,19 @@ class TableKey:
 class TablePartition:
     USER = "user"
     HOME = "home"
-    ID = "id"
-    BIO = "biodome"
-    ITEM = "item"
     QUEUE = "queue"
 
 
 class ItemAttr:
     BUNDLE = "bundle"
     VERSION = "version"
-    NAME = "name"
 
 
 class QueueAttr:
     DATE = "date"
     STATE = "state"
-    USER_ID = "user_id"
+    LISTER_ID = "lister_id"
+    FINDER_ID = "finder_id"
 
 
 class UserAttr:
@@ -46,20 +43,19 @@ class UserAttr:
     NAME = "name"
     FLAG = "flag"
     META = "meta"
+    QUEUE_ID = "queue_id"
     CURRENT_HOME = "current_home"
-    QUEUE_STATE = "queue_state"
-    QUEUE_ID = "match"
+    HOMES = "homes"
+    HOME_COUNT = "home_count"
     KEY_COUNT = "keys"
     KEY_USED_COUNT = "used_keys"
-    INVENTORY_COUNT = "inventory_count"
     INVENTORY = "inventory"
-    HOME_COUNT = "home_count"
-    HOMES = "homes"
+    INVENTORY_COUNT = "inventory_count"
 
     class Home:
-        BIODOME = "biodome"
-        HOME_ID = "home_id"
+        ID = "id"
         NAME = "name"
+        BIODOME = "biodome"
 
 
 class HomeAttr:

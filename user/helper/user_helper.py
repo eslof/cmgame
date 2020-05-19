@@ -46,14 +46,14 @@ class UserHelper:
             UserAttr.NAME: name,
             UserAttr.FLAG: flag,
             UserAttr.META: "{}",
-            UserAttr.CURRENT_HOME: "",
             UserAttr.QUEUE_ID: "",
+            UserAttr.CURRENT_HOME: "",
+            UserAttr.HOMES: [],
+            UserAttr.HOME_COUNT: 0,
             UserAttr.KEY_COUNT: Constants.User.STARTING_KEY_COUNT,
             UserAttr.KEY_USED_COUNT: 0,
             UserAttr.INVENTORY: starting_inventory,
             UserAttr.INVENTORY_COUNT: len(starting_inventory),
-            UserAttr.HOMES: [],
-            UserAttr.HOME_COUNT: 0,
         }
 
     @classmethod

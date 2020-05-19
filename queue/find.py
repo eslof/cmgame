@@ -2,7 +2,7 @@ from typing import Optional, Any, Union
 
 from database import *
 from internal import end
-from properties import QueueState
+from properties import QueueState, UserState
 from request_handler import RequestHandler
 from user import User
 
@@ -12,8 +12,8 @@ class Find(RequestHandler):
 
     @staticmethod
     def run(event: dict, user_id: str, data: dict) -> Union[str, bool]:
-        queue_state = QueueState(data[UserAttr.QUEUE_STATE])
-        if queue_state == QueueState.MATCHED:
+        user_state = UserState(data[UserAttr.STATE])
+        if user_state == UserState.MATCHED:
             return web_socket_endpoint()["address"]
         response = table.get_item(
             Key={TableKey.PARTITION: TablePartition.QUEUE},
@@ -21,7 +21,7 @@ class Find(RequestHandler):
             ConditionExpression="#state <> :matched AND #enlisted_id <> :finder_id",
             ExpressionAttributeNames={
                 "#state": QueueAttr.STATE,
-                "#enlisted_id": QueueAttr.USER_ID,
+                "#enlisted_id": QueueAttr.LISTER_ID,
             },
             ExpressionAttributeValues={
                 ":matched": QueueState.MATCHED.value,
@@ -42,5 +42,5 @@ class Find(RequestHandler):
     def validate(event: dict, user_id: Optional[str]) -> dict:
         """Get and return queue state for given user id.
         Confirm queue state not to be already matched."""
-        user_data = User.get(user_id, UserAttr.QUEUE_STATE)
+        user_data = User.get(user_id, UserAttr.STATE)
         return user_data
