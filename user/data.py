@@ -1,6 +1,4 @@
-from typing import Optional, Any
-
-from properties import UserAttr, ResponseField, ItemAttr
+from database import UserAttr
 from request_handler import RequestHandler
 from user import User
 from .helper.user_helper import UserHelper
