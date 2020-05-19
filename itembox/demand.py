@@ -3,7 +3,7 @@ from request_handler import RequestHandler
 
 from internal import end
 from user import User
-from .helpers.item_helper import ItemHelper
+from .helper.item_helper import ItemHelper
 
 
 class Demand(RequestHandler):
