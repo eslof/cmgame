@@ -15,7 +15,7 @@ class Accept(RequestHandler):
     def run(event: dict, user_id: str, data: dict) -> Any:
         inventory = data[UserAttr.INVENTORY]
         seed = ItemHelper.itembox_seed(
-            user_id, data[UserAttr.KEY_COUNT], data[UserAttr.USED_KEY_COUNT]
+            user_id, data[UserAttr.KEY_COUNT], data[UserAttr.KEY_USED_COUNT]
         )
         choices = ItemHelper.itembox(3, seed, inventory)
         table.update_item(
@@ -35,7 +35,7 @@ class Accept(RequestHandler):
                 "#state": UserAttr.STATE,
                 "#inventory": UserAttr.INVENTORY,
                 "#key_count": UserAttr.KEY_COUNT,
-                "#used_key_count": UserAttr.USED_KEY_COUNT,
+                "#used_key_count": UserAttr.KEY_USED_COUNT,
             },
         )
         return choices[event[RequestField.ItemBox.CHOICE] - 1]
@@ -45,7 +45,7 @@ class Accept(RequestHandler):
     def validate(event: dict, user_id: str) -> dict:
         user_data = User.get(
             user_id=user_id,
-            attributes=f"{UserAttr.INVENTORY}, {UserAttr.KEY_COUNT}, {UserAttr.USED_KEY_COUNT}",
+            attributes=f"{UserAttr.INVENTORY}, {UserAttr.KEY_COUNT}, {UserAttr.KEY_USED_COUNT}",
         )
         validate_field(
             target=event,

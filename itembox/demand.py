@@ -14,7 +14,7 @@ class Demand(RequestHandler):
         """Produce a count of items not already owned for the user to choose between."""
         inventory = data[UserAttr.INVENTORY]
         seed = ItemHelper.itembox_seed(
-            user_id, data[UserAttr.KEY_COUNT], data[UserAttr.USED_KEY_COUNT]
+            user_id, data[UserAttr.KEY_COUNT], data[UserAttr.KEY_USED_COUNT]
         )
         return ItemHelper.itembox(3, seed, inventory)
 
@@ -23,7 +23,7 @@ class Demand(RequestHandler):
         """Confirm that the user has the amount of keys needed for an itembox."""
         user_data = User.get(
             user_id=user_id,
-            attributes=f"{UserAttr.INVENTORY}, {UserAttr.KEY_COUNT}, {UserAttr.USED_KEY_COUNT}",
+            attributes=f"{UserAttr.INVENTORY}, {UserAttr.KEY_COUNT}, {UserAttr.KEY_USED_COUNT}",
         )
         if user_data[UserAttr.KEY_COUNT] <= 0:
             end(f"Insufficient keys: {user_data[UserAttr.KEY_COUNT]}")

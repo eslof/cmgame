@@ -1,9 +1,7 @@
 import json
 import random
-import string
-from decimal import Decimal
 
-from properties import Constants, ResponseField, ItemAttr, Seed
+from properties import Seed
 
 
 # TODO: look into how to do this better

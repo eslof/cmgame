@@ -44,16 +44,14 @@ class Constants:
 
 @unique
 class QueueState(Enum):
-    NONE = auto()
-    ENLISTED = auto()
+    NORMAL = auto()
     MATCHED = auto()
 
 
 @unique
 class UserState(Enum):
-    NEW = auto()
     NORMAL = auto()
-    VISITOR = auto()
+    MATCHED = auto()
     BANNED = auto()
 
 

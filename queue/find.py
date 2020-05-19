@@ -1,6 +1,6 @@
 from typing import Optional, Any
 
-from database import table, TableKey, TablePartition, UserAttr, QueueAttr
+from database import *
 from internal import end
 from properties import QueueState
 from request_handler import RequestHandler

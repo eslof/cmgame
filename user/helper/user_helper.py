@@ -3,8 +3,7 @@ from typing import Optional
 
 from database import table, TableKey, TablePartition, UserAttr
 from internal import generate_id, end_unless_conditional
-from properties import Constants, QueueState, ResponseField
-from properties import starting_inventory, UserState
+from properties import Constants, ResponseField, UserState, starting_inventory
 
 
 class UserHelper:
@@ -48,10 +47,9 @@ class UserHelper:
             UserAttr.FLAG: flag,
             UserAttr.META: "{}",
             UserAttr.CURRENT_HOME: "",
-            UserAttr.QUEUE_STATE: QueueState.NONE.value,
-            UserAttr.LIST_ID: "",
+            UserAttr.QUEUE_ID: "",
             UserAttr.KEY_COUNT: Constants.User.STARTING_KEY_COUNT,
-            UserAttr.USED_KEY_COUNT: 0,
+            UserAttr.KEY_USED_COUNT: 0,
             UserAttr.INVENTORY: starting_inventory,
             UserAttr.INVENTORY_COUNT: len(starting_inventory),
             UserAttr.HOMES: [],
