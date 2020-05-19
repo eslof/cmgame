@@ -5,6 +5,9 @@ from inspect import isclass
 from properties import Constants, PacketHeader
 from sys import exit as sys_exit
 from typing import Callable, Union, List
+
+from request_handler import RequestHandler
+from router import Route
 from view import View
 
 
@@ -15,6 +18,24 @@ def end_unless_conditional(e):
     error = e.response["Error"]["Code"]
     if e.response["Error"]["Code"] != "ConditionalCheckFailedException":
         end(error)  # TODO: error handling
+
+
+def validate_routing(routes: dict, request_enum: type(Enum)):
+    for enum in request_enum:
+        assert enum in routes, f"{enum} not represented in routes dict."
+        assert routes[
+            enum
+        ], f"{enum} value in routes dict missing, should be Route object."
+        assert_inheritance(routes[enum], Route)
+        assert_inheritance(routes[enum].handler, RequestHandler)
+        assert type(routes[enum].output) is Callable
+    for enum, route in routes:
+        assert (
+            enum in request_enum
+        ), f"{enum} in routes dict not present in {request_enum}."
+        assert_inheritance(route, Route)
+        assert_inheritance(route.handler, RequestHandler)
+        assert type(route.output) is Callable
 
 
 def assert_inheritance(target: Union[type, List[type]], base: type):
