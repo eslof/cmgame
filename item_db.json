@@ -1,8 +1,9 @@
 {
-  "POOmdZELeD4JtuFu": {
-    "BUNDLE": "ItemName001",
-    "VERSION": 1 },
-  "V3keoJK1CWwfTi0L": {
-    "BUNDLE": "ItemName002",
-    "VERSION": 1 }
+  "next_auto": 2,
+  "0": {
+    "bundle": "ItemName001",
+    "version": 1 },
+  "1": {
+    "bundle": "ItemName002",
+    "version": 1 }
 }
