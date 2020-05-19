@@ -1,6 +1,6 @@
 from inspect import isclass
 from typing import Callable, Any, Optional
-from internal import validate_request
+from internal import validate_request, validate_routing
 from properties import Constants
 from request_handler import RequestHandler
 from user import User
@@ -27,10 +27,13 @@ def _handler(event: dict, context: Optional[Any], _route: Route):
 
 
 # TODO: collect error messages
-def route(routers: dict, request_enum: type(Enum)):
+def route(routes: dict, request_enum: type(Enum)):
     def inner(f):
         def wrapped_f(*args):
             # region Server (todo: move to unit test)
+            assert isclass(
+                request_enum
+            ), f"Arg request_enum '{request_enum}' is not a class."
             assert (
                 f.__name__ == Constants.LAMBDA_HANDLER_NAME
             ), f"Route decorator misuse on '{f.__name__}' for '{request_enum}', should be '{Constants.LAMBDA_HANDLER_NAME}'."
@@ -45,19 +48,10 @@ def route(routers: dict, request_enum: type(Enum)):
             # endregion
 
             # region Server (todo: move to unit test)
-            assert (
-                routers and type(routers) is dict and req in routers
-            ), f"Request '{req}' not present in routers dict."
-            _route = routers[req]
-
-            assert (
-                _route
-                and isclass(type(_route))
-                and not isclass(_route)
-                and isinstance(_route, Route)
-            ), f"Value for {req} in routers dict not of class Route."
+            validate_routing(routes, request_enum)
             # endregion
 
+            _route = routes[req]
             args = args + (_route,)
             return _handler(*args)
 
