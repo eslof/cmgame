@@ -1,6 +1,7 @@
 from typing import Callable, Optional, Any, Dict, Type
 from internal import validate_request
 from properties import Constants
+from functools import wraps
 from request_handler import RequestHandler
 from enum import IntEnum
 
@@ -34,6 +35,7 @@ def wrapper(routes: dict, request_enum: Type[IntEnum], f, *args):
 
 def route(routes: dict, request_enum: Type[IntEnum]):
     def inner(f):
+        @wraps(f)
         def wrapped_f(*args):
             return wrapper(routes, request_enum, f, *args)
 
