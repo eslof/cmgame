@@ -2,9 +2,12 @@ from typing import Optional, Any, Union
 
 from database import *
 from internal import end
-from properties import MatchState, UserState
+from properties import UserState
 from request_handler import RequestHandler
 from user import User
+
+if __debug__:
+    import json
 
 
 class Find(RequestHandler):
@@ -18,15 +21,12 @@ class Find(RequestHandler):
         response = table.get_item(
             Key={TableKey.PARTITION: TablePartition.MATCH},
             # TODO: condition expression: state != matched
-            ConditionExpression="#state <> :matched AND #enlisted_id <> :finder_id",
+            ConditionExpression="#enlisted_id <> :user_id and #finder_id = :empty",
             ExpressionAttributeNames={
-                "#state": MatchAttr.STATE,
                 "#enlisted_id": MatchAttr.LISTER_ID,
+                "#finder_id": MatchAttr.FINDER_ID,
             },
-            ExpressionAttributeValues={
-                ":matched": MatchState.MATCHED.value,
-                ":finder_id": user_id,
-            },
+            ExpressionAttributeValues={":user_id": user_id, ":empty": ""},
             ScanIndexForward=False,
             Limit=1,
         )
@@ -34,7 +34,7 @@ class Find(RequestHandler):
         if len(response["Item"] > 0):
             # TODO: update listing's state to pending, and prompt for accept by finder
             # TODO: then as the enlisters code comes to update its enlistment we look for this
-
+            # TODO: set match finder_id and send match_id to ws
             return web_socket_endpoint()["address"]
         return False
 
