@@ -6,7 +6,9 @@ class List(RequestHandler):
     """TODO:List implementation."""
 
     @staticmethod
-    def run(event: dict, user_id: Optional[str], data: Optional[Any]) -> Optional[Any]:
+    def run(
+        event: dict, user_id: Optional[str], valid_data: Optional[Any]
+    ) -> Optional[Any]:
         """TODO:List.run implementation."""
         pass
 

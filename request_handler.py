@@ -11,7 +11,9 @@ class RequestHandler(ABC):
 
     @staticmethod
     @abstractmethod
-    def run(event: dict, user_id: Optional[str], data: Optional[Any]) -> Optional[Any]:
+    def run(
+        event: dict, user_id: Optional[str], valid_data: Optional[Any]
+    ) -> Optional[Any]:
         pass
 
     @staticmethod

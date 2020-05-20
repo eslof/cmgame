@@ -9,7 +9,7 @@ class Update(RequestHandler):
     """User requests to update the meta-data of an item in the user's selected home."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: dict) -> bool:
+    def run(event: dict, user_id: str, valid_data: dict) -> bool:
         """Sets given item meta-data at requested grid index for the given home id"""
         home_id = (data[UserAttr.CURRENT_HOME],)
         grid_index = (event[RequestField.Home.GRID],)

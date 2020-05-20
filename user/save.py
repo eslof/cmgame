@@ -22,7 +22,7 @@ class Save(RequestHandler):
     """User requests to save changes made to one of the user's settings or profile."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: Optional[Any]) -> bool:
+    def run(event: dict, user_id: str, valid_data: Optional[Any]) -> bool:
         request = SaveRequest(event[RequestField.User.SAVE])
         attribute, value = None, None
         if request == SaveRequest.NAME:

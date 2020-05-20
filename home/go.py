@@ -11,7 +11,7 @@ class Go(RequestHandler):
     """User requests to be moved to one of the user's own homes."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: dict) -> dict:
+    def run(event: dict, user_id: str, valid_data: dict) -> dict:
         """Set selected home of given user id to given home id.
          Get and return grid and associated meta-data for given home id."""
         home_id = data[UserAttr.HOMES][event[RequestField.User.HOME]]

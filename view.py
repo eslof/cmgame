@@ -17,12 +17,12 @@ class View:
     valid_empty = "{}"
 
     @classmethod
-    def serialize(cls, data: dict) -> str:
+    def serialize(cls, valid_data: dict) -> str:
         """Serialize data using current standard format."""
         return cls.encode(data)
 
     @classmethod
-    def try_deserialize(cls, data: str) -> _type:
+    def try_deserialize(cls, valid_data: str) -> _type:
         """Try to return deserialized data using current standard format and exit on except."""
         try:
             if not data:
@@ -33,12 +33,12 @@ class View:
         return cls.decode(data)
 
     @classmethod
-    def deserialize(cls, data: str) -> _type:
+    def deserialize(cls, valid_data: str) -> _type:
         """Deserialize data using current standard format."""
         return cls.decode(data)
 
     @classmethod
-    def response(cls, response_type: Enum, data: dict) -> str:
+    def response(cls, response_type: Enum, valid_data: dict) -> str:
         """Create and return a .serialize'd response of given type with given data."""
         data[PacketHeader.RESPONSE] = response_type.value
         return cls.serialize(data)

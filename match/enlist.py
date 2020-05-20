@@ -19,7 +19,7 @@ class Enlist(RequestHandler):
     """User requests to open his home for a possible visitor."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: dict) -> Optional[Any]:
+    def run(event: dict, user_id: str, valid_data: dict) -> Optional[Any]:
         """If an enlistment for the given user_id exists then we update its timestamp.
         If there is no enlistment for the given user_id then we add one."""
         match_id = UserState(data[UserAttr.MATCH_ID])

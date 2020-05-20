@@ -12,7 +12,7 @@ class Delete(RequestHandler):
     """Delete documentation"""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: dict) -> bool:
+    def run(event: dict, user_id: str, valid_data: dict) -> bool:
         """Run documentation TODO: stuff"""
         home_index = event[RequestField.User.HOME]
         home_id = data[UserAttr.HOMES][home_index]

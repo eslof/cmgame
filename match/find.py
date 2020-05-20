@@ -14,7 +14,7 @@ class Find(RequestHandler):
     """User requests to find an enlisted user to visit."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: dict) -> Union[str, bool]:
+    def run(event: dict, user_id: str, valid_data: dict) -> Union[str, bool]:
         user_state = UserState(data[UserAttr.STATE])
         if user_state == UserState.MATCHED:
             return web_socket_endpoint()["address"]

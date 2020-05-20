@@ -12,10 +12,10 @@ class Accept(RequestHandler):
     """User responds to a demanded itembox with requested choice."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: dict) -> Any:
+    def run(event: dict, user_id: str, valid_data: dict) -> Any:
         inventory = data[UserAttr.INVENTORY]
         seed = ItemHelper.itembox_seed(
-            user_id, data[UserAttr.KEY_COUNT], data[UserAttr.KEY_USED_COUNT]
+            user_id, valid_data[UserAttr.KEY_COUNT], valid_data[UserAttr.KEY_USED_COUNT]
         )
         choices = ItemHelper.itembox(3, seed, inventory)
         table.update_item(

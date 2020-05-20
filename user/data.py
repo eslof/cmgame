@@ -9,7 +9,7 @@ class Data(RequestHandler):
     """Returning user requests a welcome package containing: Profile, inventory, home names and their biodomes."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: dict) -> dict:
+    def run(event: dict, user_id: str, valid_data: dict) -> dict:
         homes = [
             UserHelper.template_home(
                 home[UserAttr.Home.NAME], home[UserAttr.Home.BIODOME]

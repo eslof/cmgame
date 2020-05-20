@@ -11,7 +11,7 @@ class Place(RequestHandler):
     """User requests to change the contents of a grid slot in the user's selected home."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: dict) -> bool:
+    def run(event: dict, user_id: str, valid_data: dict) -> bool:
         """Sets a grid slot for given home id to contain a requested item with given meta data."""
         home_id = data[UserAttr.CURRENT_HOME]
         item_index = event[RequestField.User.ITEM] - 1

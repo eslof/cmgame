@@ -11,7 +11,7 @@ class Save(RequestHandler):
     """User requests to save meta data of the user's selected home."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: dict) -> bool:
+    def run(event: dict, user_id: str, valid_data: dict) -> bool:
         """Set meta data for given home id."""
         home_id = data[UserAttr.CURRENT_HOME]
         meta_data = event[RequestField.Home.META]

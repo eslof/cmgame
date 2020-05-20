@@ -6,7 +6,9 @@ class Clear(RequestHandler):
     """TODO:user request to clear a slot on the grid"""
 
     @staticmethod
-    def run(event: dict, user_id: Optional[str], data: Optional[Any]) -> Optional[Any]:
+    def run(
+        event: dict, user_id: Optional[str], valid_data: Optional[Any]
+    ) -> Optional[Any]:
         """TODO:Clear.run implementation."""
         pass
 

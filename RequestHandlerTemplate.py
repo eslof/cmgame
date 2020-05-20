@@ -12,7 +12,7 @@ class $camel_case_name(RequestHandler):
     """TODO:${desc}"""
 
     @staticmethod
-    def run(event: dict, user_id: Optional[str], data: Optional[Any]) -> Optional[Any]:
+    def run(event: dict, user_id: Optional[str], valid_data: Optional[Any]) -> Optional[Any]:
         """TODO:${camel_case_name}.run implementation."""
         pass
 

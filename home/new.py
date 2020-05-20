@@ -11,7 +11,9 @@ class New(RequestHandler):
     """User requests to create a new home."""
 
     @staticmethod
-    def run(event: dict, user_id: str, data: dict, recursion_limit: int = 3) -> str:
+    def run(
+        event: dict, user_id: str, valid_data: dict, recursion_limit: int = 3
+    ) -> str:
         """TODO: cant really batch this right"""
         new_id = None
         max_attempts = 5

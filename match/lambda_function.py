@@ -17,7 +17,8 @@ routes = {
     MatchRequest.ENLIST: Route(
         handler=Enlist,
         output=lambda value: View.response(
-            response_type=ResponseType.QUEUE, data={ResponseField.Queue.MATCH: value},
+            response_type=ResponseType.QUEUE,
+            valid_data={ResponseField.Queue.MATCH: value},
         )
         if not type(value) is bool
         else View.generic(value),
@@ -25,7 +26,8 @@ routes = {
     MatchRequest.FIND: Route(
         handler=Find,
         output=lambda value: View.response(
-            response_type=ResponseType.QUEUE, data={ResponseField.Queue.MATCH: value},
+            response_type=ResponseType.QUEUE,
+            valid_data={ResponseField.Queue.MATCH: value},
         )
         if value
         else View.generic(False),
