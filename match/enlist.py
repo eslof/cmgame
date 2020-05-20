@@ -10,9 +10,9 @@ from database import (
     web_socket_endpoint,
 )
 from internal import end
-from properties import MatchState, UserState, Constants
+from properties import UserState, Constants
 from request_handler import RequestHandler
-from user import User
+from user_utils import User
 
 
 class Enlist(RequestHandler):

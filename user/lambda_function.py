@@ -6,11 +6,9 @@ from .delete import Delete
 from .new import New
 from .save import Save
 
-assert_inheritance([Data, Delete, New, Save], RequestHandler)
-
 
 @unique
-class UserRequest(IntEnum):
+class UserRequest(Enum):
     DATA = auto()
     DELETE = auto()
     NEW = auto()
@@ -21,16 +19,14 @@ routes = {
     UserRequest.DATA: Route(
         handler=Data,
         output=lambda value: View.response(
-            response_type=ResponseType.USER_DATA,
-            valid_data={ResponseField.User.DATA: value},
+            response_type=ResponseType.USER_DATA, data={ResponseField.User.DATA: value},
         ),
     ),
     UserRequest.DELETE: Route(Delete, View.generic),
     UserRequest.NEW: Route(
         handler=New,
         output=lambda value: View.response(
-            response_type=ResponseType.WELCOME,
-            valid_data={ResponseField.User.ID: value},
+            response_type=ResponseType.WELCOME, data={ResponseField.User.ID: value},
         ),
         require_id=False,
     ),

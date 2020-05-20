@@ -1,18 +1,18 @@
 from typing import Optional, Any
 
 from country import Country
-from properties import RequestField, UserAttr, TableKey
-from properties import TablePartition, UserState, Constants
-from internal import validate_field, end, validate_request
-from enum import IntEnum, unique, auto
+from database import UserAttr
+from properties import RequestField
+from properties import Constants
+from internal import validate_field, validate_request
+from enum import Enum, unique, auto
 from request_handler import RequestHandler
 
-from user import User
-from view import View
+from user_utils import User
 
 
 @unique
-class SaveRequest(IntEnum):
+class SaveRequest(Enum):
     NAME = auto()
     FLAG = auto()
     META = auto()
@@ -35,7 +35,7 @@ class Save(RequestHandler):
 
     @staticmethod
     def validate(event: dict, user_id: Optional[str]) -> None:
-        req = validate_request(event, SaveRequest, RequestField.User.SAVE)
+        req = validate_request(event, SaveRequest)
         field, validation, message = None, None, None
         if req == SaveRequest.NAME:
             field = RequestField.User.NAME

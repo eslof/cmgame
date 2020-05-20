@@ -9,11 +9,16 @@ from home.save import Save
 
 
 @unique
-class HomeRequest(IntEnum):
+class HomeRequest(Enum):
     DELETE = auto()
     GO = auto()
     NEW = auto()
     SAVE = auto()
+
+
+@unique
+class RandomRequest(Enum):
+    HEYOOO = auto()
 
 
 routes = {

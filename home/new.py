@@ -4,7 +4,7 @@ from database import UserAttr
 from internal import validate_field, end
 from properties import RequestField, Constants, Biodome
 from request_handler import RequestHandler
-from user import User
+from user_utils import User
 
 
 class New(RequestHandler):

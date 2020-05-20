@@ -5,7 +5,7 @@ from database import table, TableKey, TablePartition, UserAttr
 from internal import validate_field, end
 from properties import RequestField, UserState
 from request_handler import RequestHandler
-from user import User
+from user_utils import User
 
 
 class Accept(RequestHandler):
@@ -27,7 +27,7 @@ class Accept(RequestHandler):
             ),
             ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
             ExpressionAttributeValues={
-                ":banned": UserState.BANNED,
+                ":banned": UserState.BANNED.value,
                 ":item_id": choices[event[RequestField.ItemBox.CHOICE]],
             },
             ExpressionAttributeNames={

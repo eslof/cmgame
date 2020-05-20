@@ -1,6 +1,6 @@
 from database import UserAttr
 from request_handler import RequestHandler
-from user import User
+from user_utils import User
 from .helper.user_helper import UserHelper
 from .helper.item_helper import ItemHelper
 

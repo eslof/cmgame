@@ -1,4 +1,4 @@
-from enum import unique, auto, IntEnum
+from enum import unique, auto, Enum
 
 
 # TODO: a lot of stuff here, figure something out
@@ -44,14 +44,14 @@ class Constants:
 
 
 @unique
-class UserState(IntEnum):
+class UserState(Enum):
     NORMAL = auto()
     MATCHED = auto()
     BANNED = auto()
 
 
 @unique
-class Biodome(IntEnum):
+class Biodome(Enum):
     GRASS = auto()
     DESERT = auto()
     INCA = auto()
@@ -122,7 +122,7 @@ class ResponseField:
 
 
 @unique
-class ResponseType(IntEnum):
+class ResponseType(Enum):
     ERROR = auto()
     WELCOME = auto()
     GENERIC = auto()

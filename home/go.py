@@ -4,7 +4,7 @@ from database import table, TableKey, TablePartition, UserAttr, HomeAttr
 from internal import validate_field, end
 from properties import RequestField
 from request_handler import RequestHandler
-from user import User
+from user_utils import User
 
 
 class Go(RequestHandler):

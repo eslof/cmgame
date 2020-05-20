@@ -3,9 +3,9 @@ from internal import validate_request
 from properties import Constants
 from functools import wraps
 from request_handler import RequestHandler
-from enum import IntEnum
+from enum import Enum
 
-from user import User
+from user_utils import User
 
 
 class Route:
@@ -17,7 +17,7 @@ class Route:
         self.require_id = require_id
 
 
-def _handler(routes: Dict[IntEnum, Route], request_enum: Type[IntEnum], event: dict):
+def _handler(routes: Dict[Enum, Route], request_enum: Type[Enum], event: dict):
     req = validate_request(event, request_enum)
     _route = routes[req]
     user_id = None
@@ -29,11 +29,11 @@ def _handler(routes: Dict[IntEnum, Route], request_enum: Type[IntEnum], event: d
 
 
 # TODO: figure out how we need context
-def wrapper(routes: dict, request_enum: Type[IntEnum], f, *args):
+def wrapper(routes: dict, request_enum: Type[Enum], f, *args):
     return _handler(routes, request_enum, args[0])
 
 
-def route(routes: dict, request_enum: Type[IntEnum]):
+def route(routes: dict, request_enum: Type[Enum]):
     def inner(f):
         @wraps(f)
         def wrapped_f(*args):

@@ -1,8 +1,8 @@
-from properties import UserAttr
+from database import UserAttr
 from request_handler import RequestHandler
 
 from internal import end
-from user import User
+from user_utils import User
 from .helper.item_helper import ItemHelper
 
 

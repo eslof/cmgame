@@ -23,11 +23,9 @@ from router import route, Route
     from .${request.lower} import ${request.camel}
 #end##
 
-assert_inheritance([${cl}], RequestHandler)
-
 
 @unique
-class ${sc}Request(IntEnum):
+class ${sc}Request(Enum):
 #foreach($request in $rm)
         ${request.upper} = auto()
 #end

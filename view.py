@@ -1,6 +1,6 @@
 import json
 from json import JSONDecodeError
-from enum import IntEnum
+from enum import Enum
 from typing import Optional
 
 from internal import end
@@ -38,17 +38,17 @@ class View:
         return cls.decode(data)
 
     @classmethod
-    def response(cls, response_type: IntEnum, valid_data: dict) -> str:
+    def response(cls, response_type: Enum, data: dict) -> str:
         """Create and return a .serialize'd response of given type with given data."""
-        valid_data[PacketHeader.RESPONSE] = response_type
-        return cls.serialize(valid_data)
+        data[PacketHeader.RESPONSE] = response_type
+        return cls.serialize(data)
 
     @classmethod
     def generic(cls, result: Optional[bool]) -> str:
         """Create and return a .serialize'd boolean response as per given result."""
         return cls.serialize(
             {
-                PacketHeader.RESPONSE: ResponseType.GENERIC,
+                PacketHeader.RESPONSE: ResponseType.GENERIC.value,
                 ResponseField.Generic.RESULT: False if result is None else result,
             }
         )
@@ -58,7 +58,7 @@ class View:
         """Create and return a .serialize'd error response with given message."""
         return cls.serialize(
             {
-                PacketHeader.RESPONSE: ResponseType.ERROR,
+                PacketHeader.RESPONSE: ResponseType.ERROR.value,
                 ResponseField.Generic.ERROR: message,
             }
         )

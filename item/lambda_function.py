@@ -7,7 +7,7 @@ from item.update import Update
 
 
 @unique
-class ItemRequest(IntEnum):
+class ItemRequest(Enum):
     PLACE = auto()
     UPDATE = auto()
     CLEAR = auto()

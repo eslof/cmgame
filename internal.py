@@ -1,6 +1,6 @@
 import string
 import secrets
-from enum import IntEnum
+from enum import Enum
 from inspect import isclass
 from properties import Constants, PacketHeader
 from sys import exit as sys_exit
@@ -34,7 +34,7 @@ def generate_id(prefix: str, length: int = Constants.ID_GEN_LENGTH) -> str:
     )
 
 
-def validate_request(target: dict, request_enum: type(IntEnum)) -> IntEnum:
+def validate_request(target: dict, request_enum: type(Enum)) -> Enum:
     """validate_field wrapper for given enum used for base requests in all lambda_function.py files."""
     validate_field(
         target=target,
