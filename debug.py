@@ -20,13 +20,13 @@ if __debug__:
             and not (type(handler) is RequestHandler)
         ), f"Invalid inheritance: '{handler}' not derive '{RequestHandler}'."
 
-    def assert_route(routes: dict, enum: Enum):
+    def assert_route(routes: dict, enum: Enum, route_class: type):
         assert routes[
             enum
         ], f"Invalid route: '{routes[enum]}' in '{routes}' at '{enum}'."
         assert isinstance(
-            routes[enum], ROUTE_CLASS
-        ), f"Invalid route: '{routes[enum]}' not instance of '{ROUTE_CLASS}' in '{routes}' at '{enum}'."
+            routes[enum], route_class
+        ), f"Invalid route: '{routes[enum]}' not instance of '{route_class}' in '{routes}' at '{enum}'."
         assert_handler(routes[enum].handler)
         assert routes[
             enum
@@ -53,7 +53,7 @@ if __debug__:
             assert (
                 enum in request_enum
             ), f"Invalid entry: '{enum}' not in '{request_enum}'."
-            assert_route(routes, enum)
+            assert_route(routes, enum, route_class)
         for enum in request_enum:
             assert enum in routes, f"Invalid entry: '{enum}' not in '{routes}"
-            assert_route(routes, enum)
+            assert_route(routes, enum, route_class)

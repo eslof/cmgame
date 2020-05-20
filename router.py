@@ -1,8 +1,10 @@
-from typing import Callable
+from typing import Callable, Optional, Any
 from internal import validate_request
 from properties import Constants
 from request_handler import RequestHandler
 from enum import Enum
+
+from user import User
 
 
 class Route:
@@ -12,6 +14,16 @@ class Route:
         self.handler = handler
         self.output = output
         self.require_id = require_id
+
+
+def _handler(event: dict, context: Optional[Any], _route: Route):
+    """Todo: this is actually part of the model even though it's routing requests... figure something out"""
+    user_id = None
+    if _route.require_id:
+        user_id = User.validate_id(event)
+    valid_data = _route.handler.validate(event, user_id)
+    output = _route.handler.run(event, user_id, valid_data or None)
+    return _route.output(output)
 
 
 # TODO: figure out a better way to do this
