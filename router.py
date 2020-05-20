@@ -16,13 +16,7 @@ class Route:
         self.require_id = require_id
 
 
-# TODO: figure out how we need context
-def _handler(
-    routes: Dict[IntEnum, Route],
-    request_enum: Type[IntEnum],
-    event: dict,
-    context: dict,
-):
+def _handler(routes: Dict[IntEnum, Route], request_enum: Type[IntEnum], event: dict):
     req = validate_request(event, request_enum)
     _route = routes[req]
     user_id = None
@@ -33,8 +27,9 @@ def _handler(
     return _route.output(output)
 
 
+# TODO: figure out how we need context
 def wrapper(routes: dict, request_enum: Type[IntEnum], f, *args):
-    return _handler(routes, request_enum, *args)
+    return _handler(routes, request_enum, args[0])
 
 
 def route(routes: dict, request_enum: Type[IntEnum]):
