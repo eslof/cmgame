@@ -3,7 +3,6 @@ if __debug__:
     from inspect import isclass
     from request_handler import RequestHandler
 
-    ROUTE_CLASS = None
     LAMBDA_HANDLER_NAME = "lambda_handler"
 
     def assert_handler(handler: type):
@@ -37,7 +36,12 @@ if __debug__:
         ), f"Invalid output: '{routes[enum].output}' not callable for '{routes[enum]}' in '{routes}' at '{enum}'."
 
     # todo: move to unit test (?)
-    def assert_routing(f_name: str, routes: dict, request_enum: type(Enum)):
+    def assert_routing(
+        f_name: str, routes: dict, request_enum: type(Enum), route_class: type
+    ):
+        assert isclass(
+            route_class
+        ), f"Invalid route class: {route_class} should be class."
         assert (
             f_name == LAMBDA_HANDLER_NAME
         ), f"Invalid function: '{f_name}' for '{request_enum}', should be '{LAMBDA_HANDLER_NAME}'."

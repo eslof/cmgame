@@ -14,10 +14,9 @@ class Route:
         self.require_id = require_id
 
 
+# TODO: figure out a better way to do this
 if __debug__:
-    from debug import assert_routing, ROUTE_CLASS
-
-    ROUTE_CLASS = Route
+    from debug import assert_routing
 
 
 # TODO: collect error messages
@@ -26,10 +25,11 @@ def route(routes: dict, request_enum: type(Enum)):
         def wrapped_f(*args):
             # region Server (todo: move to unit test)
             if __debug__:
+                # TODO: figure out how to actually make this testable
                 assert (
                     len(args) > 0 and args[0] and type(args[0]) is dict
                 ), f"Missing argument for '{Constants.LAMBDA_HANDLER_NAME}' in '{request_enum}', should be '{Constants.LAMBDA_HANDLER_NAME}(event, context)'."
-                assert_routing(f.__name__, routes, request_enum)
+                assert_routing(f.__name__, routes, request_enum, Route)
             # endregion
 
             # region Client authoritive (keep this)
