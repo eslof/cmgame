@@ -10,7 +10,7 @@ assert_inheritance([Data, Delete, New, Save], RequestHandler)
 
 
 @unique
-class UserRequest(Enum):
+class UserRequest(IntEnum):
     DATA = auto()
     DELETE = auto()
     NEW = auto()

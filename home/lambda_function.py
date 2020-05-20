@@ -9,7 +9,7 @@ from home.save import Save
 
 
 @unique
-class HomeRequest(Enum):
+class HomeRequest(IntEnum):
     DELETE = auto()
     GO = auto()
     NEW = auto()

@@ -14,10 +14,12 @@ class Data(RequestHandler):
             UserHelper.template_home(
                 home[UserAttr.Home.NAME], home[UserAttr.Home.BIODOME]
             )
-            for home in data[UserAttr.HOMES]
+            for home in valid_data[UserAttr.HOMES]
         ]
-        inventory = [ItemHelper.template_inv(item) for item in data[UserAttr.INVENTORY]]
-        return UserHelper.template_welcome(data, homes, inventory)
+        inventory = [
+            ItemHelper.template_inv(item) for item in valid_data[UserAttr.INVENTORY]
+        ]
+        return UserHelper.template_welcome(valid_data, homes, inventory)
 
     @staticmethod
     def validate(event: dict, user_id: str) -> dict:

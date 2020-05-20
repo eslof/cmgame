@@ -22,20 +22,20 @@ class Enlist(RequestHandler):
     def run(event: dict, user_id: str, valid_data: dict) -> Optional[Any]:
         """If an enlistment for the given user_id exists then we update its timestamp.
         If there is no enlistment for the given user_id then we add one."""
-        match_id = UserState(data[UserAttr.MATCH_ID])
+        match_id = UserState(valid_data[UserAttr.MATCH_ID])
         # todo: just get queue ID instead
         if match_id:
             table.delete_item(
                 Key={
                     TableKey.PARTITION: TablePartition.MATCH,
-                    TableKey.SORT: data[UserAttr.MATCH_ID],
+                    TableKey.SORT: valid_data[UserAttr.MATCH_ID],
                 }
             )
             # TODO: send match_id to ws_server to know who to expect
             return web_socket_endpoint()["address"]
         time_now = datetime.now()
         new_id = time_now.strftime("%m-%d-%H-%M-%S") + user_id
-        match_id = data[UserAttr.MATCH_ID] or new_id
+        match_id = valid_data[UserAttr.MATCH_ID] or new_id
         # todo: error handling
         table.update_item(
             Key={TableKey.PARTITION: TablePartition.MATCH, TableKey.SORT: match_id},

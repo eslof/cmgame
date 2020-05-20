@@ -1,4 +1,4 @@
-from enum import unique, Enum, auto
+from enum import unique, IntEnum, auto
 
 from properties import PacketHeader
 from router import route, Route
@@ -10,7 +10,7 @@ from friend.remove import Remove
 
 
 @unique
-class FriendRequest(Enum):
+class FriendRequest(IntEnum):
     ADD = auto()
     INVITE = auto()
     LIST = auto()
@@ -33,4 +33,4 @@ def lambda_handler(event, context):
     pass
 
 
-lambda_handler({PacketHeader.REQUEST: FriendRequest.INVITE.value}, None)
+lambda_handler({PacketHeader.REQUEST: FriendRequest.INVITE}, None)

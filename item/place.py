@@ -13,7 +13,7 @@ class Place(RequestHandler):
     @staticmethod
     def run(event: dict, user_id: str, valid_data: dict) -> bool:
         """Sets a grid slot for given home id to contain a requested item with given meta data."""
-        home_id = data[UserAttr.CURRENT_HOME]
+        home_id = valid_data[UserAttr.CURRENT_HOME]
         item_index = event[RequestField.User.ITEM] - 1
         grid_index = event[RequestField.Home.GRID] - 1
         item_meta = event[RequestField.Item.META]

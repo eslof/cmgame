@@ -1,5 +1,5 @@
 if __debug__:
-    from enum import Enum
+    from enum import IntEnum
     from inspect import isclass
     from request_handler import RequestHandler
 
@@ -20,7 +20,7 @@ if __debug__:
             and not (type(handler) is RequestHandler)
         ), f"Invalid inheritance: '{handler}' not derive '{RequestHandler}'."
 
-    def assert_route(routes: dict, enum: Enum, route_class: type):
+    def assert_route(routes: dict, enum: IntEnum, route_class: type):
         assert routes[
             enum
         ], f"Invalid route: '{routes[enum]}' in '{routes}' at '{enum}'."
@@ -37,7 +37,7 @@ if __debug__:
 
     # todo: move to unit test (?)
     def assert_routing(
-        f_name: str, routes: dict, request_enum: type(Enum), route_class: type
+        f_name: str, routes: dict, request_enum: type(IntEnum), route_class: type
     ):
         assert isclass(
             route_class

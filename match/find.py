@@ -15,7 +15,7 @@ class Find(RequestHandler):
 
     @staticmethod
     def run(event: dict, user_id: str, valid_data: dict) -> Union[str, bool]:
-        user_state = UserState(data[UserAttr.STATE])
+        user_state = UserState(valid_data[UserAttr.STATE])
         if user_state == UserState.MATCHED:
             return web_socket_endpoint()["address"]
         response = table.get_item(

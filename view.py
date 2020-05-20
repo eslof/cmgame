@@ -1,6 +1,6 @@
 import json
 from json import JSONDecodeError
-from enum import Enum
+from enum import IntEnum
 from typing import Optional
 
 from internal import end
@@ -17,12 +17,12 @@ class View:
     valid_empty = "{}"
 
     @classmethod
-    def serialize(cls, valid_data: dict) -> str:
+    def serialize(cls, data: dict) -> str:
         """Serialize data using current standard format."""
         return cls.encode(data)
 
     @classmethod
-    def try_deserialize(cls, valid_data: str) -> _type:
+    def try_deserialize(cls, data: str) -> _type:
         """Try to return deserialized data using current standard format and exit on except."""
         try:
             if not data:
@@ -33,22 +33,22 @@ class View:
         return cls.decode(data)
 
     @classmethod
-    def deserialize(cls, valid_data: str) -> _type:
+    def deserialize(cls, data: str) -> _type:
         """Deserialize data using current standard format."""
         return cls.decode(data)
 
     @classmethod
-    def response(cls, response_type: Enum, valid_data: dict) -> str:
+    def response(cls, response_type: IntEnum, valid_data: dict) -> str:
         """Create and return a .serialize'd response of given type with given data."""
-        data[PacketHeader.RESPONSE] = response_type.value
-        return cls.serialize(data)
+        valid_data[PacketHeader.RESPONSE] = response_type
+        return cls.serialize(valid_data)
 
     @classmethod
     def generic(cls, result: Optional[bool]) -> str:
         """Create and return a .serialize'd boolean response as per given result."""
         return cls.serialize(
             {
-                PacketHeader.RESPONSE: ResponseType.GENERIC.value,
+                PacketHeader.RESPONSE: ResponseType.GENERIC,
                 ResponseField.Generic.RESULT: False if result is None else result,
             }
         )
@@ -58,7 +58,7 @@ class View:
         """Create and return a .serialize'd error response with given message."""
         return cls.serialize(
             {
-                PacketHeader.RESPONSE: ResponseType.ERROR.value,
+                PacketHeader.RESPONSE: ResponseType.ERROR,
                 ResponseField.Generic.ERROR: message,
             }
         )

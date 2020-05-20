@@ -7,7 +7,7 @@ from itembox.demand import Demand
 
 
 @unique
-class ItemBoxRequest(Enum):
+class ItemBoxRequest(IntEnum):
     ACCEPT = auto()
     DEMAND = auto()
 

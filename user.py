@@ -30,7 +30,7 @@ class User:
                 Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
                 ProjectionExpression=attributes,
                 ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
-                ExpressionAttributeValues={":banned": UserState.BANNED.value},
+                ExpressionAttributeValues={":banned": UserState.BANNED},
                 ExpressionAttributeNames={
                     "#id": TableKey.PARTITION,
                     "#state": UserAttr.STATE,
@@ -61,7 +61,7 @@ class User:
                 ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
                 ExpressionAttributeValues={
                     ":value": value,
-                    ":banned": UserState.BANNED.value,
+                    ":banned": UserState.BANNED,
                 },
                 ExpressionAttributeNames={
                     "#name": attribute,

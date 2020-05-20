@@ -12,7 +12,7 @@ class Demand(RequestHandler):
     @staticmethod
     def run(event: dict, user_id: str, valid_data: dict) -> list:
         """Produce a count of items not already owned for the user to choose between."""
-        inventory = data[UserAttr.INVENTORY]
+        inventory = valid_data[UserAttr.INVENTORY]
         seed = ItemHelper.itembox_seed(
             user_id, valid_data[UserAttr.KEY_COUNT], valid_data[UserAttr.KEY_USED_COUNT]
         )

@@ -7,7 +7,7 @@ from match.stop import Stop
 
 
 @unique
-class MatchRequest(Enum):
+class MatchRequest(IntEnum):
     ENLIST = auto()
     FIND = auto()
     STOP = auto()

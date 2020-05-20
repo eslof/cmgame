@@ -1,8 +1,8 @@
-from enum import Enum, unique
+from enum import IntEnum, unique
 
 
 @unique
-class Country(Enum):
+class Country(IntEnum):
     AFG = 4
     ALB = 8
     ATA = 10

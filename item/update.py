@@ -1,4 +1,6 @@
-from database import table, TableKey, TablePartition, UserAttr
+from botocore.exceptions import ClientError
+
+from database import table, TableKey, TablePartition, UserAttr, HomeAttr
 from internal import validate_field, validate_meta
 from properties import Constants, RequestField
 from request_handler import RequestHandler
@@ -11,8 +13,8 @@ class Update(RequestHandler):
     @staticmethod
     def run(event: dict, user_id: str, valid_data: dict) -> bool:
         """Sets given item meta-data at requested grid index for the given home id"""
-        home_id = (data[UserAttr.CURRENT_HOME],)
-        grid_index = (event[RequestField.Home.GRID],)
+        home_id = valid_data[UserAttr.CURRENT_HOME]
+        grid_index = event[RequestField.Home.GRID]
         item_meta = event[RequestField.Item.META]
         try:
             # TODO: rework database model

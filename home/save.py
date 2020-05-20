@@ -13,7 +13,7 @@ class Save(RequestHandler):
     @staticmethod
     def run(event: dict, user_id: str, valid_data: dict) -> bool:
         """Set meta data for given home id."""
-        home_id = data[UserAttr.CURRENT_HOME]
+        home_id = valid_data[UserAttr.CURRENT_HOME]
         meta_data = event[RequestField.Home.META]
         try:
             # TODO: rework database model

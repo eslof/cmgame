@@ -21,7 +21,7 @@ class UserHelper:
             ),
             ConditionExpression=f"attribute_exists(#id) AND #state <> :banned AND #home_count <= :max_homes",
             ExpressionAttributeValues={
-                ":banned": UserState.BANNED.value,
+                ":banned": UserState.BANNED,
                 ":max_homes": Constants.User.HOME_COUNT_MAX,
                 ":home": cls.template_home(home_id, name, biodome),
             },

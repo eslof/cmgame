@@ -14,7 +14,7 @@ class Go(RequestHandler):
     def run(event: dict, user_id: str, valid_data: dict) -> dict:
         """Set selected home of given user id to given home id.
          Get and return grid and associated meta-data for given home id."""
-        home_id = data[UserAttr.HOMES][event[RequestField.User.HOME]]
+        home_id = valid_data[UserAttr.HOMES][event[RequestField.User.HOME]]
         try:
             # TODO: rework database model also dont forget to get home meta data
             home_data = table.get_item(

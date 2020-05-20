@@ -42,7 +42,7 @@ class UserHelper:
         return {
             TableKey.PARTITION: TablePartition.USER,
             TableKey.SORT: new_id,
-            UserAttr.STATE: UserState.NEW.value,
+            UserAttr.STATE: UserState.NORMAL,
             UserAttr.NAME: name,
             UserAttr.FLAG: flag,
             UserAttr.META: "{}",

@@ -27,7 +27,7 @@ assert_inheritance([${cl}], RequestHandler)
 
 
 @unique
-class ${sc}Request(Enum):
+class ${sc}Request(IntEnum):
 #foreach($request in $rm)
         ${request.upper} = auto()
 #end

@@ -4,7 +4,7 @@ from country import Country
 from properties import RequestField, UserAttr, TableKey
 from properties import TablePartition, UserState, Constants
 from internal import validate_field, end, validate_request
-from enum import Enum, unique, auto
+from enum import IntEnum, unique, auto
 from request_handler import RequestHandler
 
 from user import User
@@ -12,7 +12,7 @@ from view import View
 
 
 @unique
-class SaveRequest(Enum):
+class SaveRequest(IntEnum):
     NAME = auto()
     FLAG = auto()
     META = auto()

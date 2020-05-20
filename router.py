@@ -1,8 +1,8 @@
-from typing import Callable, Optional, Any
+from typing import Callable, Optional, Any, Dict
 from internal import validate_request
 from properties import Constants
 from request_handler import RequestHandler
-from enum import Enum
+from enum import IntEnum
 
 from user import User
 
@@ -26,16 +26,36 @@ def _handler(event: dict, context: Optional[Any], _route: Route):
     return _route.output(output)
 
 
+def get_route(
+    routes: Dict[IntEnum, Route], request_enum: Type[IntEnum], f: Callable, *args
+) -> Route:
+    _route = get_route(routes, request_enum, f, *args)
+
+    # region Client authoritive (keep this)
+    req = validate_request(args[0], request_enum)
+    # endregion
+
+    return routes[req]
+
+
 # TODO: figure out a better way to do this
 if __debug__:
     from debug import assert_routing
 
 
-# TODO: collect error messages
-def route(routes: dict, request_enum: type(Enum)):
+def route(routes: dict, request_enum: type(IntEnum)):
     def inner(f):
         def wrapped_f(*args):
-            # region Server (todo: move to unit test)
+
+            _route = get_route(routes, request_enum, f, *args)
+
+            # region Client authoritive (keep this)
+            req = validate_request(args[0], request_enum)
+            # endregion
+
+            _route = routes[req]
+            args = args + (_route,)
+
             if __debug__:
                 # TODO: figure out how to actually make this testable
                 assert (
@@ -44,12 +64,6 @@ def route(routes: dict, request_enum: type(Enum)):
                 assert_routing(f.__name__, routes, request_enum, Route)
             # endregion
 
-            # region Client authoritive (keep this)
-            req = validate_request(args[0], request_enum)
-            # endregion
-
-            _route = routes[req]
-            args = args + (_route,)
             return _handler(*args)
 
         return wrapped_f

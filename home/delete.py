@@ -15,7 +15,7 @@ class Delete(RequestHandler):
     def run(event: dict, user_id: str, valid_data: dict) -> bool:
         """Run documentation TODO: stuff"""
         home_index = event[RequestField.User.HOME]
-        home_id = data[UserAttr.HOMES][home_index]
+        home_id = valid_data[UserAttr.HOMES][home_index]
         HomeHelper.attempt_delete(home_id)
         return User.update(user_id, UserAttr.HOMES, home_index, "REMOVE #name[:value]")
 
