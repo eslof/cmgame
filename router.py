@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Any, Dict
+from typing import Callable, Optional, Any, Dict, Type
 from internal import validate_request
 from properties import Constants
 from request_handler import RequestHandler
@@ -16,8 +16,15 @@ class Route:
         self.require_id = require_id
 
 
-def _handler(event: dict, context: Optional[Any], _route: Route):
-    """Todo: this is actually part of the model even though it's routing requests... figure something out"""
+# TODO: figure out how we need context
+def _handler(
+    routes: Dict[IntEnum, Route],
+    request_enum: Type[IntEnum],
+    event: dict,
+    context: dict,
+):
+    req = validate_request(event, request_enum)
+    _route = routes[req]
     user_id = None
     if _route.require_id:
         user_id = User.validate_id(event)
@@ -26,45 +33,14 @@ def _handler(event: dict, context: Optional[Any], _route: Route):
     return _route.output(output)
 
 
-def get_route(
-    routes: Dict[IntEnum, Route], request_enum: Type[IntEnum], f: Callable, *args
-) -> Route:
-    _route = get_route(routes, request_enum, f, *args)
-
-    # region Client authoritive (keep this)
-    req = validate_request(args[0], request_enum)
-    # endregion
-
-    return routes[req]
+def wrapper(routes: dict, request_enum: Type[IntEnum], f, *args):
+    return _handler(routes, request_enum, *args)
 
 
-# TODO: figure out a better way to do this
-if __debug__:
-    from debug import assert_routing
-
-
-def route(routes: dict, request_enum: type(IntEnum)):
+def route(routes: dict, request_enum: Type[IntEnum]):
     def inner(f):
         def wrapped_f(*args):
-
-            _route = get_route(routes, request_enum, f, *args)
-
-            # region Client authoritive (keep this)
-            req = validate_request(args[0], request_enum)
-            # endregion
-
-            _route = routes[req]
-            args = args + (_route,)
-
-            if __debug__:
-                # TODO: figure out how to actually make this testable
-                assert (
-                    len(args) > 0 and args[0] and type(args[0]) is dict
-                ), f"Missing argument for '{Constants.LAMBDA_HANDLER_NAME}' in '{request_enum}', should be '{Constants.LAMBDA_HANDLER_NAME}(event, context)'."
-                assert_routing(f.__name__, routes, request_enum, Route)
-            # endregion
-
-            return _handler(*args)
+            return wrapper(routes, request_enum, f, *args)
 
         return wrapped_f
 
