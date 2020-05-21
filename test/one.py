@@ -9,5 +9,5 @@ class One(RequestHandler):
         return data
 
     @staticmethod
-    def validate(event: dict, user_id: Optional[str]) -> Optional[dict]:
+    def validate(event: Any, user_id: Optional[str]) -> Any:
         return event

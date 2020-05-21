@@ -1,9 +1,13 @@
-from default_imports import *
+from enum import Enum, auto, unique
+from typing import Any, Dict
 
-from .data import Data
-from .delete import Delete
-from .new import New
-from .save import Save
+from properties import ResponseType, ResponseField
+from router import Route, ROUTES_TYPE, route
+from user.data import Data
+from user.delete import Delete
+from user.new import New
+from user.save import Save
+from view import View
 
 
 @unique
@@ -34,5 +38,5 @@ routes: ROUTES_TYPE = {
 
 
 @route(routes, UserRequest)
-def lambda_handler(event: Dict[str, Any], context: Dict[str, Any]) -> None:
+def lambda_handler(event: Dict[str, Any], context: Any) -> None:
     pass

@@ -1,25 +1,28 @@
+from typing import Any, Dict
 from unittest import TestCase
 
 from database import UserAttr
 from internal import generate_id
 from properties import PacketHeader, RequestField, ResponseField, ResponseType
+from test.lambda_function import TestRequest
+from test.lambda_function import lambda_handler
 from view import View
-from .test.lambda_function import TestRequest
-from .test.lambda_function import lambda_handler
 
 
 class TestService(TestCase):
     mock_id = generate_id(UserAttr.SORT_KEY_PREFIX)
 
-    def run_handler(self, mock_data: dict, expected_output: dict, name: str):
-        output: dict = View.deserialize(lambda_handler(mock_data, None))
+    def run_handler(
+        self, mock_data: Dict[str, Any], expected_output: Dict[str, Any], test_name: str
+    ) -> None:
+        output: Dict[str, Any] = View.deserialize(lambda_handler(mock_data, None))
         self.assertEqual(
             output,
             expected_output,
-            f"{name}: Invalid output: '{output}' should be '{expected_output}'.",
+            f"{test_name}: Invalid output: '{output}' should be '{expected_output}'.",
         )
 
-    def test_debug(self):
+    def test_debug(self) -> None:
         mock_data = {
             PacketHeader.REQUEST: TestRequest.ONE.value,
             RequestField.User.ID: self.mock_id,

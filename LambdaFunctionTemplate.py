@@ -1,4 +1,3 @@
-from default_imports import *
 #set($request = "")
 #set($sc = ${StringUtils.removeUnderScores($service)})
 #set($ns = $requests.replace(" ", ""))
@@ -39,5 +38,5 @@ routes: ROUTES_TYPE = {
 
 
 @route(routes, ${sc}Request)
-def lambda_handler(event: Dict[str, Any], context: Dict[str, Any]) -> None:
+def lambda_handler(event: Dict[str, Any], context: Any) -> None:
     pass

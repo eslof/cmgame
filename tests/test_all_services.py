@@ -2,7 +2,7 @@ import importlib
 import os
 from enum import Enum, EnumMeta
 from inspect import isclass
-from typing import Callable
+from typing import Callable, Any, Dict, Type
 from unittest import TestCase
 
 import router
@@ -16,7 +16,6 @@ from request_handler import RequestHandler
 
 
 class TestService(TestCase):
-
     LAMBDA_HANDLER_NAME = "lambda_handler"
     LAMBDA_FILE_NAME = "lambda_function"
     ROOT_DIR = ".."
@@ -25,7 +24,7 @@ class TestService(TestCase):
         RequestField.User.ID: generate_id(UserAttr.SORT_KEY_PREFIX),
     }
 
-    def test_all_services(self):
+    def test_all_services(self) -> None:
         dir_list = [
             name
             for name in os.listdir(self.ROOT_DIR)
@@ -41,8 +40,10 @@ class TestService(TestCase):
                     with self.subTest(directory):
                         self.lambda_handler_subTest(func, directory)
 
-    def lambda_handler_subTest(self, lambda_handler: Callable, name: str):
-        def test_handler(handler: type):
+    def lambda_handler_subTest(
+        self, lambda_handler: Callable[[Dict[str, Any], Any], None], name: str
+    ) -> None:
+        def test_handler(handler: Type[RequestHandler]) -> None:
             # region Assert that our handler base class is not broken
             self.assertTrue(
                 RequestHandler and isclass(RequestHandler),
@@ -65,7 +66,7 @@ class TestService(TestCase):
             )
             # endregion
 
-        def test_route(routes, enum):
+        def test_route(routes: router.ROUTES_TYPE, enum: Enum) -> None:
             # region Assert that the given route is valid
             self.assertTrue(
                 routes[enum],
@@ -89,12 +90,15 @@ class TestService(TestCase):
             )
             #   endregion
 
-        def test_wrapper(routes: dict, request_enum: EnumMeta, f, *args):
+        def test_wrapper(
+            routes: router.ROUTES_TYPE,
+            request_enum: EnumMeta,
+            f: Callable[[Dict[str, Any], Dict[str, Any]], None],
+            event: Dict[str, Any],
+        ) -> None:
             # region Assert decorated function to be 'lambda_handler' with at least one argument
             self.assertTrue(
-                len(args) > 0
-                and args[0]
-                and type(args[0]) in [dict, list, str, int, float, None],
+                event and len(event) > 0,
                 f"{name}: Incorrect first argument for '{Constants.LAMBDA_HANDLER_NAME}' in '{request_enum}', should be '{Constants.LAMBDA_HANDLER_NAME}(event, context)'.",
             )
             self.assertTrue(

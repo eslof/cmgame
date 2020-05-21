@@ -2,9 +2,9 @@ from enum import unique, auto, Enum
 from typing import Dict, Any
 
 from router import Route, ROUTES_TYPE, route
-from tests.test.one import One
-from tests.test.three import Three
-from tests.test.two import Two
+from test.one import One
+from test.three import Three
+from test.two import Two
 from view import View
 
 
@@ -24,5 +24,5 @@ routes: ROUTES_TYPE = {
 
 
 @route(routes, TestRequest)
-def lambda_handler(event: Dict[str, Any], context: Dict[str, Any]) -> None:
+def lambda_handler(event: Dict[str, Any], context: Any) -> None:
     pass

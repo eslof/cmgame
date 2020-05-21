@@ -33,7 +33,7 @@ class View:
         return cls.decode(data)
 
     @classmethod
-    def deserialize(cls, data: str) -> _type:
+    def deserialize(cls, data: Optional[str]) -> _type:
         """Deserialize data using current standard format."""
         return cls.decode(data)
 

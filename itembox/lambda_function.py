@@ -37,5 +37,5 @@ routes: ROUTES_TYPE = {
 
 
 @route(routes, ItemBoxRequest)
-def lambda_handler(event: Dict[str, Any], context: Dict[str, Any]) -> None:
+def lambda_handler(event: Dict[str, Any], context: Any) -> None:
     pass

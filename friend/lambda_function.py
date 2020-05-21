@@ -35,5 +35,5 @@ routes: ROUTES_TYPE = {
 
 
 @route(routes, FriendRequest)
-def lambda_handler(event: Dict[str, Any], context: Dict[str, Any]) -> None:
+def lambda_handler(event: Dict[str, Any], context: Any) -> None:
     pass
