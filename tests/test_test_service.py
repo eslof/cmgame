@@ -22,7 +22,7 @@ class TestService(TestCase):
             expected,
             f"{test_name}: Invalid output: '{output}' should be '{expected}'.",
         )
-        print(f"End of '{test_name}' integration test for test service.")
+        print(f"End of test '{test_name}' for test service.")
 
     def test_debug(self) -> None:
         request = {

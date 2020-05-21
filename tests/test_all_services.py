@@ -44,7 +44,7 @@ class TestService(TestCase):
                     with self.subTest(directory):
                         self.lambda_handler_subTest(func, directory)
                 # endregion
-        print(f"End of integrity test for all services.")
+        print(f"End of test_all_services.")
 
     def lambda_handler_subTest(
         self, lambda_handler: Callable[[Dict[str, Any], Any], None], name: str
