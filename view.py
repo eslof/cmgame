@@ -1,7 +1,7 @@
 import json
 from json import JSONDecodeError
 from enum import Enum
-from typing import Optional
+from typing import Optional, Any
 
 from internal import end
 from properties import PacketHeader, ResponseType, ResponseField
@@ -50,6 +50,15 @@ class View:
             {
                 PacketHeader.RESPONSE: ResponseType.GENERIC.value,
                 ResponseField.Generic.RESULT: False if result is None else result,
+            }
+        )
+
+    @classmethod
+    def debug(cls, data: Optional[Any]):
+        return cls.serialize(
+            {
+                PacketHeader.RESPONSE: ResponseType.DEBUG.value,
+                ResponseField.Generic.DEBUG: data,
             }
         )
 

@@ -6,6 +6,8 @@ from typing import Callable
 from unittest import TestCase
 
 import router
+from database import UserAttr
+from internal import generate_id
 from properties import RequestField, Constants, PacketHeader
 from request_handler import RequestHandler
 
@@ -18,7 +20,7 @@ class TestService(TestCase):
     ROOT_DIR = ".."
     MOCK_USER_PACKET = {
         PacketHeader.REQUEST: 1,
-        RequestField.User.ID: "U3yBYaH9ItbEmv6aOjRnCeV",
+        RequestField.User.ID: generate_id(UserAttr.SORT_KEY_PREFIX),
     }
 
     def test_all_services(self):
@@ -135,12 +137,6 @@ class TestService(TestCase):
                 )
                 test_route(routes, enum)
             # endregion
-            try:
-                output = router._handler(routes, request_enum, args[0])
-            except:
-                output = None
-
-            return output or None
 
         router.wrapper = test_wrapper
         event = self.MOCK_USER_PACKET
