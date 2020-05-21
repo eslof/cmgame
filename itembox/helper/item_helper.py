@@ -8,13 +8,10 @@ from properties import Seed
 
 
 class ItemHelper:
-    """Class provided to deal with a TODO: proper item database"""
-
     data = {}
 
     @classmethod
     def itembox(cls, count: int, seed: str, exclude_list: list = None):
-        """Get random items by given seed and given count, excluding those present in given exclude list."""
         cls.load_data()
         exclude_list = exclude_list or []
         item_ids = list(cls.data.keys())
@@ -29,7 +26,6 @@ class ItemHelper:
 
     @classmethod
     def load_data(cls) -> None:
-        """Load/Connect to DB"""
         if not cls.data:
             with open("../../item_db.json", "r") as file_stream:
                 cls.data = json.load(file_stream)

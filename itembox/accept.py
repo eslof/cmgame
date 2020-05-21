@@ -9,8 +9,6 @@ from .helper.item_helper import ItemHelper
 
 
 class Accept(RequestHandler):
-    """User responds to a demanded itembox with requested choice."""
-
     @staticmethod
     def run(event: dict, user_id: str, valid_data: dict) -> Any:
         inventory = valid_data[UserAttr.INVENTORY]

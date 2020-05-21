@@ -8,11 +8,8 @@ from user_utils import User
 
 
 class Place(RequestHandler):
-    """User requests to change the contents of a grid slot in the user's selected home."""
-
     @staticmethod
     def run(event: dict, user_id: str, valid_data: dict) -> bool:
-        """Sets a grid slot for given home id to contain a requested item with given meta data."""
         home_id = valid_data[UserAttr.CURRENT_HOME]
         item_index = event[RequestField.User.ITEM] - 1
         grid_index = event[RequestField.Home.GRID] - 1
@@ -43,9 +40,6 @@ class Place(RequestHandler):
 
     @staticmethod
     def validate(event: dict, user_id: str) -> dict:
-        """Confirm item index to be in range of inventory size.
-        Confirm target grid index to be in range of home size.
-        Confirm that item meta-data follows correct format and TODO: apply size limitation in case of misuse."""
         user_data = User.get(
             user_id=user_id,
             attributes=f"{UserAttr.INVENTORY_COUNT}, {UserAttr.CURRENT_HOME}",

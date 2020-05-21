@@ -14,11 +14,6 @@ class HomeRequest(Enum):
     SAVE = auto()
 
 
-@unique
-class RandomRequest(Enum):
-    HEYOOO = auto()
-
-
 routes = {
     HomeRequest.DELETE: Route(Delete, View.generic),
     HomeRequest.GO: Route(

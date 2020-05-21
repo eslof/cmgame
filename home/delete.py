@@ -6,14 +6,9 @@ from user_utils import User
 from .helper.home_helper import HomeHelper
 
 
-# TODO: research maybe using glacier to store deleted entries?
-#   although it really doesn't matter since homes can be freely replicated at no expense
 class Delete(RequestHandler):
-    """Delete documentation"""
-
     @staticmethod
     def run(event: dict, user_id: str, valid_data: dict) -> bool:
-        """Run documentation TODO: stuff"""
         home_index = event[RequestField.User.HOME]
         home_id = valid_data[UserAttr.HOMES][home_index]
         HomeHelper.attempt_delete(home_id)
@@ -21,7 +16,6 @@ class Delete(RequestHandler):
 
     @staticmethod
     def validate(event: dict, user_id: str) -> dict:
-        """User.get HOMES """
         user_data = User.get(user_id, UserAttr.HOMES)
         validate_field(
             event,

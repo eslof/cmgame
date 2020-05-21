@@ -13,7 +13,6 @@ class FriendRequest(Enum):
     REMOVE = auto()
 
 
-# TODO: Update route output (Callable/default=View.generic)
 routes = {
     FriendRequest.ADD: Route(
         Add, lambda value: View.response(ResponseType.DEBUG, value), False

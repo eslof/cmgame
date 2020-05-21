@@ -8,11 +8,8 @@ from user_utils import User
 
 
 class Update(RequestHandler):
-    """User requests to update the meta-data of an item in the user's selected home."""
-
     @staticmethod
     def run(event: dict, user_id: str, valid_data: dict) -> bool:
-        """Sets given item meta-data at requested grid index for the given home id"""
         home_id = valid_data[UserAttr.CURRENT_HOME]
         grid_index = event[RequestField.Home.GRID]
         item_meta = event[RequestField.Item.META]
@@ -41,8 +38,6 @@ class Update(RequestHandler):
 
     @staticmethod
     def validate(event: dict, user_id: str) -> dict:
-        """Confirm target grid index to be in range of home size.
-        Confirm that item meta-data follows correct format and TODO: apply size limitation in case of misuse."""
         user_data = User.get(user_id, UserAttr.CURRENT_HOME)
         validate_field(
             target=event,

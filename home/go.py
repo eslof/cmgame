@@ -8,15 +8,10 @@ from user_utils import User
 
 
 class Go(RequestHandler):
-    """User requests to be moved to one of the user's own homes."""
-
     @staticmethod
     def run(event: dict, user_id: str, valid_data: dict) -> dict:
-        """Set selected home of given user id to given home id.
-         Get and return grid and associated meta-data for given home id."""
         home_id = valid_data[UserAttr.HOMES][event[RequestField.User.HOME]]
         try:
-            # TODO: rework database model also dont forget to get home meta data
             home_data = table.get_item(
                 Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
                 ProjectionExpression="#GRID, #META",
@@ -42,8 +37,6 @@ class Go(RequestHandler):
 
     @staticmethod
     def validate(event: dict, user_id: str) -> dict:
-        """Confirm requested index to be in range of user's home count."""
-        # TODO: possibly batch write update_item to set current home with a condition?
         user_data = User.get(user_id, UserAttr.HOMES)
         home_count = len(user_data[UserAttr.HOMES])
         validate_field(

@@ -1,14 +1,8 @@
 from datetime import datetime
 from typing import Optional, Any
 
-from database import (
-    table,
-    TableKey,
-    TablePartition,
-    UserAttr,
-    MatchAttr,
-    web_socket_endpoint,
-)
+from database import UserAttr, MatchAttr, web_socket_endpoint
+from database import table, TableKey, TablePartition
 from internal import end
 from properties import UserState, Constants
 from request_handler import RequestHandler
@@ -16,14 +10,9 @@ from user_utils import User
 
 
 class Enlist(RequestHandler):
-    """User requests to open his home for a possible visitor."""
-
     @staticmethod
     def run(event: dict, user_id: str, valid_data: dict) -> Optional[Any]:
-        """If an enlistment for the given user_id exists then we update its timestamp.
-        If there is no enlistment for the given user_id then we add one."""
-        match_id = UserState(valid_data[UserAttr.MATCH_ID])
-        # todo: just get queue ID instead
+        match_id = valid_data[UserAttr.MATCH_ID]
         if match_id:
             table.delete_item(
                 Key={
@@ -55,11 +44,8 @@ class Enlist(RequestHandler):
 
     @staticmethod
     def validate(event: dict, user_id: str) -> dict:
-        # TODO: check if MATCH_ID is empty to determine if user is enlisted
         user_data = User.get(user_id, f"{UserAttr.STATE}, {UserAttr.MATCH_ID}")
-
         time_now = datetime.now()
-
         if user_data[UserAttr.MATCH_ID]:
             list_time_str = user_data[UserAttr.MATCH_ID][: -Constants.EXPECTED_ID_LEN]
             year_str = time_now.strftime("%Y-")

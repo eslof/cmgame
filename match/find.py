@@ -5,13 +5,8 @@ from properties import UserState
 from request_handler import RequestHandler
 from user_utils import User
 
-if __debug__:
-    pass
-
 
 class Find(RequestHandler):
-    """User requests to find an enlisted user to visit."""
-
     @staticmethod
     def run(event: dict, user_id: str, valid_data: dict) -> Union[str, bool]:
         user_state = UserState(valid_data[UserAttr.STATE])
@@ -39,7 +34,5 @@ class Find(RequestHandler):
 
     @staticmethod
     def validate(event: dict, user_id: Optional[str]) -> dict:
-        """Get and return queue state for given user id.
-        Confirm queue state not to be already matched."""
         user_data = User.get(user_id, UserAttr.STATE)
         return user_data

@@ -8,13 +8,10 @@ from .helper.user_helper import UserHelper
 
 
 class New(RequestHandler):
-    """User requests to create a new home."""
-
     @staticmethod
     def run(
         event: dict, user_id: str, valid_data: dict, recursion_limit: int = 3
     ) -> str:
-        """TODO: cant really batch this right"""
         new_id = None
         max_attempts = 5
         while not new_id and max_attempts > 0:
@@ -33,7 +30,6 @@ class New(RequestHandler):
 
     @staticmethod
     def validate(event: dict, user_id: str) -> dict:
-        """Confirm name to be of appropriate length, and existence of requested Biodome."""
         user_data = User.get(user_id, UserAttr.HOME_COUNT)
         home_count = user_data[UserAttr.HOME_COUNT]
         if home_count > Constants.User.HOME_COUNT_MAX:
