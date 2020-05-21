@@ -2,7 +2,7 @@ import importlib
 import os
 from enum import Enum, EnumMeta
 from inspect import isclass
-from typing import Callable
+from typing import Callable, Union
 from unittest import TestCase
 
 import router
@@ -13,6 +13,9 @@ from request_handler import RequestHandler
 
 
 # todo: update for enum meta
+from view import View
+
+
 class TestService(TestCase):
 
     LAMBDA_HANDLER_NAME = "lambda_handler"
@@ -90,7 +93,9 @@ class TestService(TestCase):
         def test_wrapper(routes: dict, request_enum: EnumMeta, f, *args):
             # region Assert decorated function to be 'lambda_handler' with at least one argument
             self.assertTrue(
-                len(args) > 0 and args[0] and type(args[0]) is dict,
+                len(args) > 0
+                and args[0]
+                and type(args[0]) in [dict, list, str, int, float, None],
                 f"{name}: Incorrect first argument for '{Constants.LAMBDA_HANDLER_NAME}' in '{request_enum}', should be '{Constants.LAMBDA_HANDLER_NAME}(event, context)'.",
             )
             self.assertTrue(
