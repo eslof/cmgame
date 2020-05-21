@@ -1,11 +1,12 @@
 import importlib
 import os
+from collections.abc import Sized
 from enum import Enum, EnumMeta
 from inspect import isclass
-from typing import Callable, Any, Dict, Type, Optional
+from typing import Callable, Any, Dict, Type
 from unittest import TestCase
 from unittest.mock import patch
-from collections.abc import Sized
+
 import router
 from database import UserAttr
 from internal import generate_id
@@ -43,6 +44,7 @@ class TestService(TestCase):
                     with self.subTest(directory):
                         self.lambda_handler_subTest(func, directory)
                 # endregion
+        print(f"End of integrity test for all services.")
 
     def lambda_handler_subTest(
         self, lambda_handler: Callable[[Dict[str, Any], Any], None], name: str

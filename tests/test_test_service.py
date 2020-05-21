@@ -22,6 +22,7 @@ class TestService(TestCase):
             expected_output,
             f"{test_name}: Invalid output: '{output}' should be '{expected_output}'.",
         )
+        print(f"End of '{test_name}' integration test for test service.")
 
     def test_debug(self) -> None:
         mock_data = {
@@ -32,9 +33,9 @@ class TestService(TestCase):
             PacketHeader.RESPONSE: ResponseType.DEBUG.value,
             ResponseField.Generic.DEBUG: mock_data,
         }
-        self.run_handler(mock_data, expected_output, "View.debug")
+        self.run_handler(mock_data, expected_output, "debug")
 
-    def test_generic(self):
+    def test_generic(self) -> None:
         mock_data = {
             PacketHeader.REQUEST: TestRequest.TWO.value,
             ResponseField.Generic.RESULT: True,
@@ -43,9 +44,9 @@ class TestService(TestCase):
             PacketHeader.RESPONSE: ResponseType.GENERIC.value,
             ResponseField.Generic.RESULT: mock_data[ResponseField.Generic.RESULT],
         }
-        self.run_handler(mock_data, expected_output, "View.generic")
+        self.run_handler(mock_data, expected_output, "generic")
 
-    def test_error(self):
+    def test_error(self) -> None:
         error_message = "hello world"
         mock_data = {
             PacketHeader.REQUEST: TestRequest.THREE.value,
@@ -55,4 +56,4 @@ class TestService(TestCase):
             PacketHeader.RESPONSE: ResponseType.ERROR.value,
             ResponseField.Generic.ERROR: mock_data[ResponseField.Generic.ERROR],
         }
-        self.run_handler(mock_data, expected_output, "View.error")
+        self.run_handler(mock_data, expected_output, "derror")

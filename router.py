@@ -49,7 +49,9 @@ def wrapper(
 def route(
     routes: Dict[Enum, Route], request_enum: EnumMeta
 ) -> Callable[[Callable[[Dict[str, Any], Any], None]], Callable[..., str]]:
-    def inner(f: Callable[[Dict[str, Any], None], None]) -> Callable[..., str]:
+    def inner(
+        f: Callable[[Dict[str, Any], Dict[str, Any]], None]
+    ) -> Callable[..., str]:
         @wraps(f)
         def wrapped_f(event: Dict[str, Any], context: Optional[Any]) -> Optional[str]:
             return wrapper(routes, request_enum, f, event)
