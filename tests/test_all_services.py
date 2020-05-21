@@ -2,7 +2,7 @@ import importlib
 import os
 from enum import Enum, EnumMeta
 from inspect import isclass
-from typing import Callable, Union
+from typing import Callable
 from unittest import TestCase
 
 import router
@@ -13,7 +13,6 @@ from request_handler import RequestHandler
 
 
 # todo: update for enum meta
-from view import View
 
 
 class TestService(TestCase):

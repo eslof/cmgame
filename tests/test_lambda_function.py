@@ -2,9 +2,9 @@ from unittest import TestCase
 
 from database import UserAttr
 from internal import generate_id
-from lambda_function import TestRequest
 from properties import PacketHeader, RequestField, ResponseField, ResponseType
 from view import View
+from .test.lambda_function import TestRequest
 from .test.lambda_function import lambda_handler
 
 
