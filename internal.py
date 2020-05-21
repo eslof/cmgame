@@ -26,12 +26,11 @@ def end(message: str = "", code: int = 0) -> None:
 
 def generate_id(prefix: str, length: int = Constants.ID_GEN_LENGTH) -> str:
     """TODO: what's good"""
-    return prefix + (
-        "".join(
-            secrets.choice(string.ascii_letters + string.digits + "-_")
-            for i in range(length - 1)
-        )
+    u_id = "".join(
+        secrets.choice(string.ascii_letters + string.digits + "-_")
+        for i in range(length)
     )
+    return f"{prefix}{u_id}"
 
 
 def validate_request(target: dict, request_enum: type(Enum)) -> Enum:

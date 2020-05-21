@@ -1,7 +1,7 @@
 from database import ItemAttr
 from default_imports import *
-from .accept import Accept
-from .demand import Demand
+from itembox.accept import Accept
+from itembox.demand import Demand
 
 
 @unique

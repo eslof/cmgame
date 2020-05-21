@@ -1,5 +1,4 @@
 from default_imports import *
-from router import route, Route
 #set($request = "")
 #set($sc = ${StringUtils.removeUnderScores($service)})
 #set($ns = $requests.replace(" ", ""))

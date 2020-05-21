@@ -98,6 +98,7 @@ class ResponseField:
         DATA = "data"
 
     class Generic:
+        DEBUG = "debug"
         ERROR = "error"
         RESULT = "results"
 
@@ -123,6 +124,7 @@ class ResponseField:
 
 @unique
 class ResponseType(Enum):
+    DEBUG = auto()
     ERROR = auto()
     WELCOME = auto()
     GENERIC = auto()

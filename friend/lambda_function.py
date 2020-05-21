@@ -1,8 +1,8 @@
 from default_imports import *
-from .add import Add
-from .invite import Invite
-from .list import List
-from .remove import Remove
+from friend.add import Add
+from friend.invite import Invite
+from friend.list import List
+from friend.remove import Remove
 
 
 @unique
@@ -15,12 +15,18 @@ class FriendRequest(Enum):
 
 # TODO: Update route output (Callable/default=View.generic)
 routes = {
-    FriendRequest.ADD: Route(Add, lambda v: None, False),
-    FriendRequest.INVITE: Route(
-        Invite, lambda v: print(v[PacketHeader.REQUEST]), False
+    FriendRequest.ADD: Route(
+        Add, lambda value: View.response(ResponseType.DEBUG, value), False
     ),
-    FriendRequest.LIST: Route(List, lambda v: None, False),
-    FriendRequest.REMOVE: Route(Remove, lambda v: None, False),
+    FriendRequest.INVITE: Route(
+        Invite, lambda value: View.response(ResponseType.DEBUG, value), False
+    ),
+    FriendRequest.LIST: Route(
+        List, lambda value: View.response(ResponseType.DEBUG, value), False
+    ),
+    FriendRequest.REMOVE: Route(
+        Remove, lambda value: View.response(ResponseType.DEBUG, value), False
+    ),
 }
 
 

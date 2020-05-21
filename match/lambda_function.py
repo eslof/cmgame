@@ -1,7 +1,7 @@
 from default_imports import *
-from .enlist import Enlist
-from .find import Find
-from .stop import Stop
+from match.enlist import Enlist
+from match.find import Find
+from match.stop import Stop
 
 
 @unique
