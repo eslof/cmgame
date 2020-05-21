@@ -25,7 +25,6 @@ routes: ROUTES_TYPE = {
     TestRequest.ONE: Route(One, View.debug),
     TestRequest.TWO: Route(Two, View.generic, require_id=False),
     TestRequest.THREE: Route(Three, View.error, require_id=False),
-    RandomRequest.HEYOO: Route(Three, View.error, require_id=False),
 }
 
 
