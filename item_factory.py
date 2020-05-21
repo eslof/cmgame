@@ -1,11 +1,11 @@
 import json
-from typing import Optional
+from typing import Optional, Any, Dict, Union
 
 from database import ItemAttr
 
 
 class ItemFactory:
-    data = {}
+    data: Dict[str, Any] = {}
 
     @classmethod
     def save_data(cls) -> None:
@@ -33,12 +33,12 @@ class ItemFactory:
                             return key
                 return None
 
-            item_id = scan()
-            if not item_id:
-                item_id = cls.data["next_auto"]
+            _scan: Optional[str] = scan()
+            item_id: str = _scan or cls.data["next_auto"]
+            if not _scan:
                 cls.data["next_auto"] += 1
 
-            cls.data[cls.data[item_id]] = {
+            cls.data[item_id] = {
                 ItemAttr.BUNDLE: bundle_name,
                 ItemAttr.VERSION: version,
             }
