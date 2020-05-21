@@ -1,9 +1,8 @@
 from default_imports import *
-from router import route, Route
-
 from item.clear import Clear
 from item.place import Place
 from item.update import Update
+from router import route, Route
 
 
 @unique

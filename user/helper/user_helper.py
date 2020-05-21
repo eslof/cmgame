@@ -1,5 +1,6 @@
-from botocore.exceptions import ClientError
 from typing import Optional
+
+from botocore.exceptions import ClientError
 
 from database import table, TableKey, TablePartition, UserAttr
 from internal import generate_id, end_unless_conditional

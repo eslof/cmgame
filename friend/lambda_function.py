@@ -1,12 +1,11 @@
 from enum import unique, Enum, auto
 
-from properties import PacketHeader
-from router import route, Route
-
 from friend.add import Add
 from friend.invite import Invite
 from friend.list import List
 from friend.remove import Remove
+from properties import PacketHeader
+from router import route, Route
 
 
 @unique

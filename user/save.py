@@ -1,13 +1,11 @@
+from enum import Enum, unique, auto
 from typing import Optional, Any
 
 from country import Country
 from database import UserAttr
-from properties import RequestField
-from properties import Constants
 from internal import validate_field, validate_request
-from enum import Enum, unique, auto
+from properties import Constants, RequestField
 from request_handler import RequestHandler
-
 from user_utils import User
 
 

@@ -1,11 +1,10 @@
 from typing import Optional, Any
 
 from country import Country
-from properties import Seed, RequestField, Constants
 from internal import validate_field, end
+from properties import RequestField, Constants
 from request_handler import RequestHandler
 from .helper.user_helper import UserHelper
-from random import Random
 
 
 class New(RequestHandler):
