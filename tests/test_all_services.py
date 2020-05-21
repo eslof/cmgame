@@ -2,8 +2,9 @@ import importlib
 import os
 from enum import Enum, EnumMeta
 from inspect import isclass
-from typing import Callable, Any, Dict, Type
+from typing import Callable, Any, Dict, Type, Optional
 from unittest import TestCase
+from unittest.mock import patch
 
 import router
 from database import UserAttr
@@ -95,7 +96,7 @@ class TestService(TestCase):
             request_enum: EnumMeta,
             f: Callable[[Dict[str, Any], Dict[str, Any]], None],
             event: Dict[str, Any],
-        ) -> None:
+        ) -> str:
             # region Assert decorated function to be 'lambda_handler' with at least one argument
             self.assertTrue(
                 event and len(event) > 0,
@@ -145,7 +146,10 @@ class TestService(TestCase):
                 )
                 test_route(routes, enum)
             # endregion
+            return ""
 
-        router.wrapper = test_wrapper
-        event = self.MOCK_USER_PACKET
-        lambda_handler(event, None)
+        with patch("router.wrapper") as mock_requests:
+            mock_requests.get.side_effect = test_wrapper
+            # router.wrapper = test_wrapper
+            event = self.MOCK_USER_PACKET
+            lambda_handler(event, None)

@@ -14,7 +14,7 @@ class RequestHandler(ABC):
     @abstractmethod
     def run(
         event: Dict[str, Any], user_id: Optional[str], valid_data: Optional[Any],
-    ) -> Optional[Any]:
+    ) -> Any:
         pass
 
     @staticmethod

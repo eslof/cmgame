@@ -16,6 +16,7 @@ class TestService(TestCase):
         self, mock_data: Dict[str, Any], expected_output: Dict[str, Any], test_name: str
     ) -> None:
         output: Dict[str, Any] = View.deserialize(lambda_handler(mock_data, None))
+
         self.assertEqual(
             output,
             expected_output,
