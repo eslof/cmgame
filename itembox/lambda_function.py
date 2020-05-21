@@ -1,7 +1,12 @@
+from enum import Enum, auto, unique
+from typing import Dict, Any
+
 from database import ItemAttr
-from default_imports import *
 from itembox.accept import Accept
 from itembox.demand import Demand
+from properties import ResponseType, ResponseField
+from router import ROUTES_TYPE, Route, route
+from view import View
 
 
 @unique
@@ -10,7 +15,7 @@ class ItemBoxRequest(Enum):
     DEMAND = auto()
 
 
-routes = {
+routes: ROUTES_TYPE = {
     ItemBoxRequest.ACCEPT: Route(
         handler=Accept,
         output=lambda value: View.response(
@@ -32,5 +37,5 @@ routes = {
 
 
 @route(routes, ItemBoxRequest)
-def lambda_handler(event, context):
+def lambda_handler(event: Dict[str, Any], context: Dict[str, Any]) -> None:
     pass

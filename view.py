@@ -1,6 +1,6 @@
 import json
-from json import JSONDecodeError
 from enum import Enum
+from json import JSONDecodeError
 from typing import Optional, Any
 
 from internal import end

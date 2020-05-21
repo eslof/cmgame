@@ -1,8 +1,13 @@
-from default_imports import *
+from enum import auto, Enum, unique
+from typing import Dict, Any
+
 from friend.add import Add
 from friend.invite import Invite
 from friend.list import List
 from friend.remove import Remove
+from properties import ResponseType
+from router import Route, route, ROUTES_TYPE
+from view import View
 
 
 @unique
@@ -13,7 +18,7 @@ class FriendRequest(Enum):
     REMOVE = auto()
 
 
-routes = {
+routes: ROUTES_TYPE = {
     FriendRequest.ADD: Route(
         Add, lambda value: View.response(ResponseType.DEBUG, value), False
     ),
@@ -30,5 +35,5 @@ routes = {
 
 
 @route(routes, FriendRequest)
-def lambda_handler(event, context):
+def lambda_handler(event: Dict[str, Any], context: Dict[str, Any]) -> None:
     pass

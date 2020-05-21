@@ -4,7 +4,7 @@ from typing import Dict, Any
 from item.clear import Clear
 from item.place import Place
 from item.update import Update
-from router import route, Route
+from router import route, Route, ROUTES_TYPE
 from view import View
 
 
@@ -15,7 +15,7 @@ class ItemRequest(Enum):
     CLEAR = auto()
 
 
-routes: Dict[Enum, Route] = {
+routes: ROUTES_TYPE = {
     ItemRequest.PLACE: Route(Place, View.generic),
     ItemRequest.UPDATE: Route(Update, View.generic),
     ItemRequest.CLEAR: Route(Clear, View.generic),

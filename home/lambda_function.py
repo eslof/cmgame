@@ -1,9 +1,14 @@
+from enum import auto, unique, Enum
+from typing import Dict, Any
+
 from database import HomeAttr
-from default_imports import *
 from home.delete import Delete
 from home.go import Go
 from home.new import New
 from home.save import Save
+from properties import ResponseField, ResponseType
+from router import route, Route, ROUTES_TYPE
+from view import View
 
 
 @unique
@@ -14,7 +19,7 @@ class HomeRequest(Enum):
     SAVE = auto()
 
 
-routes = {
+routes: ROUTES_TYPE = {
     HomeRequest.DELETE: Route(Delete, View.generic),
     HomeRequest.GO: Route(
         handler=Go,
@@ -32,5 +37,5 @@ routes = {
 
 
 @route(routes, HomeRequest)
-def lambda_handler(event, context):
+def lambda_handler(event: Dict[str, Any], context: Dict[str, Any]) -> None:
     pass

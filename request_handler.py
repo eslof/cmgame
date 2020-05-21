@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional, Any, Union, Dict, List
+from typing import Optional, Any, Dict
 
 
 # TODO: metaclass=abc.ABCMeta ? research

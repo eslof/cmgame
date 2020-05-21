@@ -1,7 +1,11 @@
-from default_imports import *
+from enum import unique, auto, Enum
+from typing import Dict, Any
+
+from router import Route, ROUTES_TYPE, route
 from tests.test.one import One
-from tests.test.two import Two
 from tests.test.three import Three
+from tests.test.two import Two
+from view import View
 
 
 @unique
@@ -12,7 +16,7 @@ class TestRequest(Enum):
 
 
 # TODO: Update route output (Callable/default=View.generic)
-routes = {
+routes: ROUTES_TYPE = {
     TestRequest.ONE: Route(One, View.debug),
     TestRequest.TWO: Route(Two, View.generic, require_id=False),
     TestRequest.THREE: Route(Three, View.error, require_id=False),
@@ -20,5 +24,5 @@ routes = {
 
 
 @route(routes, TestRequest)
-def lambda_handler(event, context):
+def lambda_handler(event: Dict[str, Any], context: Dict[str, Any]) -> None:
     pass

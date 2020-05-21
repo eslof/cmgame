@@ -31,7 +31,7 @@ class ${sc}Request(Enum):
 
 # TODO: Update route output (Callable/default=View.generic)
 #  example: output=Lambda value: View.construct(.. ResponseField: value[data]
-routes = {
+routes: ROUTES_TYPE = {
 #foreach($request in $rm)
     ${sc}Request.${request.upper}: Route(${request.camel}, View.generic),
 #end
@@ -39,5 +39,5 @@ routes = {
 
 
 @route(routes, ${sc}Request)
-def lambda_handler(event, context):
+def lambda_handler(event: Dict[str, Any], context: Dict[str, Any]) -> None:
     pass

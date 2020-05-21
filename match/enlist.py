@@ -4,7 +4,7 @@ from typing import Optional, Any
 from database import UserAttr, MatchAttr, web_socket_endpoint
 from database import table, TableKey, TablePartition
 from internal import end
-from properties import UserState, Constants
+from properties import Constants
 from request_handler import RequestHandler
 from user_utils import User
 

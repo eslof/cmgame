@@ -1,4 +1,5 @@
 from default_imports import *
+
 from .data import Data
 from .delete import Delete
 from .new import New
@@ -13,7 +14,7 @@ class UserRequest(Enum):
     SAVE = auto()
 
 
-routes = {
+routes: ROUTES_TYPE = {
     UserRequest.DATA: Route(
         handler=Data,
         output=lambda value: View.response(
@@ -33,5 +34,5 @@ routes = {
 
 
 @route(routes, UserRequest)
-def lambda_handler(event, context):
+def lambda_handler(event: Dict[str, Any], context: Dict[str, Any]) -> None:
     pass

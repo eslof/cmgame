@@ -1,6 +1,6 @@
 from enum import Enum, EnumMeta
 from functools import wraps
-from typing import Callable, Optional, Any, Dict, Type, Tuple, List, Union
+from typing import Callable, Optional, Any, Dict, Type
 
 from internal import validate_request
 from request_handler import RequestHandler
@@ -19,8 +19,11 @@ class Route:
         self.require_id = require_id
 
 
+ROUTES_TYPE = Dict[Enum, Route]
+
+
 def _handler(
-    routes: Dict[Enum, Route], request_enum: EnumMeta, event: Dict[str, Any],
+    routes: ROUTES_TYPE, request_enum: EnumMeta, event: Dict[str, Any],
 ) -> str:
     req: Enum = validate_request(event, request_enum)
     _route: Route = routes[req]
@@ -32,7 +35,7 @@ def _handler(
 
 # TODO: figure out how we need context
 def wrapper(
-    routes: Dict[Enum, Route],
+    routes: ROUTES_TYPE,
     request_enum: EnumMeta,
     f: Callable[[Dict[str, Any], Dict[str, Any]], None],
     event: Dict[str, Any],

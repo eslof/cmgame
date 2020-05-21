@@ -1,7 +1,12 @@
-from default_imports import *
+from enum import unique, Enum, auto
+from typing import Dict, Any
+
 from match.enlist import Enlist
 from match.find import Find
 from match.stop import Stop
+from properties import ResponseType, ResponseField
+from router import ROUTES_TYPE, Route, route
+from view import View
 
 
 @unique
@@ -11,7 +16,7 @@ class MatchRequest(Enum):
     STOP = auto()
 
 
-routes = {
+routes: ROUTES_TYPE = {
     MatchRequest.ENLIST: Route(
         handler=Enlist,
         output=lambda value: View.response(
@@ -33,5 +38,5 @@ routes = {
 
 
 @route(routes, MatchRequest)
-def lambda_handler(event, context):
+def lambda_handler(event: Dict[str, Any], context: Dict[str, Any]) -> None:
     pass

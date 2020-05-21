@@ -1,10 +1,10 @@
-import string
 import secrets
+import string
 from enum import Enum
-from inspect import isclass
-from properties import Constants, PacketHeader
 from sys import exit as sys_exit
-from typing import Callable, Union, List, Any
+from typing import Callable, Any
+
+from properties import Constants, PacketHeader
 
 
 # TODO: Move some of these hard coded strings somewhere maybe

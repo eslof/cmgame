@@ -1,5 +1,6 @@
-from typing import Union
 from collections.abc import Iterable
+from typing import Union
+
 from botocore.exceptions import ClientError
 
 from database import table, TableKey, TablePartition, UserAttr

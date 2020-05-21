@@ -1,6 +1,6 @@
 from typing import Optional, Any
 
-from properties import ResponseType, ResponseField
+from properties import ResponseField
 from request_handler import RequestHandler
 
 
