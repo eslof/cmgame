@@ -35,10 +35,9 @@ class HomeHelper:
         return new_id
 
     @classmethod
-    def attempt_delete(cls, home_id: str, batch_writer=None):
-        writer = batch_writer or table
+    def attempt_delete(cls, home_id: str):
         try:
-            writer.delete_item(
+            table.delete_item(
                 Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
                 ConditionExpression="attribute_exists(#id)",
                 ExpressionAttributeNames={"#id": TableKey.SORT},
