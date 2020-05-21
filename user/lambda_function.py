@@ -1,6 +1,4 @@
 from default_imports import *
-from router import route, Route
-
 from .data import Data
 from .delete import Delete
 from .new import New

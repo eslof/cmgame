@@ -1,10 +1,9 @@
 from database import HomeAttr
 from default_imports import *
-from home.delete import Delete
-from home.go import Go
-from home.new import New
-from home.save import Save
-from router import route, Route
+from .delete import Delete
+from .go import Go
+from .new import New
+from .save import Save
 
 
 @unique

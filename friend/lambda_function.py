@@ -1,11 +1,8 @@
-from enum import unique, Enum, auto
-
-from friend.add import Add
-from friend.invite import Invite
-from friend.list import List
-from friend.remove import Remove
-from properties import PacketHeader
-from router import route, Route
+from default_imports import *
+from .add import Add
+from .invite import Invite
+from .list import List
+from .remove import Remove
 
 
 @unique
