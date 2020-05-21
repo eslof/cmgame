@@ -132,6 +132,7 @@ class TestService(TestCase):
                     type(enum) is request_enum,
                     f"{name}: Invalid entry '{enum}' in '{routes}'.",
                 )
+
                 self.assertTrue(
                     enum in request_enum,
                     f"{name}: Invalid entry: '{enum}' not in '{request_enum}'.",
@@ -148,8 +149,7 @@ class TestService(TestCase):
             # endregion
             return ""
 
-        with patch("router.wrapper") as mock_requests:
-            mock_requests.get.side_effect = test_wrapper
+        with patch.object(router, "wrapper", new=test_wrapper):
             # router.wrapper = test_wrapper
             event = self.MOCK_USER_PACKET
             lambda_handler(event, None)
