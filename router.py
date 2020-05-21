@@ -35,9 +35,9 @@ def wrapper(
     routes: Dict[Enum, Route],
     request_enum: EnumMeta,
     f: Callable[[Dict[str, Any], Dict[str, Any]], None],
-    args: Tuple[Dict[str, Any], Any],
+    event: Dict[str, Any],
 ) -> str:
-    return _handler(routes, request_enum, args[0])
+    return _handler(routes, request_enum, event)
 
 
 # Union[str, int, float, bool, None, Dict[str, Any], List[Any]]
@@ -45,13 +45,11 @@ def wrapper(
 
 def route(
     routes: Dict[Enum, Route], request_enum: EnumMeta
-) -> Callable[[Callable[[Dict[str, Any], Dict[str, Any]], None]], Callable[..., str]]:
-    def inner(
-        f: Callable[[Dict[str, Any], Dict[str, Any]], None]
-    ) -> Callable[..., str]:
+) -> Callable[[Callable[[Dict[str, Any], Any], None]], Callable[..., str]]:
+    def inner(f: Callable[[Dict[str, Any], Any], None]) -> Callable[..., str]:
         @wraps(f)
-        def wrapped_f(*args: Tuple[Dict[str, Any], Any]) -> str:
-            return wrapper(routes, request_enum, f, *args)
+        def wrapped_f(event: Dict[str, Any], context: Any) -> str:
+            return wrapper(routes, request_enum, f, event)
 
         return wrapped_f
 

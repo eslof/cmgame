@@ -1,8 +1,11 @@
-from default_imports import *
+from enum import unique, auto, Enum
+from typing import Dict, Any
+
 from item.clear import Clear
 from item.place import Place
 from item.update import Update
 from router import route, Route
+from view import View
 
 
 @unique
@@ -12,7 +15,7 @@ class ItemRequest(Enum):
     CLEAR = auto()
 
 
-routes = {
+routes: Dict[Enum, Route] = {
     ItemRequest.PLACE: Route(Place, View.generic),
     ItemRequest.UPDATE: Route(Update, View.generic),
     ItemRequest.CLEAR: Route(Clear, View.generic),
@@ -20,5 +23,5 @@ routes = {
 
 
 @route(routes, ItemRequest)
-def lambda_handler(event, context):
+def lambda_handler(event: Dict[str, Any], context: Any) -> None:
     pass
