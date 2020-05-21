@@ -35,7 +35,7 @@ class TestService(TestCase):
         for directory in dir_list:
             for name in os.listdir(f"{self.ROOT_DIR}/{directory}"):
 
-                # region For each submodule with a lambda_function
+                # region SubTest for each folder in root with lambda_function
                 if name == f"{self.LAMBDA_FILE_NAME}.py":
                     service = importlib.import_module(
                         f"{directory}.{self.LAMBDA_FILE_NAME}"
@@ -53,7 +53,8 @@ class TestService(TestCase):
             # region Assert that our handler base class is not broken
             self.assertTrue(
                 RequestHandler and isclass(RequestHandler),
-                f"{name}: Broken or missing RequestHandler base: '{RequestHandler}'.",
+                f"{name}: Broken or missing RequestHandler base: "
+                f"'{RequestHandler}'.",
             )
             # endregion
 
@@ -63,7 +64,8 @@ class TestService(TestCase):
                 and isclass(handler)
                 and issubclass(handler, RequestHandler)
                 and not (handler is RequestHandler),
-                f"{name}: Invalid inheritance: '{handler}' must derive '{RequestHandler}'.",
+                f"{name}: Invalid inheritance: '{handler}' "
+                f"must derive '{RequestHandler}'.",
             )
             # endregion
 
@@ -73,7 +75,8 @@ class TestService(TestCase):
                 routes[enum]
                 and isinstance(routes[enum], router.Route)
                 and not (routes[enum] is router.Route),
-                f"{name}: Invalid route: '{routes[enum]}' not instance of '{router.Route}' in '{routes}' at '{enum}'.",
+                f"{name}: Invalid route: '{routes[enum]}' not instance of "
+                f"d'{router.Route}' in '{routes}' at '{enum}'.",
             )
             # endregion
 
@@ -81,7 +84,8 @@ class TestService(TestCase):
             test_handler(routes[enum].handler)
             self.assertTrue(
                 routes[enum].output and callable(routes[enum].output),
-                f"{name}: Invalid output function: '{routes[enum].output}' for '{routes[enum]}' in '{routes}' at '{enum}'.",
+                f"{name}: Invalid output function: '{routes[enum].output}'"
+                f" for '{routes[enum]}' in '{routes}' at '{enum}'.",
             )
             #   endregion
 
@@ -91,14 +95,16 @@ class TestService(TestCase):
             f: Callable[[Dict[str, Any], Dict[str, Any]], None],
             event: Dict[str, Any],
         ) -> str:
-            # region Assert decorated function to be 'lambda_handler' with at least one argument
-            self.assertTrue(
-                event and type(event) is dict,
-                f"{name}: Incorrect first argument for '{Constants.LAMBDA_HANDLER_NAME}' in '{request_enum}', should be '{Constants.LAMBDA_HANDLER_NAME}(event, context)'.",
-            )
+            # region Assert decorated function name and valid arg
             self.assertTrue(
                 f.__name__ == self.LAMBDA_HANDLER_NAME,
-                f"{name}: Invalid function: '{f.__name__}' for '{request_enum}', should be '{self.LAMBDA_HANDLER_NAME}'.",
+                f"{name}: Invalid func: '{f.__name__}' for '{request_enum}'"
+                f", should be '{self.LAMBDA_HANDLER_NAME}'.",
+            )
+            self.assertTrue(
+                event and type(event) is dict,
+                f"{name}: Incorrect first argument for decorated function,"
+                f" should be 'event: Dict[str, Any]'.",
             )
             # endregion
 
@@ -124,7 +130,8 @@ class TestService(TestCase):
                     isinstance(key, Enum)
                     and type(key) is request_enum
                     and key in request_enum,
-                    f"{name}: Invalid entry '{key}' in '{routes}' not associated with '{request_enum}'.",
+                    f"{name}: Invalid entry: '{key}' in '{routes}'"
+                    f" not associated with '{request_enum}'.",
                 )
                 test_route(routes, key)
             # endregion
@@ -132,13 +139,13 @@ class TestService(TestCase):
             # region Assert that all members of request enum have a route
             for key in request_enum:
                 self.assertTrue(
-                    key in routes, f"{name}: Missing route: '{key}' not in '{routes}'."
+                    key in routes,
+                    f"{name}: Missing route: Enum '{key}' not in '{routes}'.",
                 )
                 test_route(routes, key)
             # endregion
             return ""
 
         with patch.object(router, "wrapper", new=test_wrapper):
-            # router.wrapper = test_wrapper
             event = self.MOCK_USER_PACKET
             lambda_handler(event, None)
