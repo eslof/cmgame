@@ -1,20 +1,25 @@
 import importlib
 import os
-from enum import Enum
+from enum import Enum, EnumMeta
 from inspect import isclass
 from typing import Callable
-from unittest import TestCase, skip
+from unittest import TestCase
+
 import router
-from properties import RequestField, Constants
+from properties import RequestField, Constants, PacketHeader
 from request_handler import RequestHandler
-from inspect import getmembers, isfunction
 
 
+# todo: update for enum meta
 class TestService(TestCase):
 
     LAMBDA_HANDLER_NAME = "lambda_handler"
     LAMBDA_FILE_NAME = "lambda_function"
     ROOT_DIR = ".."
+    MOCK_USER_PACKET = {
+        PacketHeader.REQUEST: 1,
+        RequestField.User.ID: "U3yBYaH9ItbEmv6aOjRnCeV",
+    }
 
     def test_all_services(self):
         dir_list = [
@@ -80,7 +85,7 @@ class TestService(TestCase):
             )
             #   endregion
 
-        def test_wrapper(routes: dict, request_enum: type(Enum), f, *args):
+        def test_wrapper(routes: dict, request_enum: EnumMeta, f, *args):
             # region Assert decorated function to be 'lambda_handler' with at least one argument
             self.assertTrue(
                 len(args) > 0 and args[0] and type(args[0]) is dict,
@@ -130,7 +135,13 @@ class TestService(TestCase):
                 )
                 test_route(routes, enum)
             # endregion
+            try:
+                output = router._handler(routes, request_enum, args[0])
+            except:
+                output = None
+
+            return output or None
 
         router.wrapper = test_wrapper
-        event = {RequestField.User.ID: "UyBYaH9ItbEmv6aOjRnCeV"}
+        event = self.MOCK_USER_PACKET
         lambda_handler(event, None)
