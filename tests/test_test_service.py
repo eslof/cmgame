@@ -13,47 +13,47 @@ class TestService(TestCase):
     mock_id = generate_id(UserAttr.SORT_KEY_PREFIX)
 
     def run_handler(
-        self, mock_data: Dict[str, Any], expected_output: Dict[str, Any], test_name: str
+        self, mock: Dict[str, Any], expected: Dict[str, Any], test_name: str
     ) -> None:
-        output: Dict[str, Any] = View.deserialize(lambda_handler(mock_data, None))
+        output: Dict[str, Any] = View.deserialize(lambda_handler(mock, None))
 
         self.assertEqual(
             output,
-            expected_output,
-            f"{test_name}: Invalid output: '{output}' should be '{expected_output}'.",
+            expected,
+            f"{test_name}: Invalid output: '{output}' should be '{expected}'.",
         )
         print(f"End of '{test_name}' integration test for test service.")
 
     def test_debug(self) -> None:
-        mock_data = {
+        request = {
             PacketHeader.REQUEST: TestRequest.ONE.value,
             RequestField.User.ID: self.mock_id,
         }
         expected_output = {
             PacketHeader.RESPONSE: ResponseType.DEBUG.value,
-            ResponseField.Generic.DEBUG: mock_data,
+            ResponseField.Generic.DEBUG: request,
         }
-        self.run_handler(mock_data, expected_output, "debug")
+        self.run_handler(request, expected_output, "debug")
 
     def test_generic(self) -> None:
-        mock_data = {
+        request = {
             PacketHeader.REQUEST: TestRequest.TWO.value,
             ResponseField.Generic.RESULT: True,
         }
         expected_output = {
             PacketHeader.RESPONSE: ResponseType.GENERIC.value,
-            ResponseField.Generic.RESULT: mock_data[ResponseField.Generic.RESULT],
+            ResponseField.Generic.RESULT: request[ResponseField.Generic.RESULT],
         }
-        self.run_handler(mock_data, expected_output, "generic")
+        self.run_handler(request, expected_output, "generic")
 
     def test_error(self) -> None:
         error_message = "hello world"
-        mock_data = {
+        request = {
             PacketHeader.REQUEST: TestRequest.THREE.value,
             ResponseField.Generic.ERROR: error_message,
         }
         expected_output = {
             PacketHeader.RESPONSE: ResponseType.ERROR.value,
-            ResponseField.Generic.ERROR: mock_data[ResponseField.Generic.ERROR],
+            ResponseField.Generic.ERROR: request[ResponseField.Generic.ERROR],
         }
-        self.run_handler(mock_data, expected_output, "derror")
+        self.run_handler(request, expected_output, "derror")
