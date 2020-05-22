@@ -20,8 +20,7 @@ def end_unless_conditional(e: ClientError) -> None:
 
 
 def end(message: str = "") -> None:
-    """Wrapper for exit at case outcomes that are not expected by client without possible misuse or corruption."""
-    raise GameException(message) if message else GameException()
+    raise GameException(message)
 
 
 class GameException(Exception):
