@@ -22,20 +22,17 @@ class View:
         return cls.encode(data)
 
     @classmethod
-    def try_deserialize(cls, data: str) -> _type:
+    def try_deserialize(cls, data: str) -> str:
         """Try to return deserialized data using current standard format and exit on except."""
         try:
-            if not data:
-                raise cls.decode_error
-            return json.loads(data)
+            return cls.deserialize(data)
         except cls.decode_error as e:
             end(e.msg)
-        return cls.decode(data)
 
     @classmethod
-    def deserialize(cls, data: Optional[str]) -> _type:
+    def deserialize(cls, data: Optional[str]) -> str:
         """Deserialize data using current standard format."""
-        return cls.decode(data)
+        return cls.deserialize(data)
 
     @classmethod
     def response(cls, response_type: Enum, data: dict) -> str:

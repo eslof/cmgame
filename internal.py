@@ -1,27 +1,31 @@
 import secrets
 import string
+
 from enum import Enum
+from io import StringIO
 from sys import exit as sys_exit
 from typing import Callable, Any
-
+from botocore.exceptions import ClientError
+from view import View
 from properties import Constants, PacketHeader
 
 
 # TODO: Move some of these hard coded strings somewhere maybe
 
 
-def end_unless_conditional(e):
+def end_unless_conditional(e: ClientError) -> None:
     error = e.response["Error"]["Code"]
     if e.response["Error"]["Code"] != "ConditionalCheckFailedException":
         end(error)  # TODO: error handling
 
 
-def end(message: str = "", code: int = 0) -> None:
+def end(message: str = "") -> None:
     """Wrapper for exit at case outcomes that are not expected by client without possible misuse or corruption."""
-    if message:
-        pass
-        # View.error(message)
-    sys_exit(code)
+    raise GameException(message) if message else GameException()
+
+
+class GameException(Exception):
+    pass
 
 
 def generate_id(prefix: str, length: int = Constants.ID_GEN_LENGTH) -> str:
