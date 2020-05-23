@@ -18,9 +18,8 @@ class View:
 
     @classmethod
     def serialize(cls, data: dict) -> str:
-        test = json.dumps(data, separators=tuple(",", ":"), indent=0)
         """Serialize data using current standard format."""
-        return cls.encode(data)
+        return cls.encode(data, separators=tuple(",", ":"))
 
     @classmethod
     def try_deserialize(cls, data: str) -> str:
@@ -29,6 +28,7 @@ class View:
             return cls.deserialize(data)
         except cls.decode_error as e:
             end(e.msg)
+        return ""
 
     @classmethod
     def deserialize(cls, data: Optional[str]) -> str:
