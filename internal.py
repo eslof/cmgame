@@ -5,7 +5,7 @@ from enum import Enum
 from io import StringIO
 from sys import exit as sys_exit
 from typing import Callable, Any
-from botocore.exceptions import ClientError
+from botocore.exceptions import ClientError  # type: ignore
 from view import View
 from properties import Constants, PacketHeader
 
@@ -13,10 +13,11 @@ from properties import Constants, PacketHeader
 # TODO: Move some of these hard coded strings somewhere maybe
 
 
-def end_unless_conditional(e: ClientError) -> None:
+def end_unless_conditional(e: ClientError) -> None:  # type: ignore
     error = e.response["Error"]["Code"]
-    if e.response["Error"]["Code"] != "ConditionalCheckFailedException":
+    if error != "ConditionalCheckFailedException":
         end(error)  # TODO: error handling
+    return
 
 
 def end(message: str) -> None:
