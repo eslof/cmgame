@@ -1,3 +1,5 @@
+from typing import MappingView, VT_co
+
 from database import UserAttr
 from internal import validate_field, end
 from properties import RequestField, Constants, Biodome
@@ -45,7 +47,10 @@ class New(RequestHandler):
             target=event,
             field=RequestField.Home.BIODOME,
             validation=lambda value: type(value) is int
-            and value in Biodome._value2member_map_,
+            and value
+            in (
+                val.value for val in Biodome.__members__.values()
+            ),  # type: MappingView[VT_co]
             message="Home Create API (BIODOME)",
         )
         return user_data

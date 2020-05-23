@@ -1,4 +1,4 @@
-from typing import Optional, Any
+from typing import Optional, Any, VT_co, MappingView
 
 from country import Country
 from internal import validate_field, end
@@ -39,7 +39,10 @@ class New(RequestHandler):
             target=event,
             field=RequestField.User.FLAG,
             validation=lambda value: type(value) is int
-            and value in Country._value2member_map_,
+            and value
+            in (
+                val.value for val in Country.__members__.values()
+            ),  # type: MappingView[VT_co]
             message="User New API (FLAG)",
         )
         return None

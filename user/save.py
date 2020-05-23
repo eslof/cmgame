@@ -1,5 +1,5 @@
 from enum import Enum, unique, auto
-from typing import Optional, Any
+from typing import Optional, Any, MappingView, VT_co
 
 from country import Country
 from database import UserAttr
@@ -45,7 +45,11 @@ class Save(RequestHandler):
         elif req == SaveRequest.FLAG:
             field = RequestField.User.FLAG
             validation = (
-                lambda value: type(value) is int and value in Country._value2member_map_
+                lambda value: type(value) is int
+                and value
+                in (
+                    val.value for val in Country.__members__.values()
+                ),  # type: MappingView[VT_co]
             )
             message = "User Save API (FLAG)"
         elif req == SaveRequest.META:
