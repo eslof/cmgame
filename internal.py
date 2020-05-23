@@ -3,6 +3,7 @@ import string
 
 from enum import Enum, EnumMeta
 from io import StringIO
+from json import JSONDecodeError
 from sys import exit as sys_exit
 from typing import Callable, Any, Dict, MappingView, VT_co
 from botocore.exceptions import ClientError  # type: ignore
@@ -71,7 +72,6 @@ def validate_meta(target: dict, field: str, message: str = "") -> None:
         message=message,
     )
     try:
-        # View.deserialize(target[field])
-        hi = 1 + 2
-    except ValueError as e:
+        View.deserialize(target[field])
+    except JSONDecodeError as e:
         end(f"Failed validation of meta during decoding: {target[field]} {e}")

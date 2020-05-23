@@ -13,21 +13,21 @@ class TestService(TestCase):
     mock_id = generate_id(UserAttr.SORT_KEY_PREFIX)
 
     def run_handler(
-        self, mock: Dict[str, Any], expected: Dict[str, Any], test_name: str
+        self, request: Dict[str, Any], expected_output: Dict[str, Any], test_name: str
     ) -> None:
-        serialized_output: Optional[str] = lambda_handler(mock, None)
-        self.assertTrue(serialized_output, f"{test_name}: None or empty output.")
-        deserialized_output: Dict[str, Any] = View.deserialize(serialized_output)
-        serialized_mock: str = View.serialize(mock)
+        output_str: str = lambda_handler(request, None)
+        self.assertTrue(output_str, f"{test_name}: None or empty output.")
+        expected_str: str = View.serialize(expected_output)
+        output_obj: Dict[str, Any] = View.deserialize(output_str)
         self.assertEqual(
-            deserialized_output,
-            mock,
-            f"{test_name}: Unexpected output: '{deserialized_output}' should be '{mock}'.",
+            output_str,
+            expected_str,
+            f"{test_name}: Unexpected output: '{output_str}' should be '{expected_str}'.",
         )
         self.assertEqual(
-            serialized_output,
-            serialized_mock,
-            f"{test_name}: Unexpected output: '{serialized_output}' should be '{serialized_mock}'.",
+            output_obj,
+            expected_output,
+            f"{test_name}: Unexpected output: '{output_obj}' should be '{expected_output}'.",
         )
         print(f"End of test '{test_name}' for test service.")
 

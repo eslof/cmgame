@@ -24,5 +24,5 @@ routes: ROUTES_TYPE = {
 
 
 @route(routes, TestRequest)
-def lambda_handler(event: Dict[str, Any], context: Any) -> None:
+def lambda_handler(event: Dict[str, Any], context: Any) -> str:
     pass

@@ -1,9 +1,8 @@
 import json
 from enum import Enum
 from json import JSONDecodeError
-from typing import Optional, Any, Tuple
+from typing import Optional, Any, Tuple, Dict
 
-from internal import end
 from properties import PacketHeader, ResponseType, ResponseField
 
 
@@ -22,18 +21,9 @@ class View:
         return cls.encode(data, separators=cls.separators)
 
     @classmethod
-    def try_deserialize(cls, data: str) -> str:
-        """Try to return deserialized data using current standard format and exit on except."""
-        try:
-            return cls.deserialize(data)
-        except cls.decode_error as e:
-            end(e.msg)
-        return ""
-
-    @classmethod
-    def deserialize(cls, data: Optional[str]) -> str:
+    def deserialize(cls, data: Optional[str]) -> Dict[str, Any]:
         """Deserialize data using current standard format."""
-        return cls.deserialize(data)
+        return cls.decode(data)
 
     @classmethod
     def response(cls, response_type: Enum, data: dict) -> str:
