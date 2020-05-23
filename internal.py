@@ -1,10 +1,10 @@
 import secrets
 import string
 
-from enum import Enum
+from enum import Enum, EnumMeta
 from io import StringIO
 from sys import exit as sys_exit
-from typing import Callable, Any
+from typing import Callable, Any, Dict, MappingView, VT_co
 from botocore.exceptions import ClientError  # type: ignore
 from view import View
 from properties import Constants, PacketHeader
@@ -37,13 +37,16 @@ def generate_id(prefix: str, length: int = Constants.ID_GEN_LENGTH) -> str:
     return f"{prefix}{u_id}"
 
 
-def validate_request(target: dict, request_enum: type(Enum)) -> Enum:
+def validate_request(target: Dict[str, Any], request_enum: EnumMeta) -> Enum:
     """validate_field wrapper for given enum used for base requests in all lambda_function.py files."""
     validate_field(
         target=target,
         field=PacketHeader.REQUEST,
         validation=lambda value: type(value) is int
-        and value in request_enum._value2member_map_,
+        and value
+        in (
+            val.value for val in request_enum.__members__.values()
+        ),  # type: MappingView[VT_co]
         message=f"Request API ({request_enum.__name__})",
     )
     return request_enum(target[PacketHeader.REQUEST])
