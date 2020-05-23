@@ -57,12 +57,14 @@ class UserAttr:
 
 class HomeAttr:
     SORT_KEY_PREFIX = "H"
+    MATCH_GRID_SLOT = "4"
 
     NAME = "name"
     BIODOME = "biodome"
     META = "meta"
     GRID = "grid"
+    GRID_SLOT = "grid_slot"
 
-    class Grid:
+    class GridSlot:
         ITEM = "item"
         META = "meta"

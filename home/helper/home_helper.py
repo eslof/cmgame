@@ -10,12 +10,18 @@ from properties import Constants
 class HomeHelper:
     @staticmethod
     def template_new(home_id: str):
+        # TODO: update! it would cost too much wcu to do this
+        #  grid has to be dict populated over time not list
         return {
             TableKey.PARTITION: TablePartition.HOME,
             TableKey.SORT: home_id,
             HomeAttr.META: "{}",
-            HomeAttr.GRID: [{HomeAttr.Grid.ITEM: 0, HomeAttr.Grid.META: ""}]
-            * Constants.Home.SIZE,
+            HomeAttr.GRID: {
+                HomeAttr.MATCH_GRID_SLOT: {
+                    HomeAttr.GridSlot.ITEM: 4,
+                    HomeAttr.GridSlot.META: '{"color": "blue"}',
+                }
+            },
         }
 
     @classmethod
