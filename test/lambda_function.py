@@ -1,3 +1,4 @@
+import inspect
 from enum import unique, auto, Enum
 from typing import Dict, Any
 
@@ -16,11 +17,14 @@ class TestRequest(Enum):
 
 
 # TODO: Update route output (Callable/default=View.generic)
-routes: ROUTES_TYPE = {
+routes: Dict[Enum, Route] = {
     TestRequest.ONE: Route(One, View.debug),
     TestRequest.TWO: Route(Two, View.generic, require_id=False),
     TestRequest.THREE: Route(Three, View.error, require_id=False),
 }
+
+
+# print(TestRequest.ONE in routes.__annotations__[routes.__name][0])
 
 
 @route(routes, TestRequest)
