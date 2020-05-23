@@ -19,8 +19,8 @@ def end_unless_conditional(e: ClientError) -> None:
         end(error)  # TODO: error handling
 
 
-def end(message: str = "") -> None:
-    raise GameException(message)
+def end(message: str) -> None:
+    raise GameException(View.error(message))
 
 
 class GameException(Exception):

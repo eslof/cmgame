@@ -18,6 +18,7 @@ class View:
 
     @classmethod
     def serialize(cls, data: dict) -> str:
+        test = json.dumps(data, separators=tuple(",", ":"), indent=0)
         """Serialize data using current standard format."""
         return cls.encode(data)
 
