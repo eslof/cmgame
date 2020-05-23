@@ -1,7 +1,7 @@
 import json
 from enum import Enum
 from json import JSONDecodeError
-from typing import Optional, Any
+from typing import Optional, Any, Tuple
 
 from internal import end
 from properties import PacketHeader, ResponseType, ResponseField
@@ -13,13 +13,13 @@ class View:
     encode = json.dumps
     decode = json.loads
     decode_error = JSONDecodeError
-    _type = dict
     valid_empty = "{}"
+    separators: Tuple[str, str] = ",", ":"
 
     @classmethod
     def serialize(cls, data: dict) -> str:
         """Serialize data using current standard format."""
-        return cls.encode(data, separators=tuple(",", ":"))
+        return cls.encode(data, separators=cls.separators)
 
     @classmethod
     def try_deserialize(cls, data: str) -> str:
