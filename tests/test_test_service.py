@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 from unittest import TestCase
 
 from database import UserAttr
@@ -15,12 +15,19 @@ class TestService(TestCase):
     def run_handler(
         self, mock: Dict[str, Any], expected: Dict[str, Any], test_name: str
     ) -> None:
-        output: Dict[str, Any] = View.deserialize(lambda_handler(mock, None))
-
+        serialized_output: Optional[str] = lambda_handler(mock, None)
+        self.assertTrue(serialized_output, f"{test_name}: None or empty output.")
+        deserialized_output: Dict[str, Any] = View.deserialize(serialized_output)
+        serialized_mock: str = View.serialize(mock)
         self.assertEqual(
-            output,
-            expected,
-            f"{test_name}: Invalid output: '{output}' should be '{expected}'.",
+            deserialized_output,
+            mock,
+            f"{test_name}: Unexpected output: '{deserialized_output}' should be '{mock}'.",
+        )
+        self.assertEqual(
+            serialized_output,
+            serialized_mock,
+            f"{test_name}: Unexpected output: '{serialized_output}' should be '{serialized_mock}'.",
         )
         print(f"End of test '{test_name}' for test service.")
 
@@ -56,4 +63,4 @@ class TestService(TestCase):
             PacketHeader.RESPONSE: ResponseType.ERROR.value,
             ResponseField.Generic.ERROR: request[ResponseField.Generic.ERROR],
         }
-        self.run_handler(request, expected_output, "derror")
+        self.run_handler(request, expected_output, "error")
