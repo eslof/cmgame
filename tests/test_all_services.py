@@ -14,10 +14,7 @@ from properties import RequestField, Constants, PacketHeader
 from request_handler import RequestHandler
 
 
-# todo: update for enum meta
-
-
-class TestService(TestCase):
+class TestAllServices(TestCase):
     LAMBDA_HANDLER_NAME = "lambda_handler"
     LAMBDA_FILE_NAME = "lambda_function"
     ROOT_DIR = ".."

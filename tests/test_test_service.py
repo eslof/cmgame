@@ -9,7 +9,7 @@ from test.lambda_function import lambda_handler
 from view import View
 
 
-class TestService(TestCase):
+class TestTestService(TestCase):
     mock_id = generate_id(UserAttr.SORT_KEY_PREFIX)
 
     def run_handler(
