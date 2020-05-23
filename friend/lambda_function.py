@@ -18,7 +18,7 @@ class FriendRequest(Enum):
     REMOVE = auto()
 
 
-routes: ROUTES_TYPE = {
+routes: Dict[Enum, Route] = {
     FriendRequest.ADD: Route(
         Add, lambda value: View.response(ResponseType.DEBUG, value), False
     ),

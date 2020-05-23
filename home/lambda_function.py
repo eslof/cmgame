@@ -19,7 +19,7 @@ class HomeRequest(Enum):
     SAVE = auto()
 
 
-routes: ROUTES_TYPE = {
+routes: Dict[Enum, Route] = {
     HomeRequest.DELETE: Route(Delete, View.generic),
     HomeRequest.GO: Route(
         handler=Go,

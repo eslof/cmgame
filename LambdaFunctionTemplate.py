@@ -30,7 +30,7 @@ class ${sc}Request(Enum):
 
 # TODO: Update route output (Callable/default=View.generic)
 #  example: output=Lambda value: View.construct(.. ResponseField: value[data]
-routes: ROUTES_TYPE = {
+routes: Dict[Enum, Route] = {
 #foreach($request in $rm)
     ${sc}Request.${request.upper}: Route(${request.camel}, View.generic),
 #end

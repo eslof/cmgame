@@ -16,7 +16,7 @@ class MatchRequest(Enum):
     STOP = auto()
 
 
-routes: ROUTES_TYPE = {
+routes: Dict[Enum, Route] = {
     MatchRequest.ENLIST: Route(
         handler=Enlist,
         output=lambda value: View.response(

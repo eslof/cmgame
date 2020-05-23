@@ -15,7 +15,7 @@ class ItemRequest(Enum):
     CLEAR = auto()
 
 
-routes: ROUTES_TYPE = {
+routes: Dict[Enum, Route] = {
     ItemRequest.PLACE: Route(Place, View.generic),
     ItemRequest.UPDATE: Route(Update, View.generic),
     ItemRequest.CLEAR: Route(Clear, View.generic),
