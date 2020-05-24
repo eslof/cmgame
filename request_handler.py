@@ -6,9 +6,10 @@ from typing import Optional, Any, Dict
 
 
 class RequestHandler(ABC):
-    """Classes used by our AWS Lambda functions to handle requests inherit this ABC.
-    This to help maintain the architecture of the application.
-    Refer to RequestHandlerTemplate.py for new file templates."""
+    # TODO:
+    # def __new__(cls, *args, **kwargs) -> None:
+    #    throw exception for architecture misuse
+    #    return None
 
     @staticmethod
     @abstractmethod
