@@ -14,6 +14,7 @@ from properties import RequestField, PacketHeader
 from request_handler import RequestHandler
 
 
+# TODO: parametized tests to split these up programmatically so subtests end up under correct service
 class TestAllServices(TestCase):
     LAMBDA_HANDLER_NAME = "lambda_handler"
     LAMBDA_FILE_NAME = "lambda_function"

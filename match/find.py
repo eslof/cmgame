@@ -9,6 +9,7 @@ from user_utils import User
 class Find(RequestHandler):
     @staticmethod
     def run(event: dict, user_id: str, valid_data: dict) -> Union[str, bool]:
+        # TODO: rework all of this
         user_state = UserState(valid_data[UserAttr.STATE])
         if user_state == UserState.MATCHED:
             return web_socket_endpoint()["address"]
