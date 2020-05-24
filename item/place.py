@@ -17,14 +17,14 @@ class Place(RequestHandler):
         try:
             table.update_item(
                 Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
-                UpdateExpression=f"SET #grid.:grid_slot = :item",
+                UpdateExpression=f"SET #grid.#grid_slot = :item",
                 ConditionExpression=f"attribute_exists(#id)",
                 ExpressionAttributeNames={
                     "#id": TableKey.PARTITION,
                     "#grid": HomeAttr.GRID,
+                    ":grid_slot": grid_slot,
                 },
                 ExpressionAttributeValues={
-                    ":grid_slot": grid_slot,
                     ":item": {
                         HomeAttr.GridSlot.ITEM: item_slot,
                         HomeAttr.GridSlot.META: item_meta,

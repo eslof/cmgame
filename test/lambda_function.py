@@ -24,9 +24,6 @@ routes: Dict[Enum, Route] = {
 }
 
 
-# print(TestRequest.ONE in routes.__annotations__[routes.__name][0])
-
-
 @route(routes, TestRequest)
 def lambda_handler(event: Dict[str, Any], context: Any) -> str:
     pass

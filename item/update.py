@@ -17,17 +17,15 @@ class Update(RequestHandler):
             # TODO: rework database model
             table.update_item(
                 Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
-                UpdateExpression=f"SET #grid.:grid_slot.#slot_meta = :item_meta",
+                UpdateExpression=f"SET #grid.#grid_slot.#slot_meta = :item_meta",
                 ConditionExpression=f"attribute_exists(#id) and :grid_slot in #grid",
                 ExpressionAttributeNames={
                     "#id": TableKey.PARTITION,
                     "#grid": HomeAttr.GRID,
                     "#slot_meta": HomeAttr.GridSlot.META,
+                    "#grid_slot": grid_slot,
                 },
-                ExpressionAttributeValues={
-                    ":item_meta": item_meta,
-                    ":grid_slot": grid_slot,
-                },
+                ExpressionAttributeValues={":item_meta": item_meta},
             )
         except ClientError as e:
             end(e.response["Error"]["Code"])
