@@ -16,9 +16,6 @@ class New(RequestHandler):
     ) -> bool:
         new_id = HomeHelper.attempt_new()
 
-        if not new_id:
-            end("Unable to successfully create new home.")
-
         return UserHelper.add_home(
             user_id,
             new_id,
@@ -31,7 +28,7 @@ class New(RequestHandler):
         user_data = User.get(user_id, UserAttr.HOME_COUNT)
         home_count = user_data[UserAttr.HOME_COUNT]
         if home_count > Constants.User.HOME_COUNT_MAX:
-            end("Maximum homes reached")  # TODO: error handling
+            end("Maximum homes reached.")
         validate_field(
             target=event,
             field=RequestField.Home.NAME,

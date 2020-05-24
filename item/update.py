@@ -18,7 +18,7 @@ class Update(RequestHandler):
             table.update_item(
                 Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
                 UpdateExpression=f"SET #grid.#grid_slot.#slot_meta = :item_meta",
-                ConditionExpression=f"attribute_exists(#id) and :grid_slot in #grid",
+                ConditionExpression=f"attribute_exists(#id) and #grid_slot in #grid",
                 ExpressionAttributeNames={
                     "#id": TableKey.PARTITION,
                     "#grid": HomeAttr.GRID,

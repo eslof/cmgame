@@ -3,16 +3,17 @@ import string
 
 from enum import Enum, EnumMeta
 from io import StringIO
+import random
 from json import JSONDecodeError
 from sys import exit as sys_exit
-from typing import Callable, Any, Dict, MappingView, VT_co
+from typing import Callable, Any, Dict, MappingView, TypeVar
 from botocore.exceptions import ClientError  # type: ignore
 
 from database import META_SIZE_LIMIT
 from view import View
 from properties import Constants, PacketHeader
 
-
+VT_co = TypeVar("VT_co", covariant=True)
 # TODO: Move some of these hard coded strings somewhere maybe
 
 

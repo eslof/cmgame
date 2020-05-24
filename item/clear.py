@@ -25,7 +25,6 @@ class Clear(RequestHandler):
             )
         except ClientError as e:
             end(e.response["Error"]["Code"])
-
         return True
 
     @staticmethod

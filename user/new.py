@@ -9,8 +9,9 @@ from .helper.user_helper import UserHelper
 
 class New(RequestHandler):
     """We are blessed with a new user, make sure he has a good time.
-    New user is added and receive: A list of starting items and a list of biodomes for a home."""
+    New user is added and receive: A list of starting items, a list of biodomes for a home, and his ID/token."""
 
+    # TODO: update return data
     @staticmethod
     def run(event: dict, user_id: Optional[str], valid_data: Optional[Any]) -> str:
         new_id = ""

@@ -38,7 +38,6 @@ class HomeHelper:
             )
         except ClientError as e:
             end(e.response["Error"]["Code"])
-            return ""
         return new_id
 
     @classmethod
