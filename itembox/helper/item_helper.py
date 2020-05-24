@@ -37,10 +37,5 @@ class ItemHelper:
                 cls.data = data
 
     @staticmethod
-    def itembox_seed(user_id: str, key_count: int, used_key_count: int) -> int:
-        id_hash = 0
-        id_len = len(user_id)
-        for i in range(id_len):
-            id_hash += ord(user_id[i]) * (i + 1)
-
-        return id_hash + Seed.ITEMBOX + key_count + used_key_count
+    def itembox_seed(user_id: str, key_count: int, used_key_count: int) -> str:
+        return f"{key_count}{user_id}{used_key_count}"
