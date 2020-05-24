@@ -2,7 +2,7 @@ from enum import Enum, auto, unique
 from typing import Any, Dict
 
 from properties import ResponseType, ResponseField
-from router import Route, ROUTES_TYPE, route
+from router import Route, route
 from user.data import Data
 from user.delete import Delete
 from user.new import New

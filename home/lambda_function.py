@@ -7,7 +7,7 @@ from home.go import Go
 from home.new import New
 from home.save import Save
 from properties import ResponseField, ResponseType
-from router import route, Route, ROUTES_TYPE
+from router import route, Route
 from view import View
 
 

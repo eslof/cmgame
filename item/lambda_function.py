@@ -4,7 +4,7 @@ from typing import Dict, Any
 from item.clear import Clear
 from item.place import Place
 from item.update import Update
-from router import route, Route, ROUTES_TYPE
+from router import route, Route
 from view import View
 
 

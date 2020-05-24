@@ -1,11 +1,10 @@
 import json
 from datetime import datetime
-from typing import Optional
 
 from botocore.exceptions import ClientError  # type: ignore
 
 from database import table, TableKey, TablePartition, HomeAttr
-from internal import generate_id, end_unless_conditional, end
+from internal import generate_id, end
 
 
 class HomeHelper:

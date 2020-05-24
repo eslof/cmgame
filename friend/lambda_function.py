@@ -6,7 +6,7 @@ from friend.invite import Invite
 from friend.list import List
 from friend.remove import Remove
 from properties import ResponseType
-from router import Route, route, ROUTES_TYPE
+from router import Route, route
 from view import View
 
 

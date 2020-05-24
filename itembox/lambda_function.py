@@ -5,7 +5,7 @@ from database import ItemAttr
 from itembox.accept import Accept
 from itembox.demand import Demand
 from properties import ResponseType, ResponseField
-from router import ROUTES_TYPE, Route, route
+from router import Route, route
 from view import View
 
 

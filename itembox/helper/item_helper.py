@@ -1,8 +1,6 @@
 import json
 import random
-from typing import List, Any, Dict, Union
-
-from properties import Seed
+from typing import List, Dict
 
 
 # TODO: look into how to do this better

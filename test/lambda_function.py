@@ -1,8 +1,8 @@
-import inspect
+from enum import unique, auto, Enum
 from enum import unique, auto, Enum
 from typing import Dict, Any
 
-from router import Route, ROUTES_TYPE, route
+from router import Route, route
 from test.one import One
 from test.three import Three
 from test.two import Two

@@ -5,7 +5,7 @@ from match.enlist import Enlist
 from match.find import Find
 from match.stop import Stop
 from properties import ResponseType, ResponseField
-from router import ROUTES_TYPE, Route, route
+from router import Route, route
 from view import View
 
 

@@ -1,5 +1,3 @@
-from typing import Optional, Any
-
 from botocore.exceptions import ClientError  # type: ignore
 
 from database import UserAttr, TableKey, TablePartition, HomeAttr, table
