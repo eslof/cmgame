@@ -14,8 +14,10 @@ from properties import RequestField, PacketHeader
 from request_handler import RequestHandler
 
 
-# TODO: parametized tests to split these up programmatically so subtests end up under correct service
+# TODO: split this up somehow so it's easier to manage
 class TestAllServices(TestCase):
+
+    # region Const members
     LAMBDA_HANDLER_NAME = "lambda_handler"
     LAMBDA_FILE_NAME = "lambda_function"
     ROOT_DIR = ".."
@@ -23,9 +25,9 @@ class TestAllServices(TestCase):
         PacketHeader.REQUEST: 1,
         RequestField.User.ID: generate_id(UserAttr.SORT_KEY_PREFIX),
     }
+    # endregion
 
     def test_all_services(self) -> None:
-        print("hi")
         dir_list = [
             name
             for name in os.listdir(self.ROOT_DIR)
@@ -50,6 +52,7 @@ class TestAllServices(TestCase):
     ) -> None:
         def test_handler(handler: Type[RequestHandler]) -> None:
             # region Assert that our handler base class is not broken
+            # TODO: this kinda feels unnecessary
             self.assertTrue(
                 RequestHandler and isclass(RequestHandler),
                 f"{name}: Broken or missing RequestHandler base: "
