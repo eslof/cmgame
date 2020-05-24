@@ -14,12 +14,12 @@ class Go(RequestHandler):
         try:
             home_data = table.get_item(
                 Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
-                ProjectionExpression="#GRID, #META",
+                ProjectionExpression="#grid, #meta",
                 ConditionExpression="attribute_exists(#id)",
                 ExpressionAttributeNames={
-                    "#ID": TableKey.SORT,
-                    "#GRID": HomeAttr.GRID,
-                    "#META": HomeAttr.META,
+                    "#id": TableKey.SORT,
+                    "#grid": HomeAttr.GRID,
+                    "#meta": HomeAttr.META,
                 },
             )
         except ClientError as e:

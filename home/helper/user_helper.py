@@ -25,16 +25,16 @@ class UserHelper:
                     "set #homes = list_append(#homes, :home), #home_count = #home_count + 1, "
                 ),
                 ConditionExpression=f"attribute_exists(#id) AND #state <> :banned AND #home_count <= :max_homes",
-                ExpressionAttributeValues={
-                    ":banned": UserState.BANNED.value,
-                    ":max_homes": Constants.User.HOME_COUNT_MAX,
-                    ":home": cls.template_home(home_id, name, biodome),
-                },
                 ExpressionAttributeNames={
                     "#id": TableKey.PARTITION,
                     "#state": UserAttr.STATE,
                     "#homes": UserAttr.HOMES,
                     "#home_count": UserAttr.HOME_COUNT,
+                },
+                ExpressionAttributeValues={
+                    ":banned": UserState.BANNED.value,
+                    ":max_homes": Constants.User.HOME_COUNT_MAX,
+                    ":home": cls.template_home(home_id, name, biodome),
                 },
             )
         except ClientError as e:

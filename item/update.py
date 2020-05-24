@@ -1,7 +1,7 @@
-from botocore.exceptions import ClientError
+from botocore.exceptions import ClientError  # type: ignore
 
 from database import table, TableKey, TablePartition, UserAttr, HomeAttr
-from internal import validate_field, validate_meta
+from internal import validate_field, validate_meta, end
 from properties import Constants, RequestField
 from request_handler import RequestHandler
 from user_utils import User
@@ -15,10 +15,10 @@ class Update(RequestHandler):
         item_meta = event[RequestField.Item.META]
         try:
             # TODO: rework database model
-            response = table.update_item(
+            table.update_item(
                 Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
                 UpdateExpression=f"SET #grid.:grid_slot.#slot_meta = :item_meta",
-                ConditionExpression=f"attribute_exists(#id) and #slot in #grid",
+                ConditionExpression=f"attribute_exists(#id) and :grid_slot in #grid",
                 ExpressionAttributeNames={
                     "#id": TableKey.PARTITION,
                     "#grid": HomeAttr.GRID,
@@ -30,12 +30,7 @@ class Update(RequestHandler):
                 },
             )
         except ClientError as e:
-            # TODO: error handling
-            return False
-            # error = e.response['Error']['Code']
-            # if error != 'ConditionalCheckFailedException':
-            #     end("Error: " + error)
-            # end("Item already selected (or missing home): " + error)
+            end(e.response["Error"]["Code"])
 
         return True
 
