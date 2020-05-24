@@ -1,10 +1,12 @@
+from typing import Any, Dict
+
 from database import table, TableKey, TablePartition, UserAttr
 from properties import UserState, Constants
 
 
 class UserHelper:
     @staticmethod
-    def template_home(home_id: str, name: str, biodome: int):
+    def template_home(home_id: str, name: str, biodome: int) -> Dict[str, Any]:
         return {
             UserAttr.Home.ID: home_id,
             UserAttr.Home.NAME: name,
@@ -12,7 +14,7 @@ class UserHelper:
         }
 
     @classmethod
-    def add_home(cls, user_id: str, home_id: str, name: str, biodome: int):
+    def add_home(cls, user_id: str, home_id: str, name: str, biodome: int) -> None:
         table.update_item(
             Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
             UpdateExpression=(

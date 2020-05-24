@@ -10,7 +10,7 @@ from unittest.mock import patch
 import router
 from database import UserAttr
 from internal import generate_id
-from properties import RequestField, Constants, PacketHeader
+from properties import RequestField, PacketHeader
 from request_handler import RequestHandler
 
 
@@ -24,6 +24,7 @@ class TestAllServices(TestCase):
     }
 
     def test_all_services(self) -> None:
+        print("hi")
         dir_list = [
             name
             for name in os.listdir(self.ROOT_DIR)
@@ -38,10 +39,10 @@ class TestAllServices(TestCase):
                         f"{directory}.{self.LAMBDA_FILE_NAME}"
                     )
                     func = getattr(service, self.LAMBDA_HANDLER_NAME)
+
                     with self.subTest(directory):
                         self.lambda_handler_subTest(func, directory)
                 # endregion
-        print(f"End of test_all_services.")
 
     def lambda_handler_subTest(
         self, lambda_handler: Callable[[Dict[str, Any], Any], None], name: str

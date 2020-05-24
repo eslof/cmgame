@@ -1,3 +1,5 @@
+import json
+from datetime import datetime
 from typing import Optional
 
 from botocore.exceptions import ClientError
@@ -12,14 +14,16 @@ class HomeHelper:
     def template_new(home_id: str):
         # TODO: update! it would cost too much wcu to do this
         #  grid has to be dict populated over time not list
+        time_now = datetime.now()
+        time_string = time_now.strftime("%m-%d-%H-%M-%S")
         return {
             TableKey.PARTITION: TablePartition.HOME,
             TableKey.SORT: home_id,
-            HomeAttr.META: "{}",
+            HomeAttr.META: json.dumps(dict(creation_date=time_string)),
             HomeAttr.GRID: {
                 HomeAttr.MATCH_GRID_SLOT: {
-                    HomeAttr.GridSlot.ITEM: 4,
-                    HomeAttr.GridSlot.META: '{"color": "blue"}',
+                    HomeAttr.GridSlot.ITEM: HomeAttr.MATCH_GRID_SLOT,
+                    HomeAttr.GridSlot.META: json.dumps(dict(color="blue")),
                 }
             },
         }
