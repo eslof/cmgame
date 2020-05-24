@@ -8,10 +8,10 @@ from properties import Seed
 
 
 class ItemHelper:
-    data = {}
+    data: dict = {}
 
     @classmethod
-    def itembox(cls, count: int, seed: str, exclude_list: list = None):
+    def itembox(cls, count: int, seed: str, exclude_list: list = None) -> list:
         cls.load_data()
         exclude_list = exclude_list or []
         item_ids = list(cls.data.keys())

@@ -11,20 +11,23 @@ class Update(RequestHandler):
     @staticmethod
     def run(event: dict, user_id: str, valid_data: dict) -> bool:
         home_id = valid_data[UserAttr.CURRENT_HOME]
-        grid_index = event[RequestField.Home.GRID]
+        grid_slot = event[RequestField.Home.GRID]
         item_meta = event[RequestField.Item.META]
         try:
             # TODO: rework database model
             response = table.update_item(
                 Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
-                UpdateExpression=f"SET #meta.#grid_index = :item_meta",
-                ConditionExpression=f"attribute_exists(#id)",
+                UpdateExpression=f"SET #grid.:grid_slot.#slot_meta = :item_meta",
+                ConditionExpression=f"attribute_exists(#id) and #slot in #grid",
                 ExpressionAttributeNames={
                     "#id": TableKey.PARTITION,
-                    "#meta": HomeAttr.META,
-                    "#grid_index": grid_index,
+                    "#grid": HomeAttr.GRID,
+                    "#slot_meta": HomeAttr.GridSlot.META,
                 },
-                ExpressionAttributeValues={":item_meta": item_meta},
+                ExpressionAttributeValues={
+                    ":item_meta": item_meta,
+                    ":grid_slot": grid_slot,
+                },
             )
         except ClientError as e:
             # TODO: error handling
