@@ -5,7 +5,7 @@ from database import ItemAttr
 
 
 class ItemFactory:
-    data: Dict[str, Any] = {}
+    data: Dict[str, Union[int, Dict[str, str]]] = {}
 
     @classmethod
     def save_data(cls) -> None:
@@ -28,9 +28,10 @@ class ItemFactory:
                 for key in cls.data:
                     if key == "next_auto":
                         pass
-                    else:
-                        if cls.data[key][ItemAttr.BUNDLE] == bundle_name:
-                            return key
+                    elif (
+                        cls.data[key][ItemAttr.BUNDLE] == bundle_name
+                    ):  # type: Dict[str, str]
+                        return key
                 return None
 
             _scan: Optional[str] = scan()
