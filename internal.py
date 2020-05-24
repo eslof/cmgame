@@ -7,6 +7,8 @@ from json import JSONDecodeError
 from sys import exit as sys_exit
 from typing import Callable, Any, Dict, MappingView, VT_co
 from botocore.exceptions import ClientError  # type: ignore
+
+from database import META_SIZE_LIMIT
 from view import View
 from properties import Constants, PacketHeader
 
@@ -56,22 +58,21 @@ def validate_request(target: Dict[str, Any], request_enum: EnumMeta) -> Enum:
 def validate_field(
     target: dict, field: str, validation: Callable[[Any], bool], message: str = ""
 ) -> None:
-    """Confirm that the given field exists in target and perform given validation on its content."""
     if not hasattr(target, field) and field not in target:
         end(f"No valid attribute present ({message})")
     elif not validation(target[field]):
         end(f"Failed validation ({message}): {field} = {str(target[field])}")
 
 
-def validate_meta(target: dict, field: str, message: str = "") -> None:
-    """validate_field and confirm that contents follow the correct format."""
+def validate_meta(target: dict, field: str, message: str) -> None:
+    max_size = 512 if field not in META_SIZE_LIMIT else META_SIZE_LIMIT[field]
     validate_field(
         target=target,
         field=field,
-        validation=lambda value: value and type(value) is str,
+        validation=lambda value: value and type(value) is str and len(value) < max_size,
         message=message,
     )
     try:
         View.deserialize(target[field])
     except JSONDecodeError as e:
-        end(f"Failed validation of meta during decoding: {target[field]} {e}")
+        end(e.msg)

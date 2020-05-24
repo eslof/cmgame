@@ -13,15 +13,11 @@ class New(RequestHandler):
     @staticmethod
     def run(
         event: dict, user_id: str, valid_data: dict, recursion_limit: int = 3
-    ) -> str:
-        new_id = None
-        max_attempts = 5
-        while not new_id and max_attempts > 0:
-            new_id = HomeHelper.attempt_new()
-            max_attempts -= 1
+    ) -> bool:
+        new_id = HomeHelper.attempt_new()
 
         if not new_id:
-            end("Unable to successfully create new home")
+            end("Unable to successfully create new home.")
 
         return UserHelper.add_home(
             user_id,

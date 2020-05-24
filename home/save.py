@@ -1,7 +1,7 @@
 from botocore.exceptions import ClientError
 
 from database import table, TableKey, TablePartition, UserAttr, HomeAttr
-from internal import validate_meta
+from internal import validate_meta, end
 from properties import RequestField
 from request_handler import RequestHandler
 from user_utils import User
@@ -13,8 +13,7 @@ class Save(RequestHandler):
         home_id = valid_data[UserAttr.CURRENT_HOME]
         meta_data = event[RequestField.Home.META]
         try:
-            # TODO: rework database model
-            response = table.update_item(
+            table.update_item(
                 Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
                 UpdateExpression=f"SET #meta = :home_meta",
                 ConditionExpression=f"attribute_exists(#id)",
@@ -25,14 +24,8 @@ class Save(RequestHandler):
                 ExpressionAttributeValues={":home_meta": meta_data},
             )
         except ClientError as e:
-            # TODO: error handling
-            return False
-            #  error = e.response['Error']['Code']
-            # if error != 'ConditionalCheckFailedException':
-            #     end("Error: " + error)
-            # end("No such user found!")
-        else:
-            return True
+            end(e.response["Error"]["Code"])
+        return True
 
     @staticmethod
     def validate(event: dict, user_id: str) -> dict:

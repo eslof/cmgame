@@ -1,3 +1,5 @@
+from typing import Dict
+
 import boto3
 
 
@@ -9,28 +11,6 @@ def web_socket_endpoint():
 
 dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table("cmgame")
-
-
-class TableKey:
-    PARTITION = "type"
-    SORT = "id"
-
-
-class TablePartition:
-    USER = "user"
-    HOME = "home"
-    MATCH = "queue"
-
-
-class ItemAttr:
-    BUNDLE = "bundle"
-    VERSION = "version"
-
-
-class MatchAttr:
-    DATE = "date"
-    LISTER_ID = "lister_id"
-    FINDER_ID = "finder_id"
 
 
 class UserAttr:
@@ -68,3 +48,32 @@ class HomeAttr:
     class GridSlot:
         ITEM = "item"
         META = "meta"
+
+
+META_SIZE_LIMIT: Dict[str, int] = {
+    UserAttr.META: 2048,
+    HomeAttr.META: 2048,
+    HomeAttr.GridSlot.META: 1024,
+}
+
+
+class TableKey:
+    PARTITION = "type"
+    SORT = "id"
+
+
+class TablePartition:
+    USER = "user"
+    HOME = "home"
+    MATCH = "queue"
+
+
+class ItemAttr:
+    BUNDLE = "bundle"
+    VERSION = "version"
+
+
+class MatchAttr:
+    DATE = "date"
+    LISTER_ID = "lister_id"
+    FINDER_ID = "finder_id"

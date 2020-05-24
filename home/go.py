@@ -23,16 +23,10 @@ class Go(RequestHandler):
                 },
             )
         except ClientError as e:
-            end(e.response["Error"]["Message"])  # TODO: error-handling
-            # this avoids complains about unassigned reference to response return var
+            end(e.response["Error"]["Code"])
             return {}
-        else:
-            if "Item" not in home_data or len(home_data["Item"]) < 1:
-                # TODO: figure this out
-                end("No such user found")
 
         User.update(user_id, UserAttr.CURRENT_HOME, home_id)
-
         return home_data["Item"]
 
     @staticmethod

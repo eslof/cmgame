@@ -1,6 +1,9 @@
 from typing import Any, Dict
 
+from botocore.exceptions import ClientError
+
 from database import table, TableKey, TablePartition, UserAttr
+from internal import end
 from properties import UserState, Constants
 
 
@@ -14,23 +17,26 @@ class UserHelper:
         }
 
     @classmethod
-    def add_home(cls, user_id: str, home_id: str, name: str, biodome: int) -> None:
-        table.update_item(
-            Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
-            UpdateExpression=(
-                "set #homes = list_append(#homes, :home), "
-                "#home_count = #home_count + 1, "
-            ),
-            ConditionExpression=f"attribute_exists(#id) AND #state <> :banned AND #home_count <= :max_homes",
-            ExpressionAttributeValues={
-                ":banned": UserState.BANNED.value,
-                ":max_homes": Constants.User.HOME_COUNT_MAX,
-                ":home": cls.template_home(home_id, name, biodome),
-            },
-            ExpressionAttributeNames={
-                "#id": TableKey.PARTITION,
-                "#state": UserAttr.STATE,
-                "#homes": UserAttr.HOMES,
-                "#home_count": UserAttr.HOME_COUNT,
-            },
-        )
+    def add_home(cls, user_id: str, home_id: str, name: str, biodome: int) -> bool:
+        try:
+            table.update_item(
+                Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
+                UpdateExpression=(
+                    "set #homes = list_append(#homes, :home), #home_count = #home_count + 1, "
+                ),
+                ConditionExpression=f"attribute_exists(#id) AND #state <> :banned AND #home_count <= :max_homes",
+                ExpressionAttributeValues={
+                    ":banned": UserState.BANNED.value,
+                    ":max_homes": Constants.User.HOME_COUNT_MAX,
+                    ":home": cls.template_home(home_id, name, biodome),
+                },
+                ExpressionAttributeNames={
+                    "#id": TableKey.PARTITION,
+                    "#state": UserAttr.STATE,
+                    "#homes": UserAttr.HOMES,
+                    "#home_count": UserAttr.HOME_COUNT,
+                },
+            )
+        except ClientError as e:
+            end(e.response["Error"]["Code"])
+        return True

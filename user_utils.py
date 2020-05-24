@@ -1,7 +1,7 @@
 from collections.abc import Iterable
 from typing import Union
 
-from botocore.exceptions import ClientError
+from botocore.exceptions import ClientError  # type: ignore
 
 from database import table, TableKey, TablePartition, UserAttr
 from internal import validate_field, end
@@ -38,15 +38,10 @@ class User:
                 },
             )
         except ClientError as e:
-            error = e.response["Error"]["Code"]
-            if error == "ConditionalCheckFailedException":
-                end("banned or nonexistent user?")
-            end("Error: " + error)  # TODO: fix some of this error handling
-        else:
-            if len(response["Item"]) == 0:
-                end("Shouldn't be possible, attribute exists...")
+            end(e.response["Error"]["Code"])
+            return {}
 
-            return response["Item"]
+        return response["Item"]
 
     @staticmethod
     def update(
@@ -71,8 +66,5 @@ class User:
                 },
             )
         except ClientError as e:
-            error = e.response["Error"]["Code"]
-            if error == "ConditionalCheckFailedException":
-                end("banned or nonexistant user?")
-            end("Error: " + error)
+            end(e.response["Error"]["Code"])
         return True

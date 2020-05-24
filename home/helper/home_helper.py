@@ -2,11 +2,10 @@ import json
 from datetime import datetime
 from typing import Optional
 
-from botocore.exceptions import ClientError
+from botocore.exceptions import ClientError  # type: ignore
 
 from database import table, TableKey, TablePartition, HomeAttr
-from internal import generate_id, end_unless_conditional
-from properties import Constants
+from internal import generate_id, end_unless_conditional, end
 
 
 class HomeHelper:
@@ -29,19 +28,18 @@ class HomeHelper:
         }
 
     @classmethod
-    def attempt_new(cls, batch_writer=None) -> Optional[str]:
+    def attempt_new(cls) -> str:
         new_id = generate_id(HomeAttr.SORT_KEY_PREFIX)
-        writer = batch_writer or table
         try:
             # TODO: rework database model template.
-            writer.put_item(
+            table.put_item(
                 Item=cls.template_new(new_id),
                 ConditionExpression="attribute_not_exists(#id)",
                 ExpressionAttributeNames={"#id": TableKey.PARTITION},
             )
         except ClientError as e:
-            end_unless_conditional(e)
-            return None
+            end(e.response["Error"]["Code"])
+            return ""
         return new_id
 
     @classmethod
@@ -53,6 +51,5 @@ class HomeHelper:
                 ExpressionAttributeNames={"#id": TableKey.SORT},
             )
         except ClientError as e:
-            end_unless_conditional(e)
-            return False
+            end(e.response["Error"]["Code"])
         return True
