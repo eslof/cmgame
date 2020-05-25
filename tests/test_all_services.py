@@ -7,7 +7,6 @@ from types import ModuleType
 from typing import Callable, Any, Dict, Type
 from unittest import TestCase
 from unittest.mock import patch
-import warnings
 
 import router
 from database import UserAttr
@@ -22,13 +21,15 @@ from request_handler import RequestHandler
 class TestAllServices(TestCase):
 
     # region Const members
-    LAMBDA_HANDLER_NAME = "lambda_handler"
-    LAMBDA_FILE_NAME = "lambda_function"
-    ROOT_DIR = ".."
-    MOCK_USER_PACKET = {
-        PacketHeader.REQUEST: 1,
-        RequestField.User.ID: generate_id(UserAttr.SORT_KEY_PREFIX),
-    }
+    def setUp(self):
+        self.LAMBDA_HANDLER_NAME = "lambda_handler"
+        self.LAMBDA_FILE_NAME = "lambda_function"
+        self.ROOT_DIR = ".."
+        self.MOCK_USER_PACKET = {
+            PacketHeader.REQUEST: 1,
+            RequestField.User.ID: generate_id(UserAttr.SORT_KEY_PREFIX),
+        }
+
     # endregion
 
     def test_all_services(self) -> None:
@@ -62,7 +63,7 @@ class TestAllServices(TestCase):
                         )
                         self.lambda_handler_subTest(func, service, directory)
                 # endregion
-        print("End of interface test for all services.")
+        print("End of implementation test for all services.")
 
     def lambda_handler_subTest(
         self,

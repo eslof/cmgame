@@ -10,7 +10,8 @@ from view import View
 
 
 class TestTestService(TestCase):
-    mock_id = generate_id(UserAttr.SORT_KEY_PREFIX)
+    def setUp(self) -> None:
+        self.mock_id = generate_id(UserAttr.SORT_KEY_PREFIX)
 
     def run_handler(
         self, request: Dict[str, Any], expected_output: Dict[str, Any], test_name: str
