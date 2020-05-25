@@ -1,5 +1,7 @@
 from typing import Any
 
+from botocore.exceptions import ClientError
+
 from database import table, TableKey, TablePartition, UserAttr
 from internal import validate_field, end
 from properties import RequestField, UserState
@@ -16,26 +18,29 @@ class Accept(RequestHandler):
             user_id, valid_data[UserAttr.KEY_COUNT], valid_data[UserAttr.KEY_USED_COUNT]
         )
         choices = ItemHelper.itembox(3, seed, inventory)
-        table.update_item(
-            Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
-            UpdateExpression=(
-                "set #inventory = list_append(#inventory, :item_id), "
-                "#key_count = #key_count - 1, "
-                "#used_key_count = #used_key_count + 1"
-            ),
-            ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
-            ExpressionAttributeValues={
-                ":banned": UserState.BANNED.value,
-                ":item_id": choices[event[RequestField.ItemBox.CHOICE]],
-            },
-            ExpressionAttributeNames={
-                "#id": TableKey.PARTITION,
-                "#state": UserAttr.STATE,
-                "#inventory": UserAttr.INVENTORY,
-                "#key_count": UserAttr.KEY_COUNT,
-                "#used_key_count": UserAttr.KEY_USED_COUNT,
-            },
-        )
+        try:
+            table.update_item(
+                Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
+                UpdateExpression=(
+                    "set #inventory = list_append(#inventory, :item_id), "
+                    "#key_count = #key_count - 1, "
+                    "#used_key_count = #used_key_count + 1"
+                ),
+                ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
+                ExpressionAttributeValues={
+                    ":banned": UserState.BANNED.value,
+                    ":item_id": choices[event[RequestField.ItemBox.CHOICE]],
+                },
+                ExpressionAttributeNames={
+                    "#id": TableKey.PARTITION,
+                    "#state": UserAttr.STATE,
+                    "#inventory": UserAttr.INVENTORY,
+                    "#key_count": UserAttr.KEY_COUNT,
+                    "#used_key_count": UserAttr.KEY_USED_COUNT,
+                },
+            )
+        except ClientError as e:
+            end(e.response["Error"]["Code"])
         return choices[event[RequestField.ItemBox.CHOICE] - 1]
         pass
 
