@@ -40,10 +40,10 @@ class TestAllServices(TestCase):
         ]
         for directory in dir_list:
             for name in os.listdir(f"{self.ROOT_DIR}/{directory}"):
-
-                # region SubTest for each folder in root with lambda_function
                 if name == f"{self.LAMBDA_FILE_NAME}.py":
+                    # region SubTest for each folder in root with lambda_function
                     with self.subTest(directory):
+                        # region Assert lambda_handler exists and is decorated
                         service = importlib.import_module(
                             f"{directory}.{self.LAMBDA_FILE_NAME}"
                         )
@@ -61,8 +61,9 @@ class TestAllServices(TestCase):
                             f"{directory}: Undecorated '{self.LAMBDA_HANDLER_NAME}' "
                             f"in module '{directory}.{self.LAMBDA_FILE_NAME}'",
                         )
+                        # endregion
                         self.lambda_handler_subTest(func, service, directory)
-                # endregion
+                    # endregion
         print("End of implementation test for all services.")
 
     def lambda_handler_subTest(
@@ -118,30 +119,18 @@ class TestAllServices(TestCase):
             f: Callable[[Dict[str, Any], Dict[str, Any]], None],
             event: Dict[str, Any],
         ) -> str:
-            # region Assert decorated function name and valid arg
-            # TODO: this might be unnecessary as we're already asserting this in the main test_all_services
-            self.assertTrue(
-                f.__name__ == self.LAMBDA_HANDLER_NAME,
-                f"{name}: Invalid func: '{f.__name__}' for '{request_enum}'"
-                f", should be '{self.LAMBDA_HANDLER_NAME}'.",
-            )
-            self.assertTrue(
-                event and type(event) is dict,
-                f"{name}: Incorrect first argument for decorated function,"
-                f" should be 'event: Dict[str, Any]'.",
-            )
-            # endregion
-
             # region Assert rout dict and request enum
             self.assertTrue(
                 routes and type(routes) is dict,
                 f"{name}: Invalid routes dict: '{routes}'.",
             )
+            # TODO: figure out which of these are actually necessary @001
             self.assertTrue(
                 request_enum
                 and isclass(request_enum)
                 and issubclass(request_enum, Enum)
                 and isinstance(request_enum, EnumMeta)
+                and not isinstance(request_enum, Enum)
                 and isinstance(request_enum, Sized)
                 and len(request_enum),
                 f"{name}: Invalid request enum: '{request_enum}'.",
@@ -156,8 +145,10 @@ class TestAllServices(TestCase):
 
             # region Assert that all entries in routes dict are valid
             for key in routes:
+                # TODO: see @001
                 self.assertTrue(
                     isinstance(key, Enum)
+                    and not isinstance(key, EnumMeta)
                     and type(key) is request_enum
                     and key in request_enum,
                     f"{name}: Invalid entry: '{key}' in '{routes}'"
