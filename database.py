@@ -1,16 +1,43 @@
-from typing import Dict
+from typing import Dict, Union
 
 import boto3
 
 
 # TODO: create cloudfront distributed s3 bucket for config data like ws url
-def web_socket_endpoint():
+def web_socket_endpoint() -> Dict[str, Union[str, int]]:
     #  TODO: get live state
     return {"response_code": 200, "address": "domain.com/ws"}
 
 
 dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table("cmgame")
+
+# TODO: look into this
+"""
+from typing import TypedDict
+
+
+class WelcomePacket():
+    name: user_data[UserAttr.NAME],
+    flag: user_data[UserAttr.FLAG],
+    meta: user_data[UserAttr.META],
+    homes: homes,
+    inventory: inventory,
+
+class Item(TypedDict):
+    bundle: str
+    version: int
+
+
+class GridSlot(TypedDict):
+    item: int
+    meta: str
+
+
+class Home(TypedDict):
+    meta: str
+    grid: Dict[str, GridSlot]
+"""
 
 
 class UserAttr:

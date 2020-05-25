@@ -38,5 +38,5 @@ routes: Dict[Enum, Route] = {
 
 
 @route(routes, ${sc}Request)
-def lambda_handler(event: Dict[str, Any], context: Any) -> None:
+def lambda_handler(event, context):
     pass

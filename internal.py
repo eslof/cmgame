@@ -1,19 +1,16 @@
 import secrets
 import string
-
 from enum import Enum, EnumMeta
-from io import StringIO
-import random
 from json import JSONDecodeError
-from sys import exit as sys_exit
-from typing import Callable, Any, Dict, MappingView, TypeVar
+from typing import Callable, Any, Dict
+
 from botocore.exceptions import ClientError  # type: ignore
 
 from database import META_SIZE_LIMIT
-from view import View
 from properties import Constants, PacketHeader
+from view import View
 
-VT_co = TypeVar("VT_co", covariant=True)
+
 # TODO: Move some of these hard coded strings somewhere maybe
 
 
@@ -47,17 +44,17 @@ def validate_request(target: Dict[str, Any], request_enum: EnumMeta) -> Enum:
         target=target,
         field=PacketHeader.REQUEST,
         validation=lambda value: type(value) is int
-        and value
-        in (
-            val.value for val in request_enum.__members__.values()
-        ),  # type: MappingView[VT_co]
+        and value in (val.value for val in request_enum.__members__.values()),  # type: ignore
         message=f"Request API ({request_enum.__name__})",
     )
-    return request_enum(target[PacketHeader.REQUEST])
+    return request_enum(target[PacketHeader.REQUEST])  # type: ignore
 
 
 def validate_field(
-    target: dict, field: str, validation: Callable[[Any], bool], message: str = ""
+    target: Dict[str, Any],
+    field: str,
+    validation: Callable[[Any], bool],
+    message: str = "",
 ) -> None:
     if not hasattr(target, field) and field not in target:
         end(f"No valid attribute present ({message})")
@@ -65,7 +62,7 @@ def validate_field(
         end(f"Failed validation ({message}): {field} = {str(target[field])}")
 
 
-def validate_meta(target: dict, field: str, message: str) -> None:
+def validate_meta(target: Dict[str, Any], field: str, message: str) -> None:
     max_size = 512 if field not in META_SIZE_LIMIT else META_SIZE_LIMIT[field]
     validate_field(
         target=target,

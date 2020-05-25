@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Dict, List, Union
 
 from botocore.exceptions import ClientError
 
@@ -8,8 +8,10 @@ from properties import Constants, ResponseField, UserState, starting_inventory
 
 
 class UserHelper:
+    # TODO: typeddict?
+
     @staticmethod
-    def welcome_attributes():
+    def welcome_attributes() -> str:
         return ", ".join(
             [
                 UserAttr.NAME,
@@ -21,14 +23,18 @@ class UserHelper:
         )
 
     @staticmethod
-    def template_home(name: str, biodome: int):
+    def template_home(name: str, biodome: int) -> Dict[str, Any]:
         return {
             ResponseField.Home.NAME: name,
             ResponseField.Home.BIODOME: biodome,
         }
 
     @staticmethod
-    def template_welcome(user_data: dict, homes: list, inventory: list):
+    def template_welcome(
+        user_data: Dict[str, Any],
+        homes: List[Dict[str, Union[str, int]]],
+        inventory: List[Dict[str, Union[str, int]]],
+    ) -> Dict[str, Any]:
         return {
             ResponseField.User.NAME: user_data[UserAttr.NAME],
             ResponseField.User.FLAG: user_data[UserAttr.FLAG],
@@ -38,7 +44,7 @@ class UserHelper:
         }
 
     @staticmethod
-    def template_new(new_id: str, name: str, flag: int) -> dict:
+    def template_new(new_id: str, name: str, flag: int) -> Dict[str, Any]:
         """Database item template for a new User, assumes given parameters are valid."""
         return {
             TableKey.PARTITION: TablePartition.USER,
@@ -58,16 +64,16 @@ class UserHelper:
         }
 
     @classmethod
-    def attempt_new(cls, name: str, flag: int) -> Optional[str]:
+    def attempt_new(cls, name: str, flag: int) -> str:
         new_id = generate_id(UserAttr.SORT_KEY_PREFIX)
         try:
             # TODO: rework database model
-            response = table.put_item(
+            table.put_item(
                 Item=cls.template_new(new_id=new_id, name=name, flag=flag),
                 ConditionExpression="attribute_not_exists(#id)",
                 ExpressionAttributeNames={"#id": TableKey.PARTITION},
             )
         except ClientError as e:
             end_unless_conditional(e)
-            return None
+            return ""
         return new_id

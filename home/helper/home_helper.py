@@ -8,6 +8,7 @@ from internal import generate_id, end
 
 
 class HomeHelper:
+    # TODO: under construction
     @staticmethod
     def template_new(home_id: str):
         # TODO: update! it would cost too much wcu to do this
@@ -30,7 +31,6 @@ class HomeHelper:
     def attempt_new(cls) -> str:
         new_id = generate_id(HomeAttr.SORT_KEY_PREFIX)
         try:
-            # TODO: rework database model template.
             table.put_item(
                 Item=cls.template_new(new_id),
                 ConditionExpression="attribute_not_exists(#id)",

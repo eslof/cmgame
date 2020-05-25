@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, no_type_check, List, Union, Dict
 
 from botocore.exceptions import ClientError
 
@@ -12,12 +12,14 @@ from .helper.item_helper import ItemHelper
 
 class Accept(RequestHandler):
     @staticmethod
-    def run(event: dict, user_id: str, valid_data: dict) -> Any:
+    @no_type_check
+    def run(event, user_id, valid_data) -> Any:  # TODO: typeddict?
         inventory = valid_data[UserAttr.INVENTORY]
         seed = ItemHelper.itembox_seed(
             user_id, valid_data[UserAttr.KEY_COUNT], valid_data[UserAttr.KEY_USED_COUNT]
         )
-        choices = ItemHelper.itembox(3, seed, inventory)
+        chosen_id = ItemHelper.get_choice_id()
+        choices = ItemHelper.get_choice_id(3, seed, inventory)
         try:
             table.update_item(
                 Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
@@ -42,10 +44,12 @@ class Accept(RequestHandler):
         except ClientError as e:
             end(e.response["Error"]["Code"])
         return choices[event[RequestField.ItemBox.CHOICE] - 1]
-        pass
 
     @staticmethod
-    def validate(event: dict, user_id: str) -> dict:
+    @no_type_check
+    def validate(
+        event, user_id
+    ) -> Dict[str, Union[List[int], int]]:  # TODO: typeddict?
         user_data = User.get(
             user_id=user_id,
             attributes=f"{UserAttr.INVENTORY}, {UserAttr.KEY_COUNT}, {UserAttr.KEY_USED_COUNT}",

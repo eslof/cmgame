@@ -1,5 +1,5 @@
 from enum import unique, Enum, auto
-from typing import Dict, Any
+from typing import Dict
 
 from match.enlist import Enlist
 from match.find import Find
@@ -38,5 +38,5 @@ routes: Dict[Enum, Route] = {
 
 
 @route(routes, MatchRequest)
-def lambda_handler(event: Dict[str, Any], context: Any) -> None:
+def lambda_handler(event, context):
     pass

@@ -1,4 +1,4 @@
-from typing import MappingView, VT_co
+from typing import Dict, no_type_check
 
 from database import UserAttr
 from internal import validate_field, end
@@ -11,9 +11,8 @@ from .helper.user_helper import UserHelper
 
 class New(RequestHandler):
     @staticmethod
-    def run(
-        event: dict, user_id: str, valid_data: dict, recursion_limit: int = 3
-    ) -> bool:
+    @no_type_check
+    def run(event, user_id, valid_data) -> bool:
         new_id = HomeHelper.attempt_new()
 
         return UserHelper.add_home(
@@ -24,7 +23,8 @@ class New(RequestHandler):
         )
 
     @staticmethod
-    def validate(event: dict, user_id: str) -> dict:
+    @no_type_check
+    def validate(event, user_id) -> Dict[str, int]:
         user_data = User.get(user_id, UserAttr.HOME_COUNT)
         home_count = user_data[UserAttr.HOME_COUNT]
         if home_count > Constants.User.HOME_COUNT_MAX:
@@ -40,10 +40,7 @@ class New(RequestHandler):
             target=event,
             field=RequestField.Home.BIODOME,
             validation=lambda value: type(value) is int
-            and value
-            in (
-                val.value for val in Biodome.__members__.values()
-            ),  # type: MappingView[VT_co]
+            and value in (val.value for val in Biodome.__members__.values()),
             message="Home Create API (BIODOME)",
         )
         return user_data

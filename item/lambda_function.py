@@ -1,5 +1,5 @@
 from enum import unique, auto, Enum
-from typing import Dict, Any
+from typing import Dict
 
 from item.clear import Clear
 from item.place import Place
@@ -23,5 +23,5 @@ routes: Dict[Enum, Route] = {
 
 
 @route(routes, ItemRequest)
-def lambda_handler(event: Dict[str, Any], context: Any) -> None:
+def lambda_handler(event, context):
     pass

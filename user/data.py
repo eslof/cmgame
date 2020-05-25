@@ -1,3 +1,5 @@
+from typing import Dict, Any, Optional, Union, List, no_type_check
+
 from database import UserAttr
 from request_handler import RequestHandler
 from user_utils import User
@@ -9,8 +11,9 @@ class Data(RequestHandler):
     """Returning user requests a welcome package containing: Profile, inventory, home names and their biodomes."""
 
     @staticmethod
-    def run(event: dict, user_id: str, valid_data: dict) -> dict:
-        homes = [
+    @no_type_check
+    def run(event, user_id, valid_data) -> Dict[str, Any]:
+        homes: List[Dict[str, Union[str, int]]] = [
             UserHelper.template_home(
                 home[UserAttr.Home.NAME], home[UserAttr.Home.BIODOME]
             )
@@ -22,5 +25,6 @@ class Data(RequestHandler):
         return UserHelper.template_welcome(valid_data, homes, inventory)
 
     @staticmethod
-    def validate(event: dict, user_id: str) -> dict:
+    @no_type_check
+    def validate(event: Dict[str, Any], user_id: Optional[str]) -> Dict[str, Any]:
         return User.get(user_id, UserHelper.welcome_attributes())

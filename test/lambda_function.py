@@ -1,6 +1,5 @@
 from enum import unique, auto, Enum
-from enum import unique, auto, Enum
-from typing import Dict, Any
+from typing import Dict
 
 from router import Route, route
 from test.one import One
@@ -25,5 +24,5 @@ routes: Dict[Enum, Route] = {
 
 
 @route(routes, TestRequest)
-def lambda_handler(event: Dict[str, Any], context: Any) -> str:
+def lambda_handler(event, context):
     pass

@@ -1,3 +1,5 @@
+from typing import no_type_check, Union, Dict
+
 from botocore.exceptions import ClientError  # type: ignore
 
 from database import table, TableKey, TablePartition, UserAttr, HomeAttr
@@ -9,7 +11,8 @@ from user_utils import User
 
 class Place(RequestHandler):
     @staticmethod
-    def run(event: dict, user_id: str, valid_data: dict) -> bool:
+    @no_type_check
+    def run(event, user_id, valid_data) -> bool:
         home_id = valid_data[UserAttr.CURRENT_HOME]
         item_slot = event[RequestField.User.ITEM]
         grid_slot = event[RequestField.Home.GRID]
@@ -33,11 +36,11 @@ class Place(RequestHandler):
             )
         except ClientError as e:
             end(e.response["Error"]["Code"])
-
         return True
 
     @staticmethod
-    def validate(event: dict, user_id: str) -> dict:
+    @no_type_check
+    def validate(event, user_id) -> Dict[str, Union[int, str]]:  # TODO: typeddict
         user_data = User.get(
             user_id=user_id,
             attributes=f"{UserAttr.INVENTORY_COUNT}, {UserAttr.CURRENT_HOME}",

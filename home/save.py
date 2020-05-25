@@ -1,3 +1,5 @@
+from typing import no_type_check, Dict
+
 from botocore.exceptions import ClientError
 
 from database import table, TableKey, TablePartition, UserAttr, HomeAttr
@@ -9,7 +11,8 @@ from user_utils import User
 
 class Save(RequestHandler):
     @staticmethod
-    def run(event: dict, user_id: str, valid_data: dict) -> bool:
+    @no_type_check
+    def run(event, user_id, valid_data) -> bool:
         home_id = valid_data[UserAttr.CURRENT_HOME]
         meta_data = event[RequestField.Home.META]
         try:
@@ -28,7 +31,8 @@ class Save(RequestHandler):
         return True
 
     @staticmethod
-    def validate(event: dict, user_id: str) -> dict:
+    @no_type_check
+    def validate(event, user_id) -> Dict[str, str]:
         user_data = User.get(user_id, UserAttr.CURRENT_HOME)
         validate_meta(
             target=event, field=RequestField.Home.META, message="Home Save API (META)"

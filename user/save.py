@@ -1,5 +1,5 @@
 from enum import Enum, unique, auto
-from typing import Optional, Any, MappingView, VT_co
+from typing import no_type_check
 
 from country import Country
 from database import UserAttr
@@ -20,7 +20,8 @@ class Save(RequestHandler):
     """User requests to save changes made to one of the user's settings or profile."""
 
     @staticmethod
-    def run(event: dict, user_id: str, valid_data: Optional[Any]) -> bool:
+    @no_type_check
+    def run(event, user_id, valid_data) -> bool:
         request = SaveRequest(event[RequestField.User.SAVE])
         attribute, value = None, None
         if request == SaveRequest.NAME:
@@ -32,7 +33,8 @@ class Save(RequestHandler):
         return User.update(user_id, attribute, value)
 
     @staticmethod
-    def validate(event: dict, user_id: Optional[str]) -> None:
+    @no_type_check
+    def validate(event, user_id):
         req = validate_request(event, SaveRequest)
         field, validation, message = None, None, None
         if req == SaveRequest.NAME:
@@ -46,10 +48,7 @@ class Save(RequestHandler):
             field = RequestField.User.FLAG
             validation = (
                 lambda value: type(value) is int
-                and value
-                in (
-                    val.value for val in Country.__members__.values()
-                ),  # type: MappingView[VT_co]
+                and value in (val.value for val in Country.__members__.values()),
             )
             message = "User Save API (FLAG)"
         elif req == SaveRequest.META:

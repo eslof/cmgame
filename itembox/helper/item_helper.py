@@ -1,19 +1,27 @@
 import json
 import random
-from typing import List, Dict
+from typing import List, Dict, Union
 
-
-# TODO: look into how to do this better
+from database import ItemAttr
 
 
 class ItemHelper:
+    # TODO: all of this needs to be reworked
     data: Dict[str, Dict[str, str]]
     next_auto: int
 
     @classmethod
+    def get_choice_id(cls, bundle_name: str) -> str:
+        cls.load_data()
+        for key in cls.data:
+            if cls.data[key][ItemAttr.BUNDLE] == bundle_name:
+                return key
+        return ""
+
+    @classmethod
     def itembox(
         cls, count: int, seed: str, exclude_list: List[str]
-    ) -> List[Dict[str, str]]:
+    ) -> List[Dict[str, Union[str, int]]]:
         cls.load_data()
         item_ids = list(cls.data.keys())
         random.Random(seed).shuffle(item_ids)

@@ -1,6 +1,6 @@
 from enum import Enum, EnumMeta
 from functools import wraps
-from typing import Callable, Optional, Any, Dict, Type
+from typing import Callable, Optional, Any, Dict, Type, no_type_check
 
 from internal import validate_request
 from request_handler import RequestHandler
@@ -49,6 +49,7 @@ def wrapper(
 def route(
     routes: ROUTES_TYPE, request_enum: EnumMeta
 ) -> Callable[[Callable[[Dict[str, Any], Any], None]], Callable[..., str]]:
+    @no_type_check
     def inner(
         f: Callable[[Dict[str, Any], Dict[str, Any]], None]
     ) -> Callable[..., str]:

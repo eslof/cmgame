@@ -1,5 +1,5 @@
 from enum import Enum, auto, unique
-from typing import Dict, Any
+from typing import Dict
 
 from database import ItemAttr
 from itembox.accept import Accept
@@ -15,6 +15,7 @@ class ItemBoxRequest(Enum):
     DEMAND = auto()
 
 
+# TODO: system under rework
 routes: Dict[Enum, Route] = {
     ItemBoxRequest.ACCEPT: Route(
         handler=Accept,
@@ -37,5 +38,5 @@ routes: Dict[Enum, Route] = {
 
 
 @route(routes, ItemBoxRequest)
-def lambda_handler(event: Dict[str, Any], context: Any) -> None:
+def lambda_handler(event, context):
     pass

@@ -1,5 +1,5 @@
 from enum import Enum, auto, unique
-from typing import Any, Dict
+from typing import Dict
 
 from properties import ResponseType, ResponseField
 from router import Route, route
@@ -38,5 +38,5 @@ routes: Dict[Enum, Route] = {
 
 
 @route(routes, UserRequest)
-def lambda_handler(event: Dict[str, Any], context: Any) -> None:
+def lambda_handler(event, context):
     pass

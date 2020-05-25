@@ -1,13 +1,15 @@
-from typing import Optional, Any, Dict
+from typing import Any, Dict, no_type_check
 
 from request_handler import RequestHandler
 
 
 class One(RequestHandler):
     @staticmethod
-    def run(event: Dict[str, Any], user_id: Optional[str], data: Any) -> Optional[Any]:
+    @no_type_check
+    def run(event, user_id, data) -> Dict[str, Any]:
         return data
 
     @staticmethod
-    def validate(event: Dict[str, Any], user_id: Optional[str]) -> Dict[str, Any]:
+    @no_type_check
+    def validate(event, user_id) -> Dict[str, Any]:
         return event

@@ -1,4 +1,4 @@
-from typing import Optional, Any, VT_co, MappingView
+from typing import Optional, Any, Dict, no_type_check
 
 from country import Country
 from internal import validate_field, end
@@ -13,22 +13,20 @@ class New(RequestHandler):
 
     # TODO: update return data
     @staticmethod
-    def run(event: dict, user_id: Optional[str], valid_data: Optional[Any]) -> str:
-        new_id = ""
-        max_attempts = 5
-        while not new_id and max_attempts > 0:
-            new_id = UserHelper.attempt_new(
-                event[RequestField.User.NAME], event[RequestField.User.FLAG]
-            )
-            max_attempts -= 1
+    @no_type_check
+    def run(event, user_id, valid_data) -> str:
+        new_id = UserHelper.attempt_new(
+            event[RequestField.User.NAME], event[RequestField.User.FLAG]
+        )
 
         if not new_id:
-            end("Unable to successfully create new user")
+            end("Unable to create new user.")
 
         return new_id
 
     @staticmethod
-    def validate(event: dict, user_id: Optional[str]) -> None:
+    @no_type_check
+    def validate(event: Dict[str, Any], user_id: Optional[str]):
         validate_field(
             target=event,
             field=RequestField.User.NAME,
@@ -40,10 +38,6 @@ class New(RequestHandler):
             target=event,
             field=RequestField.User.FLAG,
             validation=lambda value: type(value) is int
-            and value
-            in (
-                val.value for val in Country.__members__.values()
-            ),  # type: MappingView[VT_co]
+            and value in (val.value for val in Country.__members__.values()),
             message="User New API (FLAG)",
         )
-        return None

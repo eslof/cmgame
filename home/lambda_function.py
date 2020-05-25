@@ -1,5 +1,5 @@
 from enum import auto, unique, Enum
-from typing import Dict, Any
+from typing import Dict
 
 from database import HomeAttr
 from home.delete import Delete
@@ -37,5 +37,5 @@ routes: Dict[Enum, Route] = {
 
 
 @route(routes, HomeRequest)
-def lambda_handler(event: Dict[str, Any], context: Any) -> None:
+def lambda_handler(event, context):
     pass

@@ -8,6 +8,7 @@ from properties import UserState, Constants
 
 
 class UserHelper:
+    # TODO: under construction
     @staticmethod
     def template_home(home_id: str, name: str, biodome: int) -> Dict[str, Any]:
         return {

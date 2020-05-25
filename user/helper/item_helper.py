@@ -11,7 +11,7 @@ class ItemHelper:
     """Class provided to deal with a TODO: proper item database"""
 
     data = {}
-
+    # TODO: rework a lot of this, typeddict ?
     @classmethod
     def template_inv(cls, item_id: str) -> dict:
         cls.load_data()

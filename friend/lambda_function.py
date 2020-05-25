@@ -1,5 +1,5 @@
 from enum import auto, Enum, unique
-from typing import Dict, Any
+from typing import Dict
 
 from friend.add import Add
 from friend.invite import Invite
@@ -35,5 +35,5 @@ routes: Dict[Enum, Route] = {
 
 
 @route(routes, FriendRequest)
-def lambda_handler(event: Dict[str, Any], context: Any) -> None:
+def lambda_handler(event, context):
     pass

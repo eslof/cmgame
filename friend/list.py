@@ -1,15 +1,15 @@
-from typing import Optional, Any
+from typing import no_type_check
 
 from request_handler import RequestHandler
 
 
 class List(RequestHandler):
     @staticmethod
-    def run(
-        event: dict, user_id: Optional[str], valid_data: Optional[Any]
-    ) -> Optional[Any]:
+    @no_type_check
+    def run(event, user_id, valid_data):
         pass
 
     @staticmethod
-    def validate(event: dict, user_id: Optional[str]) -> Optional[dict]:
+    @no_type_check
+    def validate(event, user_id):
         pass

@@ -1,4 +1,4 @@
-from typing import Optional, Any, Dict
+from typing import Any, Dict, no_type_check
 
 from properties import ResponseField
 from request_handler import RequestHandler
@@ -6,9 +6,11 @@ from request_handler import RequestHandler
 
 class Two(RequestHandler):
     @staticmethod
-    def run(event: Dict[str, Any], user_id: Optional[str], data: Any) -> Optional[Any]:
+    @no_type_check
+    def run(event, user_id, data) -> bool:
         return data[ResponseField.Generic.RESULT]
 
     @staticmethod
-    def validate(event: Dict[str, Any], user_id: Optional[str]) -> Dict[str, Any]:
+    @no_type_check
+    def validate(event, user_id) -> Dict[str, Any]:
         return event

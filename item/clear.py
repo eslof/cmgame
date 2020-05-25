@@ -1,3 +1,5 @@
+from typing import no_type_check, Dict
+
 from botocore.exceptions import ClientError  # type: ignore
 
 from database import UserAttr, TableKey, TablePartition, HomeAttr, table
@@ -9,7 +11,8 @@ from user_utils import User
 
 class Clear(RequestHandler):
     @staticmethod
-    def run(event: dict, user_id: str, valid_data: dict) -> bool:
+    @no_type_check
+    def run(event, user_id, valid_data) -> bool:
         home_id = valid_data[UserAttr.CURRENT_HOME]
         grid_slot = event[RequestField.Home.GRID]
         try:
@@ -28,7 +31,8 @@ class Clear(RequestHandler):
         return True
 
     @staticmethod
-    def validate(event: dict, user_id: str) -> dict:
+    @no_type_check
+    def validate(event, user_id) -> Dict[str, str]:
         validate_field(
             target=event,
             field=RequestField.Home.GRID,
