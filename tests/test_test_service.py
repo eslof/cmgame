@@ -29,7 +29,7 @@ class TestTestService(TestCase):
             expected_output,
             f"{test_name}: Unexpected output: '{output_obj}' should be '{expected_output}'.",
         )
-        print(f"End of test '{test_name}' for test service.")
+        print(f"End of integration test using '{test_name}' for test service.")
 
     def test_debug(self) -> None:
         request = {

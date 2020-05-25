@@ -3,9 +3,11 @@ import os
 from collections.abc import Sized
 from enum import Enum, EnumMeta
 from inspect import isclass
+from types import ModuleType
 from typing import Callable, Any, Dict, Type
 from unittest import TestCase
 from unittest.mock import patch
+import warnings
 
 import router
 from database import UserAttr
@@ -14,7 +16,9 @@ from properties import RequestField, PacketHeader
 from request_handler import RequestHandler
 
 
-# TODO: split this up somehow so it's easier to manage
+# **FOLD ALL REGIONS** until TODO: make this more manageable
+
+
 class TestAllServices(TestCase):
 
     # region Const members
@@ -38,17 +42,33 @@ class TestAllServices(TestCase):
 
                 # region SubTest for each folder in root with lambda_function
                 if name == f"{self.LAMBDA_FILE_NAME}.py":
-                    service = importlib.import_module(
-                        f"{directory}.{self.LAMBDA_FILE_NAME}"
-                    )
-                    func = getattr(service, self.LAMBDA_HANDLER_NAME)
-
                     with self.subTest(directory):
-                        self.lambda_handler_subTest(func, directory)
+                        service = importlib.import_module(
+                            f"{directory}.{self.LAMBDA_FILE_NAME}"
+                        )
+                        self.assertTrue(
+                            hasattr(service, self.LAMBDA_HANDLER_NAME),
+                            f"{directory}: Missing '{self.LAMBDA_HANDLER_NAME}' "
+                            f"in module '{directory}.{self.LAMBDA_FILE_NAME}'",
+                        )
+                        func = getattr(service, self.LAMBDA_HANDLER_NAME)
+                        self.assertTrue(
+                            func
+                            and hasattr(func, "__decorated__")
+                            and func.__decorated__
+                            and func.__decorated__ == "route",
+                            f"{directory}: Undecorated '{self.LAMBDA_HANDLER_NAME}' "
+                            f"in module '{directory}.{self.LAMBDA_FILE_NAME}'",
+                        )
+                        self.lambda_handler_subTest(func, service, directory)
                 # endregion
+        print("End of interface test for all services.")
 
     def lambda_handler_subTest(
-        self, lambda_handler: Callable[[Dict[str, Any], Any], None], name: str
+        self,
+        lambda_handler: Callable[[Dict[str, Any], Any], None],
+        service: ModuleType,
+        name: str,
     ) -> None:
         def test_handler(handler: Type[RequestHandler]) -> None:
             # region Assert that our handler base class is not broken
@@ -98,6 +118,7 @@ class TestAllServices(TestCase):
             event: Dict[str, Any],
         ) -> str:
             # region Assert decorated function name and valid arg
+            # TODO: this might be unnecessary as we're already asserting this in the main test_all_services
             self.assertTrue(
                 f.__name__ == self.LAMBDA_HANDLER_NAME,
                 f"{name}: Invalid func: '{f.__name__}' for '{request_enum}'"
@@ -123,6 +144,12 @@ class TestAllServices(TestCase):
                 and isinstance(request_enum, Sized)
                 and len(request_enum),
                 f"{name}: Invalid request enum: '{request_enum}'.",
+            )
+            self.assertTrue(
+                hasattr(request_enum, "__module__")
+                and request_enum.__module__
+                and request_enum.__module__ == f"{name}.{self.LAMBDA_FILE_NAME}",
+                f"{name}: Incorrect request enum: '{request_enum}' defined in '{request_enum.__module__}'",
             )
             # endregion
 

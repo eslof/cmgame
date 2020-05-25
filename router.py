@@ -53,9 +53,12 @@ def route(
         f: Callable[[Dict[str, Any], Dict[str, Any]], None]
     ) -> Callable[..., str]:
         @wraps(f)
-        def wrapped_f(event: Dict[str, Any], context: Optional[Any]) -> Optional[str]:
+        def route_decorated(
+            event: Dict[str, Any], context: Optional[Any]
+        ) -> Optional[str]:
             return wrapper(routes, request_enum, f, event)
 
-        return wrapped_f
+        route_decorated.__decorated__ = "route"
+        return route_decorated
 
     return inner
