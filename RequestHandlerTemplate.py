@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, no_type_check
 
 
 #set($camel_case_name = ${StringUtils.removeUnderScores($NAME)})
@@ -13,13 +13,13 @@ class $camel_case_name(RequestHandler):
     """TODO:${desc}"""
 
     @staticmethod
-    @typing.no_type_check
+    @no_type_check
     def run(event, user_id, valid_data) -> Any:
         """TODO:${camel_case_name}.run implementation."""
         pass
 
     @staticmethod
-    @typing.no_type_check
+    @no_type_check
     def validate(event, user_id) -> Any:
         """TODO:${camel_case_name}.validate implementation."""
         pass
