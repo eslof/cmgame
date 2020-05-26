@@ -15,7 +15,7 @@ class Delete(RequestHandler):
         home_index = event[RequestField.User.HOME] - 1
         home_id = valid_data[UserAttr.HOMES][home_index]
         HomeHelper.attempt_delete(home_id)
-        return User.update(user_id, UserAttr.HOMES, home_index, "REMOVE #name[:value]")
+        return User.update(user_id, UserAttr.HOMES, home_index, "REMOVE #name :value")
 
     @staticmethod
     @no_type_check

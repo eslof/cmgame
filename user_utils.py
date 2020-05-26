@@ -1,5 +1,5 @@
 from collections.abc import Iterable
-from typing import Union
+from typing import Union, Dict, Any
 
 from botocore.exceptions import ClientError  # type: ignore
 
@@ -10,8 +10,8 @@ from properties import RequestField, UserState, Constants
 
 class User:
     @staticmethod
-    def validate_id(event: dict) -> str:
-        """TODO: user authentication"""
+    def validate_id(event: Dict[str, str]) -> str:
+        # TODO: real user authentication
         validate_field(
             target=event,
             field=RequestField.User.ID,
@@ -23,10 +23,10 @@ class User:
         return event[RequestField.User.ID]
 
     @staticmethod
-    def get(user_id: str, attributes: str) -> dict:
+    def get(user_id: str, attributes: str) -> Dict[str, Any]:
         """Get and return given attributes for given user_id unless banned."""
         try:
-            response = table.get_item(
+            response: Dict[str, Dict[str, Any]] = table.get_item(
                 Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
                 ProjectionExpression=attributes,
                 ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
@@ -39,14 +39,14 @@ class User:
         except ClientError as e:
             end(e.response["Error"]["Code"])
             return {}
-
-        return response["Item"]
+        else:
+            return response["Item"]
 
     @staticmethod
     def update(
         user_id: str,
         attribute: str,
-        value: Union[int, str, bool, Iterable],
+        value: Any,
         expression: str = "set #name = :value",
     ) -> bool:
         try:

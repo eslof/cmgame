@@ -14,7 +14,6 @@ class TestRequest(Enum):
     THREE = auto()
 
 
-# TODO: Update route output (Callable/default=View.generic)
 routes: Dict[Enum, Route] = {
     TestRequest.ONE: Route(One, View.debug),
     TestRequest.TWO: Route(Two, View.generic, require_id=False),
