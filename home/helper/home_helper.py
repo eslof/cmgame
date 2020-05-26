@@ -41,7 +41,7 @@ class HomeHelper:
         return new_id
 
     @classmethod
-    def attempt_delete(cls, home_id: str):
+    def attempt_delete(cls, home_id: str) -> None:
         try:
             table.delete_item(
                 Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
@@ -50,4 +50,3 @@ class HomeHelper:
             )
         except ClientError as e:
             end(e.response["Error"]["Code"])
-        return True

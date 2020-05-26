@@ -6,8 +6,8 @@ from request_handler import RequestHandler
 class One(RequestHandler):
     @staticmethod
     @no_type_check
-    def run(event, user_id, data) -> Dict[str, Any]:
-        return data
+    def run(event, user_id, valid_data) -> Dict[str, Any]:
+        return valid_data
 
     @staticmethod
     @no_type_check

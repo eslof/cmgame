@@ -5,6 +5,7 @@ from request_handler import RequestHandler
 
 class Stop(RequestHandler):
     # TODO: implement
+
     @staticmethod
     @no_type_check
     def run(event, user_id, valid_data):

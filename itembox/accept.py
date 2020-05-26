@@ -18,6 +18,8 @@ class Accept(RequestHandler):
         seed = ItemHelper.itembox_seed(
             user_id, valid_data[UserAttr.KEY_COUNT], valid_data[UserAttr.KEY_USED_COUNT]
         )
+        # todo: way too inefficient to re-generate the same itembox just to get the choice
+        #  figure out what to do
         chosen_id = ItemHelper.get_choice_id()
         choices = ItemHelper.get_choice_id(3, seed, inventory)
         try:

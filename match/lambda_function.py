@@ -33,7 +33,7 @@ routes: Dict[Enum, Route] = {
         if value
         else View.generic(False),
     ),
-    MatchRequest.STOP: Route(Stop, View.generic),
+    MatchRequest.STOP: Route(Stop, View.generic),  # Todo: implement
 }
 
 

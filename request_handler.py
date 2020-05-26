@@ -1,7 +1,6 @@
 # TODO: metaclass=abc.ABCMeta ? research
-import typing
 from abc import ABC, abstractmethod
-from typing import Optional, Any, Dict
+from typing import Any, no_type_check
 
 
 class RequestHandler(ABC):
@@ -10,14 +9,14 @@ class RequestHandler(ABC):
     #    throw exception for architecture misuse
     #    return None
 
-    @typing.no_type_check
     @staticmethod
     @abstractmethod
-    def run(event: Dict[str, Any], user_id: Optional[str], valid_data,) -> Any:
+    @no_type_check
+    def run(event, user_id, valid_data) -> Any:
         pass
 
-    @typing.no_type_check
     @staticmethod
     @abstractmethod
-    def validate(event: Dict[str, Any], user_id: Optional[str]):
+    @no_type_check
+    def validate(event, user_id):
         pass

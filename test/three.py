@@ -7,8 +7,8 @@ from request_handler import RequestHandler
 class Three(RequestHandler):
     @staticmethod
     @no_type_check
-    def run(event, user_id, data) -> Dict[str, Any]:
-        return data[ResponseField.Generic.ERROR]
+    def run(event, user_id, valid_data) -> Dict[str, Any]:
+        return valid_data[ResponseField.Generic.ERROR]
 
     @staticmethod
     @no_type_check
