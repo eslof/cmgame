@@ -1,11 +1,10 @@
 from enum import unique, auto, Enum
 from typing import Dict
-
 from router import Route, route
+from view import View
 from test.one import One
 from test.three import Three
 from test.two import Two
-from view import View
 
 
 @unique
