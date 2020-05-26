@@ -1,4 +1,5 @@
 from enum import unique, auto, Enum
+from typing import Dict
 
 from router import Route, route
 from view import View
