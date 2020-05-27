@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from typing import Any, Dict
 
 from botocore.exceptions import ClientError  # type: ignore
 
@@ -10,9 +11,7 @@ from internal import generate_id, end
 class HomeHelper:
     # TODO: under construction
     @staticmethod
-    def template_new(home_id: str):
-        # TODO: update! it would cost too much wcu to do this
-        #  grid has to be dict populated over time not list
+    def template_new(home_id: str) -> Dict[str, Any]:
         time_now = datetime.now()
         time_string = time_now.strftime("%m-%d-%H-%M-%S")
         return {
