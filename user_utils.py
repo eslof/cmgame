@@ -1,5 +1,4 @@
-from collections.abc import Iterable
-from typing import Union, Dict, Any
+from typing import Dict, Any
 
 from botocore.exceptions import ClientError  # type: ignore
 

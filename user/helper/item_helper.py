@@ -1,34 +1,28 @@
-import json
-
-from database import ItemAttr
-from properties import ResponseField
+from typing import List
+from item_factory import Items, DBItem, BUNDLE, VERSION
 
 
 # TODO: look into how to do this better
+from properties import starting_inventory
 
 
-class ItemHelper:
-    """Class provided to deal with a TODO: proper item database"""
-
-    data = {}
-
+class ItemHelper(Items):
     @classmethod
-    def template_inv(cls, item_id: str) -> dict:
+    def template_inv(cls, item_id: int) -> DBItem:
         cls.load_data()
-        item = cls.get(item_id)
+        item = cls.data["items"][item_id]
         return {
-            ResponseField.Item.BUNDLE: item[ItemAttr.BUNDLE],
-            ResponseField.Item.VERSION: item[ItemAttr.VERSION],
+            BUNDLE: item["bundle"],
+            VERSION: item["version"],
         }
 
     @classmethod
-    def get(cls, item_id: str) -> dict:
+    def get_biodomes(cls) -> List[DBItem]:
         cls.load_data()
-        return cls.data[item_id]
+        biodomes = list(cls.data["biodomes"].values())
+        return biodomes
 
     @classmethod
-    def load_data(cls) -> None:
-        """Load/Connect to DB"""
-        if not cls.data:
-            with open("../../item_db.json", "r") as file_stream:
-                cls.data = json.load(file_stream)
+    def get_starter_inventory(cls) -> List[DBItem]:
+        cls.load_data()
+        return [cls.data["items"][i] for i in starting_inventory]

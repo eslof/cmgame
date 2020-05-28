@@ -4,10 +4,20 @@ from botocore.exceptions import ClientError
 
 from database import table, TableKey, TablePartition, UserAttr
 from internal import generate_id, end_unless_conditional
+from item_factory import DBItem
 from properties import Constants, ResponseField, UserState, starting_inventory
+from user.helper.item_helper import ItemHelper
 
 
 class UserHelper:
+    @staticmethod
+    def welcome_info() -> Dict[str, List[DBItem]]:
+        # TODO: no hard cody
+        return {
+            "biodomes": ItemHelper.get_biodomes(),
+            "inventory": ItemHelper.get_starter_inventory(),
+        }
+
     @staticmethod
     def welcome_attributes() -> str:
         return ", ".join(

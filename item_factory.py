@@ -8,6 +8,7 @@ AUTO: Final = "auto"
 ITEMS: Final = "items"
 BUNDLE: Final = "bundle"
 VERSION: Final = "version"
+BIODOMES: Final = "biodomes"
 
 
 class DBItem(TypedDict):
@@ -16,8 +17,9 @@ class DBItem(TypedDict):
 
 
 class ItemDB(TypedDict):
-    auto: int
+    auto: Dict[str, int]
     items: Dict[int, DBItem]
+    biodomes: Dict[int, DBItem]
 
 
 class Items:
@@ -35,24 +37,28 @@ class Items:
                 cls.data = pickle.load(file)
 
     @classmethod
-    def update(cls, bundle_name: str, version: int) -> None:
+    def update(
+        cls, item_type: Literal["items", "biodomes"], bundle_name: str, version: int,
+    ) -> None:
         cls.load_data()
+        auto = cls.data[AUTO]
+        if item_type == "items":
+            target = cls.data[ITEMS]
+        elif item_type == "biodomes":
+            target = cls.data[BIODOMES]
+        else:
+            raise ValueError
 
         def scan() -> Optional[int]:
             return next(
-                (
-                    i
-                    for i in cls.data[ITEMS].keys()
-                    if cls.data[ITEMS][i][BUNDLE] == bundle_name
-                ),
-                None,
+                (i for i in target.keys() if target[i][BUNDLE] == bundle_name), None,
             )
 
-        item_id: int = scan() or cls.data[AUTO]
-        if item_id == cls.data[AUTO]:
-            cls.data[AUTO] += 1
+        item_id: int = scan() or auto[item_type]
+        if item_id == auto[item_type]:
+            auto[item_type] += 1
 
-        cls.data[ITEMS][item_id] = {
+        target[item_id] = {
             BUNDLE: bundle_name,
             VERSION: version,
         }

@@ -4,6 +4,7 @@ from enum import unique, auto, Enum
 # TODO: a lot of stuff here, figure something out
 
 # region Base
+from typing import List
 
 
 class Seed:
@@ -16,12 +17,7 @@ class Seed:
 # region Game
 
 
-starting_inventory = [
-    "q1H7AD0zllObeidAEwvui",
-    "eMg5ltDhJ7Yy3jhjG6Svt",
-    "D4JlrGOb_wNdNgj16vv_d",
-    "1-Zlb-R0OGLfmqbBpSwL2",
-]
+starting_inventory: List[int] = [1, 2, 3, 4]
 
 
 class Constants:
@@ -103,6 +99,7 @@ class ResponseField:
         RESULT = "results"
 
     class User:
+        WELCOME = "welcome"
         META = "meta"
         DATA = "data"
         ID = "id"

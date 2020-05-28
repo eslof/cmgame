@@ -2,7 +2,7 @@ from typing import Optional, Any, Dict, no_type_check
 
 from country import Country
 from internal import validate_field, end
-from properties import RequestField, Constants
+from properties import RequestField, Constants, ResponseField
 from request_handler import RequestHandler
 from .helper.user_helper import UserHelper
 
@@ -14,15 +14,17 @@ class New(RequestHandler):
     # TODO: update return data
     @staticmethod
     @no_type_check
-    def run(event, user_id, valid_data) -> str:
+    def run(event, user_id, valid_data) -> dict:
         new_id = UserHelper.attempt_new(
             event[RequestField.User.NAME], event[RequestField.User.FLAG]
         )
-
         if not new_id:
             end("Unable to create new user.")
 
-        return new_id
+        return {
+            ResponseField.User.ID: new_id,
+            ResponseField.User.WELCOME: UserHelper.welcome_info(),
+        }
 
     @staticmethod
     @no_type_check

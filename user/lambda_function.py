@@ -29,7 +29,7 @@ routes: Dict[Enum, Route] = {
     UserRequest.NEW: Route(
         handler=New,
         output=lambda value: View.response(
-            response_type=ResponseType.WELCOME, data={ResponseField.User.ID: value},
+            response_type=ResponseType.WELCOME, data=value,
         ),
         require_id=False,
     ),
