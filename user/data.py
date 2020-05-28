@@ -8,7 +8,7 @@ from .helper.user_helper import UserHelper
 
 
 class Data(RequestHandler):
-    """Returning user requests a welcome package containing: Profile, inventory, home names and their biodomes."""
+    """Returning user requests a welcome-back package containing: Profile, inventory, home names and their biodomes."""
 
     @staticmethod
     @no_type_check

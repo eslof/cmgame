@@ -11,14 +11,6 @@ from user.helper.item_helper import ItemHelper
 
 class UserHelper:
     @staticmethod
-    def welcome_info() -> Dict[str, List[DBItem]]:
-        # TODO: no hard cody
-        return {
-            "biodomes": ItemHelper.get_biodomes(),
-            "inventory": ItemHelper.get_starter_inventory(),
-        }
-
-    @staticmethod
     def welcome_attributes() -> str:
         return ", ".join(
             [

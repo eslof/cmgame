@@ -4,7 +4,7 @@ from request_handler import RequestHandler
 
 
 class Delete(RequestHandler):
-    """TODO: User requests to close the user's own account."""
+    """TODO: Figure out how we do this proper without just losing data."""
 
     @staticmethod
     @no_type_check

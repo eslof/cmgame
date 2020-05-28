@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 from item_factory import Items, DBItem, BUNDLE, VERSION
 
 
@@ -7,6 +7,14 @@ from properties import starting_inventory
 
 
 class ItemHelper(Items):
+    @staticmethod
+    def welcome_info() -> Dict[str, List[DBItem]]:
+        # TODO: no hard cody
+        return {
+            "biodomes": ItemHelper.get_biodomes(),
+            "inventory": ItemHelper.get_starter_inventory(),
+        }
+
     @classmethod
     def template_inv(cls, item_id: int) -> DBItem:
         cls.load_data()

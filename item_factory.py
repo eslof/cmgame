@@ -33,7 +33,7 @@ class Items:
     @classmethod
     def load_data(cls) -> None:
         if not cls.data:
-            with open("../../item_db.p", "rb") as file:
+            with open("item_db.p", "rb") as file:
                 cls.data = pickle.load(file)
 
     @classmethod
