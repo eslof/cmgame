@@ -1,9 +1,6 @@
-import json
 import random
-from typing import List, Dict, Union, KeysView
-
-from database import ItemAttr
-from item_factory import ItemDB, Items, DBItem
+from typing import List
+from item_factory import Items, DBItem
 
 
 class ItemHelper(Items):

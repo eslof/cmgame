@@ -1,5 +1,5 @@
 from typing import Dict, Union, Literal, Final, final
-
+from item_factory import BUNDLE, VERSION, ITEMS, AUTO
 import boto3
 
 
@@ -11,6 +11,11 @@ def web_socket_endpoint() -> Dict[str, Union[str, int]]:
 
 dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table("cmgame")
+
+
+class ItemAttr:
+    BUNDLE = BUNDLE
+    VERSION = VERSION
 
 
 class UserAttr:
@@ -66,11 +71,6 @@ class TablePartition:
     USER = "user"
     HOME = "home"
     MATCH = "queue"
-
-
-class ItemAttr:
-    BUNDLE = "bundle"
-    VERSION = "version"
 
 
 class MatchAttr:
