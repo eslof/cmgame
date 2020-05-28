@@ -9,7 +9,6 @@ from internal import generate_id, end
 
 
 class HomeHelper:
-    # TODO: under construction
     @staticmethod
     def template_new(home_id: str) -> Dict[str, Any]:
         time_now = datetime.now()

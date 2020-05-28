@@ -15,6 +15,7 @@ class Delete(RequestHandler):
         home_index = event[RequestField.User.HOME] - 1
         home_id = valid_data[UserAttr.HOMES][home_index]
         HomeHelper.attempt_delete(home_id)
+        # todo: do we need an extra if :value in #name condition here to catch misuse?
         return User.update(user_id, UserAttr.HOMES, home_index, "REMOVE #name :value")
 
     @staticmethod
