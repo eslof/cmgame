@@ -16,7 +16,7 @@ class ItemDB(TypedDict):
     items: Dict[int, DBItem]
 
 
-class ItemFactory:
+class Items:
     data: ItemDB
 
     @classmethod
