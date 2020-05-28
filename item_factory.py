@@ -1,9 +1,13 @@
 import pickle
-from typing import Optional, Dict
-
-from database import ItemAttr
+from typing import Optional, Dict, Final, Literal
 
 from typing import TypedDict
+
+# TODO: look into this
+AUTO: Final = "auto"
+ITEMS: Final = "items"
+BUNDLE: Final = "bundle"
+VERSION: Final = "version"
 
 
 class DBItem(TypedDict):
@@ -38,17 +42,17 @@ class Items:
             return next(
                 (
                     i
-                    for i in cls.data["items"].keys()
-                    if cls.data["items"][i]["bundle"] == bundle_name
+                    for i in cls.data[ITEMS].keys()
+                    if cls.data[ITEMS][i][BUNDLE] == bundle_name
                 ),
                 None,
             )
 
-        item_id: int = scan() or cls.data["auto"]
-        if item_id == cls.data["auto"]:
-            cls.data["auto"] += 1
+        item_id: int = scan() or cls.data[AUTO]
+        if item_id == cls.data[AUTO]:
+            cls.data[AUTO] += 1
 
-        cls.data["items"][item_id] = {
-            ItemAttr.BUNDLE: bundle_name,
-            ItemAttr.VERSION: version,
+        cls.data[ITEMS][item_id] = {
+            BUNDLE: bundle_name,
+            VERSION: version,
         }
