@@ -13,7 +13,7 @@ class ItemFactory:
         save_data = cast(Dict[str, Union[int, Dict[str, Union[str, int]]]], cls.data)
         save_data["next_auto"] = cls.next_auto
         with open("../../item_db.json", "w") as file_stream:
-            file_stream.write(json.dumps(cls.data))
+            json.dump(cls.data, file_stream)
 
     @classmethod
     def load_data(cls) -> None:
