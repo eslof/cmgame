@@ -1,46 +1,54 @@
-import json
-from typing import Optional, Dict, Union, cast
+import pickle
+from typing import Optional, Dict
 
 from database import ItemAttr
 
+from typing import TypedDict
+
+
+class DBItem(TypedDict):
+    bundle: str
+    version: int
+
+
+class ItemDB(TypedDict):
+    auto: int
+    items: Dict[int, DBItem]
+
 
 class ItemFactory:
-    data: Dict[str, Dict[str, Union[str, int]]]
-    next_auto: int
+    data: ItemDB
 
     @classmethod
     def save_data(cls) -> None:
-        save_data = cast(Dict[str, Union[int, Dict[str, Union[str, int]]]], cls.data)
-        save_data["next_auto"] = cls.next_auto
-        with open("../../item_db.json", "w") as file_stream:
-            json.dump(cls.data, file_stream)
+        with open("item_db.p", "wb") as file:
+            pickle.dump(cls.data, file, protocol=pickle.HIGHEST_PROTOCOL)
 
     @classmethod
     def load_data(cls) -> None:
-        """Load/Connect to DB"""
         if not cls.data:
-            with open("../../item_db.json", "r") as file_stream:
-                data = json.load(file_stream)
-                cls.next_auto = data["next_auto"]
-                del data["next_auto"]
-                cls.data = data
+            with open("../../item_db.p", "rb") as file:
+                cls.data = pickle.load(file)
 
     @classmethod
     def update(cls, bundle_name: str, version: int) -> None:
         cls.load_data()
 
-        def scan() -> Optional[str]:
-            for key in cls.data:
-                if cls.data[key][ItemAttr.BUNDLE] == bundle_name:
-                    return key
-            return None
+        def scan() -> Optional[int]:
+            return next(
+                (
+                    i
+                    for i in cls.data["items"].keys()
+                    if cls.data["items"][i]["bundle"] == bundle_name
+                ),
+                None,
+            )
 
-        existing_id = scan()
-        item_id: str = existing_id or str(cls.next_auto)
-        if item_id == str(cls.next_auto):
-            cls.next_auto += 1
+        item_id: int = scan() or cls.data["auto"]
+        if item_id == cls.data["auto"]:
+            cls.data["auto"] += 1
 
-        cls.data[item_id] = {
+        cls.data["items"][item_id] = {
             ItemAttr.BUNDLE: bundle_name,
             ItemAttr.VERSION: version,
         }
