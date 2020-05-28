@@ -11,11 +11,8 @@ class Demand(RequestHandler):
     @staticmethod
     @no_type_check
     def run(event, user_id, valid_data) -> List[Dict[str, Any]]:
-        inventory = valid_data[UserAttr.INVENTORY]
-        seed = ItemHelper.itembox_seed(
-            user_id, valid_data[UserAttr.KEY_COUNT], valid_data[UserAttr.KEY_USED_COUNT]
-        )
-        return ItemHelper.itembox(3, seed, inventory)
+        seed = ItemHelper.itembox_seed(user_id, valid_data[UserAttr.KEY_USED_COUNT])
+        return ItemHelper.get_itembox(seed)
 
     @staticmethod
     @no_type_check

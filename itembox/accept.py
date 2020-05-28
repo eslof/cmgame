@@ -4,6 +4,7 @@ from botocore.exceptions import ClientError
 
 from database import table, TableKey, TablePartition, UserAttr
 from internal import validate_field, end
+from itembox.helper.user_helper import UserHelper
 from properties import RequestField, UserState
 from request_handler import RequestHandler
 from user_utils import User
@@ -11,58 +12,21 @@ from itembox.helper.item_helper import ItemHelper
 
 
 class Accept(RequestHandler):
-    @classmethod
+    @staticmethod
     @no_type_check
-    def run(cls, event, user_id, valid_data) -> bool:
+    def run(event, user_id, valid_data) -> bool:
         seed = ItemHelper.itembox_seed(user_id, valid_data[UserAttr.KEY_USED_COUNT])
         item_id: int = ItemHelper.get_choice(
-            valid_data[RequestField.ItemBox.CHOICE], seed, 3
+            valid_data[RequestField.ItemBox.CHOICE], seed
         )
         try:
             if item_id in valid_data[UserAttr.INVENTORY]:
-                cls._handle_duplicate(user_id)
+                UserHelper.handle_duplicate_item(user_id)
             else:
-                cls._handle_new(user_id, item_id)
+                UserHelper.handle_new_item(user_id, item_id)
         except ClientError as e:
             end(e.response["Error"]["Code"])
         return True
-
-    @staticmethod
-    def _handle_new(user_id: str, item_id: int) -> None:
-        table.update_item(
-            Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id,},
-            UpdateExpression=(
-                "set #inventory = list_append(#inventory, :item_id), "
-                "#key_count = #key_count - 1, "
-                "#used_key_count = #used_key_count + 1"
-            ),
-            ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
-            ExpressionAttributeValues={
-                ":banned": UserState.BANNED.value,
-                ":item_id": item_id,
-            },
-            ExpressionAttributeNames={
-                "#id": TableKey.PARTITION,
-                "#state": UserAttr.STATE,
-                "#inventory": UserAttr.INVENTORY,
-                "#key_count": UserAttr.KEY_COUNT,
-                "#used_key_count": UserAttr.KEY_USED_COUNT,
-            },
-        )
-
-    @staticmethod
-    def _handle_duplicate(user_id: str) -> None:
-        table.update_item(
-            Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id,},
-            UpdateExpression="#used_key_count = #used_key_count + 1",
-            ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
-            ExpressionAttributeValues={":banned": UserState.BANNED.value,},
-            ExpressionAttributeNames={
-                "#id": TableKey.PARTITION,
-                "#state": UserAttr.STATE,
-                "#used_key_count": UserAttr.KEY_USED_COUNT,
-            },
-        )
 
     @staticmethod
     @no_type_check

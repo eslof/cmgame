@@ -26,6 +26,9 @@ class Constants:
     # Certain partitions have 1 char prefix added (U for User, H for Home)
     EXPECTED_ID_LEN = ID_GEN_LENGTH + 1
 
+    class ItemBox:
+        ITEM_COUNT = 3
+
     class User:
         HOME_COUNT_MAX = 5
         META_MAX_LENGTH = 99328
