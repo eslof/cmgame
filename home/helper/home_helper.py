@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from typing import Any, Dict
+from typing import Dict, Any
 
 from botocore.exceptions import ClientError  # type: ignore
 
