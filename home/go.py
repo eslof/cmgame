@@ -12,7 +12,7 @@ from user_utils import User
 class Go(RequestHandler):
     @staticmethod
     @no_type_check
-    def run(event, user_id, valid_data) -> dict:  # TODO: typeddict
+    def run(event, user_id, valid_data) -> dict:
         home_index = event[RequestField.User.HOME] - 1
         home_id = valid_data[UserAttr.HOMES][home_index]
         try:
@@ -34,7 +34,7 @@ class Go(RequestHandler):
 
     @staticmethod
     @no_type_check
-    def validate(event, user_id) -> Dict[str, Any]:  # TODO: typeddict
+    def validate(event, user_id) -> Dict[str, Any]:
         user_data = User.get(user_id, UserAttr.HOMES)
         home_count = len(user_data[UserAttr.HOMES])
         validate_field(

@@ -19,7 +19,7 @@ class Delete(RequestHandler):
 
     @staticmethod
     @no_type_check
-    def validate(event, user_id) -> Dict[str, Any]:  # TODO: use TypedDict for these
+    def validate(event, user_id) -> Dict[str, Any]:
         user_data = User.get(user_id, UserAttr.HOMES)
         validate_field(
             event,

@@ -8,8 +8,6 @@ from properties import Constants, ResponseField, UserState, starting_inventory
 
 
 class UserHelper:
-    # TODO: typeddict?
-
     @staticmethod
     def welcome_attributes() -> str:
         return ", ".join(

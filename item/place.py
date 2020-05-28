@@ -40,7 +40,7 @@ class Place(RequestHandler):
 
     @staticmethod
     @no_type_check
-    def validate(event, user_id) -> Dict[str, Union[int, str]]:  # TODO: typeddict
+    def validate(event, user_id) -> Dict[str, Union[int, str]]:
         user_data = User.get(
             user_id=user_id,
             attributes=f"{UserAttr.INVENTORY_COUNT}, {UserAttr.CURRENT_HOME}",
