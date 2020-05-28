@@ -5,7 +5,7 @@ from botocore.exceptions import ClientError  # type: ignore
 from database import table, TableKey, TablePartition, UserAttr, HomeAttr
 from internal import validate_field, validate_meta, end
 from item.helper.internal_helper import InternalHelper
-from properties import Constants, RequestField
+from properties import RequestField
 from request_handler import RequestHandler
 from user_utils import User
 

@@ -4,9 +4,7 @@ from botocore.exceptions import ClientError
 
 from database import table, TableKey, TablePartition, UserAttr
 from internal import generate_id, end_unless_conditional
-from item_factory import DBItem
 from properties import Constants, ResponseField, UserState, starting_inventory
-from user.helper.item_helper import ItemHelper
 
 
 class UserHelper:

@@ -1,6 +1,6 @@
 from typing import List, Dict
-from item_factory import Items, DBItem, BUNDLE, VERSION
 
+from item_factory import Items, DBItem, BUNDLE, VERSION
 
 # TODO: look into how to do this better
 from properties import starting_inventory

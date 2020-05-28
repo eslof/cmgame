@@ -1,6 +1,8 @@
-from typing import Dict, Union, Literal, Final, final
-from item_factory import BUNDLE, VERSION, ITEMS, AUTO
+from typing import Dict, Union
+
 import boto3
+
+from item_factory import BUNDLE, VERSION
 
 
 # TODO: create cloudfront distributed s3 bucket for config data like ws url

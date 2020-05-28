@@ -1,14 +1,14 @@
-from typing import Any, no_type_check, List, Union, Dict
+from typing import no_type_check, List, Union, Dict
 
 from botocore.exceptions import ClientError
 
-from database import table, TableKey, TablePartition, UserAttr
+from database import UserAttr
 from internal import validate_field, end
+from itembox.helper.item_helper import ItemHelper
 from itembox.helper.user_helper import UserHelper
-from properties import RequestField, UserState
+from properties import RequestField
 from request_handler import RequestHandler
 from user_utils import User
-from itembox.helper.item_helper import ItemHelper
 
 
 class Accept(RequestHandler):
