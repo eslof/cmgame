@@ -22,7 +22,7 @@ class Demand(RequestHandler):
     def validate(event, user_id) -> Dict[str, Union[List[str], int]]:
         user_data = User.get(
             user_id=user_id,
-            attributes=f"{UserAttr.INVENTORY}, {UserAttr.KEY_COUNT}, {UserAttr.KEY_USED_COUNT}",
+            attributes=f"{UserAttr.KEY_COUNT}, {UserAttr.KEY_USED_COUNT}",
         )
         if user_data[UserAttr.KEY_COUNT] <= 0:
             end(f"Insufficient keys: {user_data[UserAttr.KEY_COUNT]}")

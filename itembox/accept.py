@@ -4,6 +4,7 @@ from botocore.exceptions import ClientError
 
 from database import table, TableKey, TablePartition, UserAttr
 from internal import validate_field, end
+from item_factory import DBItem
 from properties import RequestField, UserState
 from request_handler import RequestHandler
 from user_utils import User
@@ -14,38 +15,56 @@ class Accept(RequestHandler):
     @staticmethod
     @no_type_check
     def run(event, user_id, valid_data) -> Any:
-        inventory = valid_data[UserAttr.INVENTORY]
-        seed = ItemHelper.itembox_seed(
-            user_id, valid_data[UserAttr.KEY_COUNT], valid_data[UserAttr.KEY_USED_COUNT]
-        )
+        seed = ItemHelper.itembox_seed(user_id, valid_data[UserAttr.KEY_USED_COUNT])
         # todo: way too inefficient to re-generate the same itembox just to get the choice
         #  figure out what to do
-        chosen_id = ItemHelper.get_choice_id()
-        choices = ItemHelper.get_choice_id(3, seed, inventory)
+        item_id: int = ItemHelper.get_choice(
+            valid_data[RequestField.ItemBox.CHOICE], seed, 3
+        )
+        # TODO: clean-up, if user gets a duplicate it simply adds to used_key_count to make the seed change
         try:
-            table.update_item(
-                Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
-                UpdateExpression=(
-                    "set #inventory = list_append(#inventory, :item_id), "
-                    "#key_count = #key_count - 1, "
-                    "#used_key_count = #used_key_count + 1"
-                ),
-                ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
-                ExpressionAttributeValues={
-                    ":banned": UserState.BANNED.value,
-                    ":item_id": choices[event[RequestField.ItemBox.CHOICE]],
-                },
-                ExpressionAttributeNames={
-                    "#id": TableKey.PARTITION,
-                    "#state": UserAttr.STATE,
-                    "#inventory": UserAttr.INVENTORY,
-                    "#key_count": UserAttr.KEY_COUNT,
-                    "#used_key_count": UserAttr.KEY_USED_COUNT,
-                },
-            )
+            if item_id in valid_data[UserAttr.INVENTORY]:
+                table.update_item(
+                    Key={
+                        TableKey.PARTITION: TablePartition.USER,
+                        TableKey.SORT: user_id,
+                    },
+                    UpdateExpression="#used_key_count = #used_key_count + 1",
+                    ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
+                    ExpressionAttributeValues={":banned": UserState.BANNED.value,},
+                    ExpressionAttributeNames={
+                        "#id": TableKey.PARTITION,
+                        "#state": UserAttr.STATE,
+                        "#used_key_count": UserAttr.KEY_USED_COUNT,
+                    },
+                )
+            else:
+                table.update_item(
+                    Key={
+                        TableKey.PARTITION: TablePartition.USER,
+                        TableKey.SORT: user_id,
+                    },
+                    UpdateExpression=(
+                        "set #inventory = list_append(#inventory, :item_id), "
+                        "#key_count = #key_count - 1, "
+                        "#used_key_count = #used_key_count + 1"
+                    ),
+                    ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
+                    ExpressionAttributeValues={
+                        ":banned": UserState.BANNED.value,
+                        ":item_id": item_id,
+                    },
+                    ExpressionAttributeNames={
+                        "#id": TableKey.PARTITION,
+                        "#state": UserAttr.STATE,
+                        "#inventory": UserAttr.INVENTORY,
+                        "#key_count": UserAttr.KEY_COUNT,
+                        "#used_key_count": UserAttr.KEY_USED_COUNT,
+                    },
+                )
         except ClientError as e:
             end(e.response["Error"]["Code"])
-        return choices[event[RequestField.ItemBox.CHOICE] - 1]
+        return True
 
     @staticmethod
     @no_type_check
