@@ -18,8 +18,6 @@ class New(RequestHandler):
         new_id = UserHelper.attempt_new(
             event[RequestField.User.NAME], event[RequestField.User.FLAG]
         )
-        if not new_id:
-            end("Unable to create new user.")
 
         return {
             ResponseField.User.ID: new_id,

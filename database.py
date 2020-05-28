@@ -11,7 +11,7 @@ def web_socket_endpoint() -> Dict[str, Union[str, int]]:
     return {"response_code": 200, "address": "domain.com/ws"}
 
 
-dynamodb = boto3.resource("dynamodb")
+dynamodb = boto3.resource("dynamodb", endpoint_url="http://localhost:8000")
 table = dynamodb.Table("cmgame")
 
 
@@ -44,7 +44,7 @@ class UserAttr:
 
 class HomeAttr:
     SORT_KEY_PREFIX = "H"
-    MATCH_GRID_SLOT = "4"
+    MATCH_GRID_SLOT = 4
 
     NAME = "name"
     BIODOME = "biodome"

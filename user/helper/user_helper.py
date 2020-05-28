@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Union
 from botocore.exceptions import ClientError
 
 from database import table, TableKey, TablePartition, UserAttr
-from internal import generate_id, end_unless_conditional
+from internal import generate_id, end_unless_conditional, end
 from properties import Constants, ResponseField, UserState, starting_inventory
 
 
@@ -72,6 +72,5 @@ class UserHelper:
                 ExpressionAttributeNames={"#id": TableKey.PARTITION},
             )
         except ClientError as e:
-            end_unless_conditional(e)
-            return ""
+            end("Unable to create new user.")
         return new_id
