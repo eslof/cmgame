@@ -4,6 +4,7 @@ from botocore.exceptions import ClientError  # type: ignore
 
 from database import table, TableKey, TablePartition, UserAttr, HomeAttr
 from internal import validate_field, validate_meta, end
+from item.helper.internal_helper import InternalHelper
 from properties import Constants, RequestField
 from request_handler import RequestHandler
 from user_utils import User
@@ -32,19 +33,14 @@ class Update(RequestHandler):
             )
         except ClientError as e:
             end(e.response["Error"]["Code"])
-
         return True
 
     @staticmethod
     @no_type_check
     def validate(event, user_id) -> Dict[str, str]:
         user_data = User.get(user_id, UserAttr.CURRENT_HOME)
-        validate_field(
-            target=event,
-            field=RequestField.Home.GRID,
-            validation=lambda value: type(value) is int
-            and 0 < value <= Constants.Home.SIZE,
-            message="Item Update API (GRID)",
+        InternalHelper.validate_grid_request(
+            target=event, message="Item Update API (GRID SLOT)"
         )
         validate_meta(
             target=event,

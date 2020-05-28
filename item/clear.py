@@ -4,6 +4,7 @@ from botocore.exceptions import ClientError  # type: ignore
 
 from database import UserAttr, TableKey, TablePartition, HomeAttr, table
 from internal import end, validate_field
+from item.helper.internal_helper import InternalHelper
 from properties import RequestField, Constants
 from request_handler import RequestHandler
 from user_utils import User
@@ -33,11 +34,7 @@ class Clear(RequestHandler):
     @staticmethod
     @no_type_check
     def validate(event, user_id) -> Dict[str, str]:
-        validate_field(
-            target=event,
-            field=RequestField.Home.GRID,
-            validation=lambda value: type(value) is int
-            and 0 < value <= Constants.Home.SIZE,
-            message="Item Place API (ITEM_INDEX)",
+        InternalHelper.validate_grid_request(
+            target=event, message="Item Clear API (GRID SLOT)"
         )
         return User.get(user_id, UserAttr.CURRENT_HOME)

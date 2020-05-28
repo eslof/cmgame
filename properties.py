@@ -38,6 +38,7 @@ class Constants:
 
     class Home:
         SIZE = 49
+        MATCH_GRID_SLOT = 4
         META_MAX_LENGTH = 199680
         NAME_MAX_LENGTH = 32
 

@@ -4,6 +4,7 @@ from botocore.exceptions import ClientError  # type: ignore
 
 from database import table, TableKey, TablePartition, UserAttr, HomeAttr
 from internal import validate_field, validate_meta, end
+from item.helper.internal_helper import InternalHelper
 from properties import Constants, RequestField
 from request_handler import RequestHandler
 from user_utils import User
@@ -13,24 +14,23 @@ class Place(RequestHandler):
     @staticmethod
     @no_type_check
     def run(event, user_id, valid_data) -> bool:
-        home_id = valid_data[UserAttr.CURRENT_HOME]
-        item_slot = event[RequestField.User.ITEM]
-        grid_slot = event[RequestField.Home.GRID]
-        item_meta = event[RequestField.Item.META]
         try:
             table.update_item(
-                Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
+                Key={
+                    TableKey.PARTITION: TablePartition.HOME,
+                    TableKey.SORT: valid_data[UserAttr.CURRENT_HOME],
+                },
                 UpdateExpression=f"SET #grid.#grid_slot = :item",
                 ConditionExpression=f"attribute_exists(#id)",
                 ExpressionAttributeNames={
                     "#id": TableKey.PARTITION,
                     "#grid": HomeAttr.GRID,
-                    ":grid_slot": grid_slot,
+                    "#grid_slot": event[RequestField.Home.GRID],
                 },
                 ExpressionAttributeValues={
                     ":item": {
-                        HomeAttr.GridSlot.ITEM: item_slot,
-                        HomeAttr.GridSlot.META: item_meta,
+                        HomeAttr.GridSlot.ITEM: event[RequestField.User.ITEM],
+                        HomeAttr.GridSlot.META: event[RequestField.Item.META],
                     },
                 },
             )
@@ -51,14 +51,10 @@ class Place(RequestHandler):
             field=RequestField.User.ITEM,
             validation=lambda value: type(value) is int
             and 0 < value <= inventory_count,
-            message="Item Place API (ITEM_INDEX)",
+            message="Item Place API (ITEM REFERENCE)",
         )
-        validate_field(
-            target=event,
-            field=RequestField.Home.GRID,
-            validation=lambda value: type(value) is int
-            and 0 < value <= Constants.Home.SIZE,
-            message="Item Place API (GRID)",
+        InternalHelper.validate_grid_request(
+            target=event, message="Item Place API (GRID SLOT)"
         )
         validate_meta(
             target=event, field=RequestField.Item.META, message="Item Place API (META)",
