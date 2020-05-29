@@ -23,7 +23,7 @@ class UserHelper:
             table.update_item(
                 Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
                 UpdateExpression=(
-                    "set #homes = list_append(#homes, :home), #home_count = #home_count + 1, "
+                    "set #homes = list_append(#homes, :home), #home_count = #home_count + :one"
                 ),
                 ConditionExpression=f"attribute_exists(#id) AND #state <> :banned AND #home_count <= :max_homes",
                 ExpressionAttributeNames={
@@ -33,9 +33,10 @@ class UserHelper:
                     "#home_count": UserAttr.HOME_COUNT,
                 },
                 ExpressionAttributeValues={
+                    ":one": 1,
                     ":banned": UserState.BANNED.value,
                     ":max_homes": Constants.User.HOME_COUNT_MAX,
-                    ":home": cls.template_home(home_id, name, biodome),
+                    ":home": [cls.template_home(home_id, name, biodome)],
                 },
             )
         except ClientError as e:
