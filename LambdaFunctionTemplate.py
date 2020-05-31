@@ -5,6 +5,7 @@ from router import Route, route
 from view import View
 #set($request = "")
 #set($sc = ${StringUtils.removeUnderScores($service)})
+#set($sl = $service.toLowerCase())
 #set($ns = $requests.replace(" ", ""))
 #set($rl = $ns.split(","))
 #set($rm = {})
@@ -23,7 +24,7 @@ from view import View
 #end##
 
 #foreach($request in $rm)
-    from .${request.lower} import ${request.camel}
+    from ${sl}.${request.lower} import ${request.camel}
 #end##
 
 

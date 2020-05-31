@@ -1,4 +1,5 @@
 from typing import Any, no_type_check
+from request_handler import RequestHandler
 #set($camel_case_name = ${StringUtils.removeUnderScores($NAME)})
 #set($desc = $description)
 #set($empty = $desc.replace(" ", ""))
