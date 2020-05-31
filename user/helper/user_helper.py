@@ -69,8 +69,11 @@ class UserHelper:
             table.put_item(
                 Item=cls.template_new(new_id=new_id, name=name, flag=flag),
                 ConditionExpression="attribute_not_exists(#id)",
-                ExpressionAttributeNames={"#id": TableKey.PARTITION},
+                ExpressionAttributeNames={"#id": TableKey.SORT},
             )
         except ClientError as e:
-            end("Unable to create new user.")
+            error = e.response["Error"]["Code"]
+            if error == "ConditionalCheckFailedException":
+                end("ID Collision, try again.")
+            end(error)
         return new_id

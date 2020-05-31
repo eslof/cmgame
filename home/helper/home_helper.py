@@ -20,7 +20,7 @@ class HomeHelper:
             HomeAttr.GRID: {
                 HomeAttr.MATCH_GRID_SLOT: {
                     HomeAttr.GridSlot.ITEM: HomeAttr.MATCH_GRID_SLOT,
-                    HomeAttr.GridSlot.META: json.dumps(dict(color="blue")),
+                    HomeAttr.GridSlot.META: json.dumps({"color": "blue"}),
                 }
             },
         }
@@ -32,10 +32,13 @@ class HomeHelper:
             table.put_item(
                 Item=cls.template_new(new_id),
                 ConditionExpression="attribute_not_exists(#id)",
-                ExpressionAttributeNames={"#id": TableKey.PARTITION},
+                ExpressionAttributeNames={"#id": TableKey.SORT},
             )
         except ClientError as e:
-            end(e.response["Error"]["Code"])
+            error = e.response["Error"]["Code"]
+            if error == "ConditionalCheckFailedException":
+                end("ID Collision, try again.")
+            end(error)
         return new_id
 
     @classmethod
@@ -47,4 +50,7 @@ class HomeHelper:
                 ExpressionAttributeNames={"#id": TableKey.SORT},
             )
         except ClientError as e:
-            end(e.response["Error"]["Code"])
+            error = e.response["Error"]["Code"]
+            if error == "ConditionalCheckFailedException":
+                end("Target home not found.")
+            end(error)

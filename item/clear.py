@@ -22,9 +22,9 @@ class Clear(RequestHandler):
                 UpdateExpression=f"REMOVE #grid.#slot",
                 ConditionExpression=f"attribute_exists(#id) and #slot in #grid",
                 ExpressionAttributeNames={
-                    "#id": TableKey.PARTITION,
+                    "#id": TableKey.SORT,
                     "#grid": HomeAttr.GRID,
-                    "#slot": grid_slot,
+                    "#slot": str(grid_slot),
                 },
             )
         except ClientError as e:

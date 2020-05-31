@@ -24,7 +24,7 @@ class Update(RequestHandler):
                 UpdateExpression=f"SET #grid.#grid_slot.#slot_meta = :item_meta",
                 ConditionExpression=f"attribute_exists(#id) and #grid_slot in #grid",
                 ExpressionAttributeNames={
-                    "#id": TableKey.PARTITION,
+                    "#id": TableKey.SORT,
                     "#grid": HomeAttr.GRID,
                     "#slot_meta": HomeAttr.GridSlot.META,
                     "#grid_slot": grid_slot,

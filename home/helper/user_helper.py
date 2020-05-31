@@ -3,6 +3,7 @@ from typing import Any, Dict
 from botocore.exceptions import ClientError
 
 from database import table, TableKey, TablePartition, UserAttr
+from home.helper.home_helper import HomeHelper
 from internal import end
 from properties import UserState, Constants
 
@@ -27,7 +28,7 @@ class UserHelper:
                 ),
                 ConditionExpression=f"attribute_exists(#id) AND #state <> :banned AND #home_count <= :max_homes",
                 ExpressionAttributeNames={
-                    "#id": TableKey.PARTITION,
+                    "#id": TableKey.SORT,
                     "#state": UserAttr.STATE,
                     "#homes": UserAttr.HOMES,
                     "#home_count": UserAttr.HOME_COUNT,
@@ -40,5 +41,9 @@ class UserHelper:
                 },
             )
         except ClientError as e:
-            end(e.response["Error"]["Code"])
+            HomeHelper.attempt_delete(home_id)
+            error = e.response["Error"]["Code"]
+            if error == "ConditionalCheckFailedException":
+                end("No such user, banned user or home limit reached.")
+            end(error)
         return True

@@ -14,7 +14,7 @@ class New(RequestHandler):
     @no_type_check
     def run(event, user_id, valid_data) -> bool:
         new_id = HomeHelper.attempt_new()
-
+        # TODO: delete home if add_home fails
         return UserHelper.add_home(
             user_id,
             new_id,

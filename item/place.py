@@ -23,7 +23,7 @@ class Place(RequestHandler):
                 UpdateExpression=f"SET #grid.#grid_slot = :item",
                 ConditionExpression=f"attribute_exists(#id)",
                 ExpressionAttributeNames={
-                    "#id": TableKey.PARTITION,
+                    "#id": TableKey.SORT,
                     "#grid": HomeAttr.GRID,
                     "#grid_slot": event[RequestField.Home.GRID],
                 },

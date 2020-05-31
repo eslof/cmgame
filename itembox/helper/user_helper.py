@@ -5,6 +5,7 @@ from properties import UserState
 class UserHelper:
     @staticmethod
     def handle_new_item(user_id: str, item_id: int) -> None:
+        # TODO: error handling
         table.update_item(
             Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id,},
             UpdateExpression=(
@@ -18,7 +19,7 @@ class UserHelper:
                 ":item_id": item_id,
             },
             ExpressionAttributeNames={
-                "#id": TableKey.PARTITION,
+                "#id": TableKey.SORT,
                 "#state": UserAttr.STATE,
                 "#inventory": UserAttr.INVENTORY,
                 "#key_count": UserAttr.KEY_COUNT,
@@ -34,7 +35,7 @@ class UserHelper:
             ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
             ExpressionAttributeValues={":banned": UserState.BANNED.value},
             ExpressionAttributeNames={
-                "#id": TableKey.PARTITION,
+                "#id": TableKey.SORT,
                 "#state": UserAttr.STATE,
                 "#used_key_count": UserAttr.KEY_USED_COUNT,
             },

@@ -21,7 +21,7 @@ class Save(RequestHandler):
                 UpdateExpression=f"SET #meta = :home_meta",
                 ConditionExpression=f"attribute_exists(#id)",
                 ExpressionAttributeNames={
-                    "#id": TableKey.PARTITION,
+                    "#id": TableKey.SORT,
                     "#meta": HomeAttr.META,
                 },
                 ExpressionAttributeValues={":home_meta": meta_data},

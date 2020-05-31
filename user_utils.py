@@ -23,23 +23,23 @@ class User:
 
     @staticmethod
     def get(user_id: str, attributes: str) -> Dict[str, Any]:
-        """Get and return given attributes for given user_id unless banned."""
+        """Get and return given attributes for given user_id unless banned.
+        UserState attribute is always included."""
         try:
             response: Dict[str, Dict[str, Any]] = table.get_item(
                 Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
-                ProjectionExpression=attributes,
-                ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
+                ProjectionExpression=f"#state, {attributes}",
                 ExpressionAttributeValues={":banned": UserState.BANNED.value},
-                ExpressionAttributeNames={
-                    "#id": TableKey.PARTITION,
-                    "#state": UserAttr.STATE,
-                },
+                ExpressionAttributeNames={"#state": UserAttr.STATE},
             )
         except ClientError as e:
             end(e.response["Error"]["Code"])
-            return {}
         else:
-            return response["Item"]
+            if "Item" in response and len(response["Item"]) > 0:
+                if UserState(response["Item"][UserAttr.STATE]) == UserState.BANNED:
+                    end("Attempting to get attributes of banned user.")
+                return response["Item"]
+            end("No user found.")
 
     @staticmethod
     def update(
@@ -59,10 +59,13 @@ class User:
                 },
                 ExpressionAttributeNames={
                     "#name": attribute,
-                    "#id": TableKey.PARTITION,
+                    "#id": TableKey.SORT,
                     "#state": UserAttr.STATE,
                 },
             )
         except ClientError as e:
-            end(e.response["Error"]["Code"])
+            error = e.response["Error"]["Code"]
+            if error == "ConditionalCheckFailedException":
+                end("No such user or banned user.")
+            end(error)
         return True
