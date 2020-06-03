@@ -15,10 +15,11 @@ class New(RequestHandler):
     @staticmethod
     @no_type_check
     def run(event, user_id, valid_data) -> dict:
-        new_id = UserHelper.attempt_new(
+        new_id = UserHelper.new(
             event[RequestField.User.NAME], event[RequestField.User.FLAG]
         )
-
+        if not new_id:
+            end("Unable to create new user.")
         return {
             ResponseField.User.ID: new_id,
             ResponseField.User.WELCOME: ItemHelper.welcome_info(),

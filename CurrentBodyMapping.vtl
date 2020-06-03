@@ -3,6 +3,8 @@
 #set($context.responseOverride.status = 400)
 #if("$!{inputRoot.errorType}" == "GameException")
 $inputRoot.errorMessage
+#elseif("$!{inputRoot.errorType}" == "RateException")
+$inputRoot.errorMessage
 #else
 $input.json('$')
 #end

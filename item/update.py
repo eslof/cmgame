@@ -2,7 +2,8 @@ from typing import Dict, no_type_check
 
 from botocore.exceptions import ClientError  # type: ignore
 
-from database import table, TableKey, TablePartition, UserAttr, HomeAttr
+from database import table, db_update
+from db_properties import TableKey, TablePartition, UserAttr, HomeAttr
 from internal import validate_meta, end
 from item.helper.internal_helper import InternalHelper
 from properties import RequestField
@@ -17,28 +18,24 @@ class Update(RequestHandler):
         home_id = valid_data[UserAttr.CURRENT_HOME]
         grid_slot = event[RequestField.Home.GRID]
         item_meta = event[RequestField.Item.META]
-        try:
-            # TODO: rework database model
-            table.update_item(
-                Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
-                UpdateExpression=f"SET #grid.#grid_slot.#slot_meta = :item_meta",
-                ConditionExpression=f"attribute_exists(#id) and #grid_slot in #grid",
-                ExpressionAttributeNames={
-                    "#id": TableKey.SORT,
-                    "#grid": HomeAttr.GRID,
-                    "#slot_meta": HomeAttr.GridSlot.META,
-                    "#grid_slot": grid_slot,
-                },
-                ExpressionAttributeValues={":item_meta": item_meta},
-            )
-        except ClientError as e:
-            end(e.response["Error"]["Code"])
+        if not db_update(
+            Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
+            UpdateExpression=f"SET #grid.#grid_slot.#slot_meta = :item_meta",
+            ConditionExpression=f"attribute_exists(#id) and #grid_slot in #grid",
+            ExpressionAttributeNames={
+                "#id": TableKey.SORT,
+                "#grid": HomeAttr.GRID,
+                "#slot_meta": HomeAttr.GridSlot.META,
+                "#grid_slot": grid_slot,
+            },
+            ExpressionAttributeValues={":item_meta": item_meta},
+        ):
+            end("Unable to update meta for grid slot.")
         return True
 
     @staticmethod
     @no_type_check
     def validate(event, user_id) -> Dict[str, str]:
-        user_data = User.get(user_id, UserAttr.CURRENT_HOME)
         InternalHelper.validate_grid_request(
             target=event, message="Item Update API (GRID SLOT)"
         )
@@ -47,4 +44,7 @@ class Update(RequestHandler):
             field=RequestField.Item.META,
             message="Item Update API (META)",
         )
+        user_data = User.get(user_id, UserAttr.CURRENT_HOME)
+        if not user_data:
+            end("Unable to retrieve current home for user.")
         return user_data

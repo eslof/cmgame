@@ -1,10 +1,11 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Union, Optional
 
 from botocore.exceptions import ClientError
 
-from database import table, TableKey, TablePartition, UserAttr
+from database import table, db_put
+from db_properties import TableKey, TablePartition, UserAttr
 from internal import generate_id, end_unless_conditional, end
-from properties import Constants, ResponseField, UserState, starting_inventory
+from properties import Constants, ResponseField, starting_inventory
 
 
 class UserHelper:
@@ -43,11 +44,9 @@ class UserHelper:
 
     @staticmethod
     def template_new(new_id: str, name: str, flag: int) -> Dict[str, Any]:
-        """Database item template for a new User, assumes given parameters are valid."""
         return {
             TableKey.PARTITION: TablePartition.USER,
             TableKey.SORT: new_id,
-            UserAttr.STATE: UserState.NORMAL.value,
             UserAttr.NAME: name,
             UserAttr.FLAG: flag,
             UserAttr.META: "{}",
@@ -62,18 +61,13 @@ class UserHelper:
         }
 
     @classmethod
-    def attempt_new(cls, name: str, flag: int) -> str:
+    def new(cls, name: str, flag: int) -> Optional[str]:
         new_id = generate_id(UserAttr.SORT_KEY_PREFIX)
-        try:
-            # TODO: rework database model
-            table.put_item(
-                Item=cls.template_new(new_id=new_id, name=name, flag=flag),
-                ConditionExpression="attribute_not_exists(#id)",
-                ExpressionAttributeNames={"#id": TableKey.SORT},
-            )
-        except ClientError as e:
-            error = e.response["Error"]["Code"]
-            if error == "ConditionalCheckFailedException":
-                end("ID Collision, try again.")
-            end(error)
+        results = db_put(
+            Item=cls.template_new(new_id=new_id, name=name, flag=flag),
+            ConditionExpression="attribute_not_exists(#id)",
+            ExpressionAttributeNames={"#id": TableKey.SORT},
+        )
+        if not results:
+            return None
         return new_id

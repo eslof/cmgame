@@ -1,7 +1,7 @@
 from typing import Any, Dict
 from unittest import TestCase
 
-from database import UserAttr
+from db_properties import UserAttr
 from internal import generate_id
 from properties import PacketHeader, RequestField, ResponseField, ResponseType
 from test.lambda_function import TestRequest

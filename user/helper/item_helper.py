@@ -17,7 +17,7 @@ class ItemHelper(Items):
 
     @classmethod
     def template_inv(cls, item_id: int) -> DBItem:
-        cls.load_data()
+        cls.connect()
         item = cls.data["items"][item_id]
         return {
             BUNDLE: item["bundle"],
@@ -26,11 +26,11 @@ class ItemHelper(Items):
 
     @classmethod
     def get_biodomes(cls) -> List[DBItem]:
-        cls.load_data()
+        cls.connect()
         biodomes = list(cls.data["biodomes"].values())
         return biodomes
 
     @classmethod
     def get_starter_inventory(cls) -> List[DBItem]:
-        cls.load_data()
+        cls.connect()
         return [cls.data["items"][i] for i in starting_inventory]

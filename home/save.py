@@ -2,7 +2,8 @@ from typing import no_type_check, Dict
 
 from botocore.exceptions import ClientError
 
-from database import table, TableKey, TablePartition, UserAttr, HomeAttr
+from database import table, db_update
+from db_properties import TableKey, TablePartition, UserAttr, HomeAttr
 from internal import validate_meta, end
 from properties import RequestField
 from request_handler import RequestHandler
@@ -15,25 +16,22 @@ class Save(RequestHandler):
     def run(event, user_id, valid_data) -> bool:
         home_id = valid_data[UserAttr.CURRENT_HOME]
         meta_data = event[RequestField.Home.META]
-        try:
-            table.update_item(
-                Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
-                UpdateExpression=f"SET #meta = :home_meta",
-                ConditionExpression=f"attribute_exists(#id)",
-                ExpressionAttributeNames={
-                    "#id": TableKey.SORT,
-                    "#meta": HomeAttr.META,
-                },
-                ExpressionAttributeValues={":home_meta": meta_data},
-            )
-        except ClientError as e:
-            end(e.response["Error"]["Code"])
+        if not db_update(
+            Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
+            UpdateExpression=f"SET #meta = :home_meta",
+            ConditionExpression=f"attribute_exists(#id)",
+            ExpressionAttributeNames={"#id": TableKey.SORT, "#meta": HomeAttr.META,},
+            ExpressionAttributeValues={":home_meta": meta_data},
+        ):
+            end("Unable to save home meta.")
         return True
 
     @staticmethod
     @no_type_check
     def validate(event, user_id) -> Dict[str, str]:
         user_data = User.get(user_id, UserAttr.CURRENT_HOME)
+        if not user_data:
+            end("Unable to retrieve current home for user.")
         validate_meta(
             target=event, field=RequestField.Home.META, message="Home Save API (META)"
         )

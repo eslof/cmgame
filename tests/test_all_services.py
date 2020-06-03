@@ -9,7 +9,7 @@ from unittest import TestCase
 from unittest.mock import patch
 
 import router
-from database import UserAttr
+from db_properties import UserAttr
 from internal import generate_id
 from properties import RequestField, PacketHeader
 from request_handler import RequestHandler

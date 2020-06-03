@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, no_type_check, Union
 
-from database import UserAttr
+from db_properties import UserAttr
 from internal import end
 from request_handler import RequestHandler
 from user_utils import User
@@ -21,6 +21,8 @@ class Demand(RequestHandler):
             user_id=user_id,
             attributes=f"{UserAttr.KEY_COUNT}, {UserAttr.KEY_USED_COUNT}",
         )
+        if not user_data:
+            end("Unable to retrieve key and used key count for user.")
         if user_data[UserAttr.KEY_COUNT] <= 0:
             end(f"Insufficient keys: {user_data[UserAttr.KEY_COUNT]}")
 

@@ -1,10 +1,11 @@
 import json
 from datetime import datetime
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 from botocore.exceptions import ClientError  # type: ignore
 
-from database import table, TableKey, TablePartition, HomeAttr
+from database import table, db_put, db_delete
+from db_properties import TableKey, TablePartition, HomeAttr
 from internal import generate_id, end
 
 
@@ -26,31 +27,19 @@ class HomeHelper:
         }
 
     @classmethod
-    def attempt_new(cls) -> str:
+    def new(cls) -> Optional[str]:
         new_id = generate_id(HomeAttr.SORT_KEY_PREFIX)
-        try:
-            table.put_item(
-                Item=cls.template_new(new_id),
-                ConditionExpression="attribute_not_exists(#id)",
-                ExpressionAttributeNames={"#id": TableKey.SORT},
-            )
-        except ClientError as e:
-            error = e.response["Error"]["Code"]
-            if error == "ConditionalCheckFailedException":
-                end("ID Collision, try again.")
-            end(error)
-        return new_id
+        result = db_put(
+            Item=cls.template_new(new_id),
+            ConditionExpression="attribute_not_exists(#id)",
+            ExpressionAttributeNames={"#id": TableKey.SORT},
+        )
+        return new_id if result else None
 
     @classmethod
-    def attempt_delete(cls, home_id: str) -> None:
-        try:
-            table.delete_item(
-                Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
-                ConditionExpression="attribute_exists(#id)",
-                ExpressionAttributeNames={"#id": TableKey.SORT},
-            )
-        except ClientError as e:
-            error = e.response["Error"]["Code"]
-            if error == "ConditionalCheckFailedException":
-                end("Target home not found.")
-            end(error)
+    def delete(cls, home_id: str) -> bool:
+        return db_delete(
+            Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
+            ConditionExpression="attribute_exists(#id)",
+            ExpressionAttributeNames={"#id": TableKey.SORT},
+        )

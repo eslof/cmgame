@@ -43,11 +43,10 @@ class Constants:
         NAME_MAX_LENGTH = 32
 
 
-@unique
-class UserState(Enum):
-    NORMAL = auto()
-    MATCHED = auto()
-    BANNED = auto()
+class ArchiveReason:
+    VOLUNTARY = "voluntary"
+    BANNED = "banned"
+    INACTIVE = "inactive"
 
 
 @unique

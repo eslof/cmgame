@@ -1,7 +1,7 @@
 from enum import auto, unique, Enum
 from typing import Dict
 
-from database import HomeAttr
+from db_properties import HomeAttr
 from home.delete import Delete
 from home.go import Go
 from home.new import New

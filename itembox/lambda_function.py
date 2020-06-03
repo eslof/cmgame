@@ -1,7 +1,7 @@
 from enum import Enum, auto, unique
 from typing import Dict
 
-from database import ItemAttr
+from item_factory import ItemAttr
 from itembox.accept import Accept
 from itembox.demand import Demand
 from properties import ResponseType, ResponseField

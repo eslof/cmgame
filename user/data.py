@@ -1,6 +1,7 @@
 from typing import Dict, Any, Optional, Union, List, no_type_check
 
-from database import UserAttr
+from db_properties import UserAttr
+from internal import end
 from request_handler import RequestHandler
 from user_utils import User
 from .helper.item_helper import ItemHelper
@@ -27,4 +28,7 @@ class Data(RequestHandler):
     @staticmethod
     @no_type_check
     def validate(event: Dict[str, Any], user_id: Optional[str]) -> Dict[str, Any]:
-        return User.get(user_id, UserHelper.welcome_attributes())
+        results = User.get(user_id, UserHelper.welcome_attributes())
+        if not results:
+            end("Unable to get welcome attributes for user.")
+        return results["Item"]

@@ -2,8 +2,8 @@ from enum import Enum, unique, auto
 from typing import no_type_check
 
 from country import Country
-from database import UserAttr
-from internal import validate_field, validate_request
+from db_properties import UserAttr
+from internal import validate_field, validate_request, validate_meta, end
 from properties import Constants, RequestField
 from request_handler import RequestHandler
 from user_utils import User
@@ -30,7 +30,10 @@ class Save(RequestHandler):
             attribute, value = UserAttr.FLAG, RequestField.User.FLAG
         elif request == SaveRequest.META:
             attribute, value = UserAttr.META, RequestField.User.META
-        return User.update(user_id, attribute, value)
+        results = User.update(user_id, attribute, value)
+        if not results:
+            end("Unable to save user data.")
+        return True
 
     @staticmethod
     @no_type_check
@@ -51,12 +54,10 @@ class Save(RequestHandler):
                 and value in (val.value for val in Country.__members__.values()),
             )
             message = "User Save API (FLAG)"
-        elif req == SaveRequest.META:
-            field = RequestField.User.META
-            validation = (
-                lambda value: type(value) is str
-                and len(value) < Constants.User.META_MAX_LENGTH
-            )
-            message = "User Save API (META)"
 
-        validate_field(event, field, validation, message)
+        if req == SaveRequest.META:
+            validate_meta(event, RequestField.User.META, "User Save API (META)")
+        else:
+            if None in (field, validation, message):
+                end("User Save API (NON-META)")
+            validate_field(event, field, validation, message)

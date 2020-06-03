@@ -1,20 +1,15 @@
+from botocore.exceptions import ClientError  # type: ignore
 import secrets
 import string
-from enum import Enum, EnumMeta
-from json import JSONDecodeError
-from typing import Callable, Any, Dict
+from enum import EnumMeta, Enum
+from typing import Dict, Callable, Any
 
-from botocore.exceptions import ClientError  # type: ignore
-
-from database import META_SIZE_LIMIT
+from db_properties import META_SIZE_LIMIT
 from properties import Constants, PacketHeader
 from view import View
 
 
-# TODO: Move some of these hard coded strings somewhere maybe
-
-
-def end_unless_conditional(e: ClientError) -> None:  # type: ignore
+def end_unless_conditional(e: ClientError) -> None:
     error = e.response["Error"]["Code"]
     if error != "ConditionalCheckFailedException":
         end(error)  # TODO: error handling
@@ -72,5 +67,5 @@ def validate_meta(target: Dict[str, Any], field: str, message: str) -> None:
     )
     try:
         View.deserialize(target[field])
-    except JSONDecodeError as e:
+    except View.decode_error as e:
         end(e.msg)

@@ -1,8 +1,10 @@
 from typing import no_type_check
 
-from database import table, TablePartition, TableKey, UserAttr
-from properties import UserState
+from database import table
+from db_properties import TablePartition, TableKey, UserAttr
+from internal import end
 from request_handler import RequestHandler
+from user_utils import User
 
 
 class Delete(RequestHandler):
@@ -10,18 +12,12 @@ class Delete(RequestHandler):
 
     @staticmethod
     @no_type_check
-    def run(event, user_id, valid_data) -> None:
+    def run(event, user_id, valid_data) -> bool:
         # todo: error handling
-        table.update_item(
-            Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
-            UpdateExpression="set #partition = :user_archive",
-            ConditionExpression=f"attribute_exists(#id) AND #state <> :banned",
-            ExpressionAttributeValues={":user_archive": TablePartition.USER_ARCHIVE},
-            ExpressionAttributeNames={
-                "#id": TableKey.SORT,
-                "#partition": TableKey.PARTITION,
-            },
-        )
+        results = User.archive(user_id)
+        if not results:
+            end("Unable to delete user.")
+        return True
 
     @staticmethod
     @no_type_check

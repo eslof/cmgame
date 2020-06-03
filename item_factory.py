@@ -1,14 +1,28 @@
 import pickle
+import sqlite3
+from functools import partial
+import random
 from typing import Optional, Dict, Final, Literal
 
 from typing import TypedDict
 
 # TODO: look into this
+from internal import end
+
 AUTO: Final = "auto"
 ITEMS: Final = "items"
-BUNDLE: Final = "bundle"
-VERSION: Final = "version"
+BUNDLE = Literal["bundle"]
+VERSION = Literal["version"]
 BIODOMES: Final = "biodomes"
+
+
+def seeded_random(string1, string2):
+    return random.randint(-1, 1)
+
+
+class ItemAttr:
+    BUNDLE = "bundle"
+    VERSION = "version"
 
 
 class DBItem(TypedDict):
@@ -17,48 +31,73 @@ class DBItem(TypedDict):
 
 
 class ItemDB(TypedDict):
-    auto: Dict[str, int]
     items: Dict[int, DBItem]
     biodomes: Dict[int, DBItem]
 
 
 class Items:
-    data: ItemDB
+    # data: ItemDB = None
+    conn: sqlite3.Connection = None
+    cur: sqlite3.Cursor = None
+
+    # SQL_CREATE_ITEM_TABLE = """ CREATE TABLE IF NOT EXISTS items (
+    #                         id INTEGER PRIMARY KEY AUTOINCREMENT,
+    #                         bundle TEXT NOT NULL,
+    #                         version INTEGER NOT NULL,
+    #                         UNIQUE (bundle)
+    #                     );"""
+    # create_table = """CREATE TABLE IF NOT EXISTS biodome (
+    #                     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    #                     bundle TEXT NOT NULL,
+    #                     version INTEGER NOT NULL,
+    #                     UNIQUE (bundle)
+    #                 );"""
 
     @classmethod
-    def save_data(cls) -> None:
-        with open("item_db.p", "wb") as file:
-            pickle.dump(cls.data, file, protocol=pickle.HIGHEST_PROTOCOL)
+    def connect(cls, readonly: bool = True) -> None:
+        if not cls.conn:
+            try:
+                cls.conn = sqlite3.connect(
+                    f"file:db.sqlite{'?mode=ro' if readonly else ''}", uri=True
+                )
+            except sqlite3.Error as e:
+                end(f"Item DB API ({type(e).__name__})")
+            else:
+                cls.conn.create_collation("seeded_random", seeded_random)
+                cls.conn.row_factory = sqlite3.Row
+                cls.cur = cls.conn.cursor()
 
     @classmethod
-    def load_data(cls) -> None:
-        if not cls.data:
-            with open("item_db.p", "rb") as file:
-                cls.data = pickle.load(file)
-
-    @classmethod
-    def update(
+    def upsert_bundle(
         cls, item_type: Literal["items", "biodomes"], bundle_name: str, version: int,
-    ) -> None:
-        cls.load_data()
-        auto = cls.data[AUTO]
-        if item_type == "items":
-            target = cls.data[ITEMS]
-        elif item_type == "biodomes":
-            target = cls.data[BIODOMES]
-        else:
-            raise ValueError
+    ) -> list:
+        cls.connect(False)
+        query = (
+            f"INSERT INTO {item_type} ({ItemAttr.BUNDLE}, {ItemAttr.VERSION})"
+            f" VALUES('{bundle_name}', {version})"
+            f" ON CONFLICT({ItemAttr.BUNDLE})"
+            f" DO UPDATE SET {ItemAttr.VERSION} = {version}"
+        )
+        return cls.cur.execute(query).fetchall()
 
-        def scan() -> Optional[int]:
-            return next(
-                (i for i in target.keys() if target[i][BUNDLE] == bundle_name), None,
-            )
+    @classmethod
+    def change_bundle_name(cls, table, old_name, new_name, version=None) -> list:
+        cls.connect(False)
+        query = (
+            f"UPDATE {table}"
+            f" SET {ItemAttr.BUNDLE}='{new_name}', {ItemAttr.VERSION}={version or ItemAttr.VERSION}"
+            f" WHERE {ItemAttr.BUNDLE}='{old_name}'"
+        )
+        return cls.cur.execute(query).fetchall()
 
-        item_id: int = scan() or auto[item_type]
-        if item_id == auto[item_type]:
-            auto[item_type] += 1
 
-        target[item_id] = {
-            BUNDLE: bundle_name,
-            VERSION: version,
-        }
+# random.seed("hwefawefalo")
+# Items.connect()
+# mysql = "SELECT id FROM items ORDER BY CAST(id as TEXT) COLLATE seeded_random LIMIT 3 OFFSET 2"
+# results = Items.cur.execute(mysql).fetchone()
+# print(results)
+# print(results.keys())
+# print(tuple(results)[0])
+#
+# items = [{row.keys()[i]: tuple(row)[i] for i in range(len(row))} for row in results]
+# print(items)

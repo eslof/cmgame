@@ -1,10 +1,12 @@
-from typing import no_type_check
+from typing import no_type_check, Dict, Union
 
+from boto3.dynamodb.conditions import Attr
 from botocore.exceptions import ClientError
 
-from database import *
+from database import web_socket_endpoint, db_scan, db_update, db_delete
+from db_properties import UserAttr, TablePartition, TableKey, MatchAttr
 from internal import end
-from properties import UserState
+from match.helper.match_helper import MatchHelper
 from request_handler import RequestHandler
 from user_utils import User
 
@@ -12,36 +14,60 @@ from user_utils import User
 class Find(RequestHandler):
     @staticmethod
     @no_type_check
-    def run(event, user_id, valid_data) -> Union[str, bool]:
-        # TODO: rework all of this
-        user_state = UserState(valid_data[UserAttr.STATE])
-        if user_state == UserState.MATCHED:
+    def run(event, user_id, valid_data: Dict[str, str]) -> Union[str, bool]:
+        # region User already in match
+        match_id = valid_data[UserAttr.MATCH_ID]
+        if match_id:
             return web_socket_endpoint()["address"]
-        try:
-            response = table.get_item(
-                Key={TableKey.PARTITION: TablePartition.MATCH},
-                # TODO: condition expression: state != matched
-                ConditionExpression="#enlisted_id <> :user_id and #finder_id = :empty",
-                ExpressionAttributeNames={
-                    "#enlisted_id": MatchAttr.LISTER_ID,
-                    "#finder_id": MatchAttr.FINDER_ID,
-                },
-                ExpressionAttributeValues={":user_id": user_id, ":empty": ""},
-                ScanIndexForward=False,
-                Limit=1,
+        # endregion
+        # region Else scan for a listing
+        scan_response = db_scan(
+            Key={TableKey.PARTITION: TablePartition.MATCH},
+            FilterExpression=Attr(MatchAttr.LISTER_ID).ne(user_id)
+            & Attr(MatchAttr.FINDER_ID).eq(""),
+            ScanIndexForward=False,
+            Limit=1,
+        )
+        if not scan_response:
+            return False
+        scan_match_id = scan_response["Item"][0]["id"]
+        # endregion
+        # region Remove found listing if too old
+        seconds_old = MatchHelper.get_age(scan_match_id)
+        if seconds_old > 15:
+            db_delete(
+                Key={
+                    TableKey.PARTITION: TablePartition.MATCH,
+                    TableKey.SORT: scan_match_id,
+                }
             )
-        except ClientError as e:
-            end(e.response["Error"]["Code"])
-        else:
-            if len(response["Item"] > 0):
-                # TODO: update listing's state to pending, and prompt for accept by finder
-                # TODO: then as the enlisters code comes to update its enlistment we look for this
-                # TODO: set match finder_id and send match_id to ws
-                return web_socket_endpoint()["address"]
-        return False
+            return False
+        # endregion
+        # region Else update listing to fill in finder id and add match_id to finder
+        update_response = db_update(
+            Key={
+                TableKey.PARTITION: TablePartition.MATCH,
+                TableKey.SORT: scan_match_id,
+            },
+            UpdateExpression="SET #finder_id = :user_id",
+            ConditionExpression=f"attribute_exists(#id) AND #finder_id = :empty",
+            ExpressionAttributeValues={":user_id": user_id, ":empty": ""},
+            ExpressionAttributeNames={
+                "#id": TableKey.SORT,
+                "#finder_id": MatchAttr.FINDER_ID,
+            },
+        )
+        if not update_response:
+            return False
+        response = User.update(user_id, UserAttr.MATCH_ID, scan_match_id)
+        if not response:
+            # todo: something
+            pass
+        # todo: send match id to chat server to expect lister_id and finder_id
+        return web_socket_endpoint()["address"]
 
     @staticmethod
     @no_type_check
-    def validate(event, user_id) -> Dict[str, int]:
-        user_data = User.get(user_id, UserAttr.STATE)
+    def validate(event, user_id) -> Dict[str, str]:
+        user_data = User.get(user_id, UserAttr.MATCH_ID)
         return user_data
