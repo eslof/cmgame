@@ -1,13 +1,10 @@
 from datetime import datetime
 from typing import Union, no_type_check
 
-from botocore.exceptions import ClientError
-
-from database import table, web_socket_endpoint, db_delete, db_update, db_get
+from database import web_socket_endpoint, db_update, db_get
 from db_properties import TableKey, TablePartition, UserAttr, MatchAttr
 from internal import end
 from match.helper.match_helper import MatchHelper
-from properties import Constants
 from request_handler import RequestHandler
 from user_utils import User
 

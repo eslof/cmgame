@@ -2,7 +2,6 @@ import random
 from typing import List
 
 from item_factory import Items, DBItem
-from properties import Constants
 
 
 class ItemHelper(Items):

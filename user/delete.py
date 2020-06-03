@@ -1,7 +1,5 @@
 from typing import no_type_check
 
-from database import table
-from db_properties import TablePartition, TableKey, UserAttr
 from internal import end
 from request_handler import RequestHandler
 from user_utils import User

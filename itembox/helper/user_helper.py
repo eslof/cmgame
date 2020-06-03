@@ -1,5 +1,5 @@
+from database import db_update
 from db_properties import TableKey, UserAttr, TablePartition
-from database import table, db_update
 
 
 class UserHelper:

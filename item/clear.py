@@ -1,9 +1,7 @@
 from typing import no_type_check, Dict
 
-from botocore.exceptions import ClientError  # type: ignore
-
-from db_properties import UserAttr, TableKey, TablePartition, HomeAttr
 from database import table
+from db_properties import UserAttr, TableKey, TablePartition, HomeAttr
 from internal import end
 from item.helper.internal_helper import InternalHelper
 from properties import RequestField

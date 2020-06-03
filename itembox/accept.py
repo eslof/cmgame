@@ -1,7 +1,5 @@
 from typing import no_type_check, List, Union, Dict
 
-from botocore.exceptions import ClientError
-
 from db_properties import UserAttr
 from internal import validate_field, end
 from itembox.helper.item_helper import ItemHelper

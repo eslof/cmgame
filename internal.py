@@ -1,8 +1,9 @@
-from botocore.exceptions import ClientError  # type: ignore
 import secrets
 import string
 from enum import EnumMeta, Enum
 from typing import Dict, Callable, Any
+
+from botocore.exceptions import ClientError  # type: ignore
 
 from db_properties import META_SIZE_LIMIT
 from properties import Constants, PacketHeader

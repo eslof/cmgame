@@ -1,8 +1,6 @@
 from typing import Dict, no_type_check
 
-from botocore.exceptions import ClientError  # type: ignore
-
-from database import table, db_update
+from database import db_update
 from db_properties import TableKey, TablePartition, UserAttr, HomeAttr
 from internal import validate_meta, end
 from item.helper.internal_helper import InternalHelper

@@ -1,7 +1,7 @@
 import json
 from enum import Enum
 from json import JSONDecodeError
-from typing import Optional, Any, Tuple, Dict
+from typing import Optional, Any, Dict
 
 from properties import PacketHeader, ResponseType, ResponseField
 

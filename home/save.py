@@ -1,8 +1,6 @@
 from typing import no_type_check, Dict
 
-from botocore.exceptions import ClientError
-
-from database import table, db_update
+from database import db_update
 from db_properties import TableKey, TablePartition, UserAttr, HomeAttr
 from internal import validate_meta, end
 from properties import RequestField

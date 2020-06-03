@@ -1,5 +1,5 @@
 from functools import wraps
-from typing import Dict, Union, no_type_check, Any, Optional, Callable
+from typing import Dict, Union, no_type_check, Any, Optional
 
 # import sqlite3
 import boto3  # type: ignore

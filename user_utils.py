@@ -1,10 +1,8 @@
 from typing import Dict, Any
 
-from botocore.exceptions import ClientError  # type: ignore
-
-from database import table, db_get, db_update
-from db_properties import TableKey, TablePartition, UserAttr
-from internal import validate_field, end
+from database import db_get, db_update
+from db_properties import TableKey, TablePartition
+from internal import validate_field
 from properties import RequestField, Constants
 
 
