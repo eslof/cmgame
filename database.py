@@ -48,9 +48,8 @@ class RateException(Exception):
 @no_type_check
 def db_scan(*args, **kwargs) -> Optional[Dict[str, Any]]:
     response = _db_try(table.scan, lambda v: None, args, kwargs)
-    if "Item" not in response or len(response["Item"]) <= 0:
-        return
-    return response
+    items = response.get("Items", [])
+    return items
 
 
 # @no_type_check
