@@ -51,6 +51,6 @@ class User:
             Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
             UpdateExpression=expression,
             ConditionExpression=f"attribute_exists(#id)",
-            ExpressionAttributeValues={":value": value,},
-            ExpressionAttributeNames={"#name": attribute, "#id": TableKey.SORT,},
+            ExpressionAttributeValues={":value": value},
+            ExpressionAttributeNames={"#name": attribute, "#id": TableKey.SORT},
         )
