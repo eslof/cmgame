@@ -16,44 +16,21 @@ class Find(RequestHandler):
     def run(event, user_id, valid_data: Dict[str, str]) -> Union[str, bool]:
 
         match_id = valid_data[UserAttr.MATCH_ID]
-        if match_id:
+        if match_id and MatchHelper.get_age(match_id) < 10:  # todo: move to config
             return web_socket_endpoint()["address"]
-
-        scan_items = db_scan(
-            Key={TableKey.PARTITION: TablePartition.MATCH},
-            FilterExpression=Attr(MatchAttr.LISTER_ID).ne(user_id)
-            & Attr(MatchAttr.FINDER_ID).eq(""),
-            ScanIndexForward=False,
-            Limit=1,
-        )
-        if len(scan_items) == 0:
+        scan_items = MatchHelper.find_match(user_id)
+        if not scan_items:
             return False
         scan_match_id = scan_items[0]["id"]
 
         seconds_old = MatchHelper.get_age(scan_match_id)
         if seconds_old > 15:
-            db_delete(
-                Key={
-                    TableKey.PARTITION: TablePartition.MATCH,
-                    TableKey.SORT: scan_match_id,
-                }
-            )
+            MatchHelper.delete_match(scan_match_id)
             return False
 
-        if not db_update(
-            Key={
-                TableKey.PARTITION: TablePartition.MATCH,
-                TableKey.SORT: scan_match_id,
-            },
-            UpdateExpression="SET #finder_id = :user_id",
-            ConditionExpression=f"attribute_exists(#id) AND #finder_id = :empty",
-            ExpressionAttributeValues={":user_id": user_id, ":empty": ""},
-            ExpressionAttributeNames={
-                "#id": TableKey.SORT,
-                "#finder_id": MatchAttr.FINDER_ID,
-            },
-        ):
+        if not MatchHelper.claim_match(scan_match_id, user_id):
             return False
+
         if not User.update(user_id, UserAttr.MATCH_ID, scan_match_id):
             end("Unable to update user match id.")
         # todo: send match id to chat server to expect lister_id and finder_id

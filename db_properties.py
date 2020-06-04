@@ -16,6 +16,7 @@ class UserAttr:
     FLAG = "flag"
     META = "meta"
     MATCH_ID = "match_id"
+    LIST_ID = "list_id"
     CURRENT_HOME = "current_home"
     HOMES = "homes"
     HOME_COUNT = "home_count"
