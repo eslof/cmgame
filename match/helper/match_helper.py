@@ -62,8 +62,8 @@ class MatchHelper:
     def generate_id(user_id):
         return f"{datetime.now().strftime('%m-%d-%H-%M-%S')}{user_id}"
 
-    @classmethod
-    def update_and_get(cls, match_id, new_id):
+    @staticmethod
+    def update_and_get(match_id, new_id):
         return db_update(
             Key={TableKey.PARTITION: TablePartition.MATCH, TableKey.SORT: match_id},
             UpdateExpression="SET #sort = :new_match_id",
