@@ -23,7 +23,7 @@ class Enlist(RequestHandler):
                 },
                 ProjectionExpression=MatchAttr.FINDER_ID,
             )
-            if not results:
+            if not (results and "Item" in results and results["Item"]):
                 end("Current matching not found.")
             if results["Item"][0][MatchAttr.FINDER_ID]:
                 return web_socket_endpoint()["address"]

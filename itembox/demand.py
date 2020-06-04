@@ -2,6 +2,7 @@ from typing import Any, Dict, List, no_type_check, Union
 
 from db_properties import UserAttr
 from internal import end
+from item_factory import DBItem
 from request_handler import RequestHandler
 from user_utils import User
 from .helper.item_helper import ItemHelper
@@ -10,7 +11,7 @@ from .helper.item_helper import ItemHelper
 class Demand(RequestHandler):
     @staticmethod
     @no_type_check
-    def run(event, user_id, valid_data) -> List[Dict[str, Any]]:
+    def run(event, user_id, valid_data) -> List[DBItem]:
         seed = ItemHelper.itembox_seed(user_id, valid_data[UserAttr.KEY_USED_COUNT])
         return ItemHelper.get_itembox(seed)
 

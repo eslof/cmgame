@@ -18,14 +18,7 @@ class ItemBoxRequest(Enum):
 # TODO: system under rework
 routes: Dict[Enum, Route] = {
     ItemBoxRequest.ACCEPT: Route(
-        handler=Accept,
-        output=lambda value: View.response(
-            response_type=ResponseType.ITEM_DATA,
-            data={
-                ResponseField.Item.BUNDLE: value[ItemAttr.BUNDLE],
-                ResponseField.Item.VERSION: value[ItemAttr.VERSION],
-            },
-        ),
+        handler=Accept, output=lambda value: View.generic(True),
     ),
     ItemBoxRequest.DEMAND: Route(
         handler=Demand,

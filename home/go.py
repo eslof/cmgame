@@ -11,24 +11,23 @@ from user_utils import User
 class Go(RequestHandler):
     @staticmethod
     @no_type_check
-    def run(event, user_id, valid_data) -> dict:
+    def run(event, user_id, valid_data) -> Dict[str, Any]:
         home_index = event[RequestField.User.HOME] - 1
         home_id = valid_data[UserAttr.HOMES][home_index]
-        home_data = table.get_item(
+        response = table.get_item(
             Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
             ProjectionExpression="#grid, #meta",
-            ConditionExpression="attribute_exists(#id)",
             ExpressionAttributeNames={
                 "#id": TableKey.SORT,
                 "#grid": HomeAttr.GRID,
                 "#meta": HomeAttr.META,
             },
         )
-        if not home_data:
+        if not (response and "Item" and response and response["Item"]):
             end("Unable to get home data for requested home.")
         if not User.update(user_id, UserAttr.CURRENT_HOME, home_id):
             end("Unable to set user current home to requested home.")
-        return home_data["Item"]  # todo: figure this out
+        return response["Item"]
 
     @staticmethod
     @no_type_check
