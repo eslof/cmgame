@@ -48,8 +48,7 @@ class RateException(Exception):
 @no_type_check
 def db_scan(*args, **kwargs) -> Optional[Dict[str, Any]]:
     response = _db_try(table.scan, lambda v: None, args, kwargs)
-    items = response.get("Items", [])
-    return items
+    return response.get("Items", None)
 
 
 # @no_type_check
@@ -68,9 +67,7 @@ def db_update(*args, **kwargs) -> bool:
 @wraps(table.get_item)
 def db_get(*args, **kwargs) -> Optional[Dict[str, Any]]:
     response = _db_try(table.get_item, lambda v: None, args, kwargs)
-    if "Item" not in response or len(response["Item"]) <= 0:
-        return
-    return response
+    return response.get("Item", None)
 
 
 @no_type_check
