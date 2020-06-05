@@ -1,7 +1,7 @@
-import secrets
+import random
 import string
 from enum import EnumMeta, Enum
-from typing import Dict, Callable, Any
+from typing import Dict, Callable, Any, Final
 
 from botocore.exceptions import ClientError  # type: ignore
 
@@ -25,13 +25,13 @@ class GameException(Exception):
     pass
 
 
-def generate_id(prefix: str, length: int = Constants.ID_GEN_LENGTH) -> str:
-    """TODO: what's good"""
-    u_id = "".join(
-        secrets.choice(string.ascii_letters + string.digits + "-_")
-        for i in range(length)
+charset: Final = "".join([string.ascii_letters, string.digits, "-_"])
+
+
+def generate_id(prefix: str) -> str:
+    return "".join(
+        [prefix, "".join(random.choices(charset, k=Constants.ID_GEN_LENGTH))]
     )
-    return f"{prefix}{u_id}"
 
 
 def validate_request(target: Dict[str, Any], request_enum: EnumMeta) -> Enum:
