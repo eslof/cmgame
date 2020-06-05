@@ -14,7 +14,7 @@ class Stop(RequestHandler):
     @no_type_check
     def run(event, user_id, valid_data):
         list_id = valid_data[UserAttr.LIST_ID]
-        if not MatchHelper.delete_match(list_id):
+        if not MatchHelper.delete(list_id):
             end("Unable to delete match listing.")
         if not User.update(user_id, UserAttr.LIST_ID, ""):
             end("Unable to clear user listing id.")

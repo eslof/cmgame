@@ -2,7 +2,7 @@ from datetime import datetime
 
 from boto3.dynamodb.conditions import Attr
 
-from database import db_get, db_scan, db_delete, db_update
+from database import db_get, db_scan, db_delete, db_update, db_put
 from db_properties import TableKey, TablePartition, MatchAttr
 from properties import Constants
 
@@ -17,14 +17,7 @@ class MatchHelper:
         return (time_now - list_time).total_seconds()
 
     @staticmethod
-    def get_finder(match_id):
-        return db_get(
-            Key={TableKey.PARTITION: TablePartition.MATCH, TableKey.SORT: match_id,},
-            ProjectionExpression=MatchAttr.FINDER_ID,
-        )
-
-    @staticmethod
-    def find_match(user_id):
+    def find_available(user_id):
         return db_scan(
             Key={TableKey.PARTITION: TablePartition.MATCH},
             FilterExpression=Attr(MatchAttr.LISTER_ID).ne(user_id)
@@ -34,21 +27,15 @@ class MatchHelper:
         )
 
     @staticmethod
-    def delete_match(scan_match_id):
+    def delete(match_id):
         return db_delete(
-            Key={
-                TableKey.PARTITION: TablePartition.MATCH,
-                TableKey.SORT: scan_match_id,
-            }
+            Key={TableKey.PARTITION: TablePartition.MATCH, TableKey.SORT: match_id,}
         )
 
     @staticmethod
-    def claim_match(scan_match_id, user_id):
+    def claim(match_id, user_id):
         return db_update(
-            Key={
-                TableKey.PARTITION: TablePartition.MATCH,
-                TableKey.SORT: scan_match_id,
-            },
+            Key={TableKey.PARTITION: TablePartition.MATCH, TableKey.SORT: match_id,},
             UpdateExpression="SET #finder_id = :user_id",
             ConditionExpression=f"attribute_exists(#id) AND #finder_id = :empty",
             ExpressionAttributeValues={":user_id": user_id, ":empty": ""},
@@ -59,11 +46,28 @@ class MatchHelper:
         )
 
     @staticmethod
+    def template_new(match_id, user_id):
+        return {
+            TableKey.PARTITION: TablePartition.MATCH,
+            TableKey.SORT: match_id,
+            MatchAttr.LISTER_ID: user_id,
+            MatchAttr.FINDER_ID: "",
+        }
+
+    @classmethod
+    def new(cls, new_id, user_id):
+        return db_put(
+            Item=cls.template_new(new_id, user_id),
+            ConditionExpression="attribute_not_exists(#id)",
+            ExpressionAttributeNames={"#id": TableKey.SORT},
+        )
+
+    @staticmethod
     def generate_id(user_id):
         return f"{datetime.now().strftime('%m-%d-%H-%M-%S')}{user_id}"
 
     @staticmethod
-    def update_and_get(match_id, new_id):
+    def upsert_return(match_id, new_id):
         return db_update(
             Key={TableKey.PARTITION: TablePartition.MATCH, TableKey.SORT: match_id},
             UpdateExpression="SET #sort = :new_match_id",

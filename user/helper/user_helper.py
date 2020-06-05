@@ -62,7 +62,7 @@ class UserHelper:
     def new(cls, name: str, flag: int) -> Optional[str]:
         new_id = generate_id(UserAttr.SORT_KEY_PREFIX)
         results = db_put(
-            Item=cls.template_new(new_id=new_id, name=name, flag=flag),
+            Item=cls.template_new(new_id, name, flag),
             ConditionExpression="attribute_not_exists(#id)",
             ExpressionAttributeNames={"#id": TableKey.SORT},
         )

@@ -66,6 +66,5 @@ class TablePartition:
 
 
 class MatchAttr:
-    DATE = "date"
     LISTER_ID = "lister_id"
     FINDER_ID = "finder_id"

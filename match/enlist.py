@@ -13,21 +13,28 @@ class Enlist(RequestHandler):
     @staticmethod
     @no_type_check
     def run(event, user_id, valid_data) -> Union[bool, str]:
-        # todo: more work needed on this
         match_id = valid_data[UserAttr.MATCH_ID]
         if match_id and MatchHelper.get_age(match_id) < 10:  # todo: put in config
             return web_socket_endpoint()["address"]
+        list_id = valid_data[UserAttr.LIST_ID]
+        if not list_id:
+            new_id = MatchHelper.generate_id(user_id)
+            if not MatchHelper.new(new_id, user_id):
+                end("Unable to create match listing.")
+            if not User.update(user_id, UserAttr.LIST_ID, new_id):
+                end("Unable to update user list id.")
+            return True
 
         new_id = MatchHelper.generate_id(user_id)
-        match_id = valid_data[UserAttr.LIST_ID] or MatchHelper.generate_id(user_id)
-        results = MatchHelper.update_and_get(match_id, new_id)
+        match_id = valid_data[UserAttr.LIST_ID]
+        results = MatchHelper.upsert_return(match_id, new_id)
         if not results:
             end("Unable to refresh listing.")
-        if results["Attributes"][MatchAttr.FINDER_ID]:
-            if not User.update(user_id, UserAttr.MATCH_ID, match_id):
-                end("Unable to update user with claimed match.")
-            return web_socket_endpoint()["address"]
-        return True
+        if not results.get("Attributes", {}).get(MatchAttr.FINDER_ID):
+            return True
+        if not User.update(user_id, UserAttr.MATCH_ID, match_id):
+            end("Unable to update user with claimed match.")
+        return web_socket_endpoint()["address"]
 
     @staticmethod
     @no_type_check

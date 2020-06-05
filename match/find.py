@@ -14,21 +14,23 @@ class Find(RequestHandler):
     @staticmethod
     @no_type_check
     def run(event, user_id, valid_data: Dict[str, str]) -> Union[str, bool]:
-
         match_id = valid_data[UserAttr.MATCH_ID]
-        if match_id and MatchHelper.get_age(match_id) < 10:  # todo: move to config
+        if (
+            match_id
+            and MatchHelper.get_age(match_id) < 10  # todo: Constants.MATCH_COOLDOWN
+        ):
             return web_socket_endpoint()["address"]
-        scan_items = MatchHelper.find_match(user_id)
+        scan_items = MatchHelper.find_available(user_id)
         if not scan_items:
             return False
         scan_match_id = scan_items[0]["id"]
 
         seconds_old = MatchHelper.get_age(scan_match_id)
         if seconds_old > 15:
-            MatchHelper.delete_match(scan_match_id)
+            MatchHelper.delete(scan_match_id)
             return False
 
-        if not MatchHelper.claim_match(scan_match_id, user_id):
+        if not MatchHelper.claim(scan_match_id, user_id):
             return False
 
         if not User.update(user_id, UserAttr.MATCH_ID, scan_match_id):

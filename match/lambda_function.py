@@ -19,11 +19,9 @@ class MatchRequest(Enum):
 routes: Dict[Enum, Route] = {
     MatchRequest.ENLIST: Route(
         handler=Enlist,
-        output=lambda value: View.response(
-            response_type=ResponseType.QUEUE, data={ResponseField.Queue.MATCH: value},
-        )
-        if not type(value) is bool
-        else View.generic(value),
+        output=lambda value: View.generic(value)
+        if type(value) is bool
+        else View.response(ResponseType.QUEUE, {ResponseField.Queue.MATCH: value}),
     ),
     MatchRequest.FIND: Route(
         handler=Find,
