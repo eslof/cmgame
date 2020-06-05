@@ -58,10 +58,12 @@ class TestTestService(TestCase):
         error_message = "hello world"
         request = {
             PacketHeader.REQUEST: TestRequest.THREE.value,
-            ResponseField.Generic.ERROR: error_message,
+            ResponseField.Generic.ERROR_MESSAGE: error_message,
         }
         expected_output = {
             PacketHeader.RESPONSE: ResponseType.ERROR.value,
-            ResponseField.Generic.ERROR: request[ResponseField.Generic.ERROR],
+            ResponseField.Generic.ERROR_MESSAGE: request[
+                ResponseField.Generic.ERROR_MESSAGE
+            ],
         }
         self.run_handler(request, expected_output, "error")

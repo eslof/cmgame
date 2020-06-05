@@ -8,7 +8,7 @@ class Three(RequestHandler):
     @staticmethod
     @no_type_check
     def run(event, user_id, valid_data) -> Dict[str, Any]:
-        return valid_data[ResponseField.Generic.ERROR]
+        return valid_data[ResponseField.Generic.ERROR_MESSAGE]
 
     @staticmethod
     @no_type_check

@@ -47,11 +47,12 @@ class View:
         )
 
     @classmethod
-    def error(cls, message: str) -> str:
+    def error(cls, error_type: str, message: str) -> str:
         """Create and return a .serialize'd error response with given message."""
         return cls.serialize(
             {
                 PacketHeader.RESPONSE: ResponseType.ERROR.value,
-                ResponseField.Generic.ERROR: message,
+                ResponseField.Generic.ERROR_TYPE: error_type,
+                ResponseField.Generic.ERROR_MESSAGE: message,
             }
         )

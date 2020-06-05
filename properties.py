@@ -98,7 +98,8 @@ class ResponseField:
 
     class Generic:
         DEBUG = "debug"
-        ERROR = "error"
+        ERROR_MESSAGE = "message"
+        ERROR_TYPE = "type"
         RESULT = "results"
 
     class User:

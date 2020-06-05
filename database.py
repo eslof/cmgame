@@ -33,7 +33,9 @@ def _db_try(table_function, *args, **kwargs) -> Union[Dict[str, Any], bool]:
             AWSError.REQ_LIMIT,
             AWSError.WCU_LIMIT,
         ):
-            raise RateException(View.error(e.response["Error"]["Code"]))
+            raise RateException(
+                View.error(RateException.__name__, e.response["Error"]["Code"])
+            )
         return False
     except Exception as e:
         end(f"Unknown error ({type(e).__name__}).")  # todo: think about this one
