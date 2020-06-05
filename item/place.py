@@ -1,8 +1,8 @@
 from typing import no_type_check, Union, Dict
 
-from database import db_update
-from db_properties import TableKey, TablePartition, UserAttr, HomeAttr
+from db_properties import UserAttr
 from internal import validate_field, validate_meta, end
+from item.helper.home_helper import HomeHelper
 from item.helper.internal_helper import InternalHelper
 from properties import RequestField
 from request_handler import RequestHandler
@@ -13,34 +13,20 @@ class Place(RequestHandler):
     @staticmethod
     @no_type_check
     def run(event, user_id, valid_data) -> bool:
-        if not db_update(
-            Key={
-                TableKey.PARTITION: TablePartition.HOME,
-                TableKey.SORT: valid_data[UserAttr.CURRENT_HOME],
-            },
-            UpdateExpression=f"SET #grid.#grid_slot = :item",
-            ConditionExpression=f"attribute_exists(#id)",
-            ExpressionAttributeNames={
-                "#id": TableKey.SORT,
-                "#grid": HomeAttr.GRID,
-                "#grid_slot": event[RequestField.Home.GRID],
-            },
-            ExpressionAttributeValues={
-                ":item": {
-                    HomeAttr.GridSlot.ITEM: event[RequestField.User.ITEM],
-                    HomeAttr.GridSlot.META: event[RequestField.Item.META],
-                },
-            },
+        if not HomeHelper.set_slot(
+            home_id=valid_data[UserAttr.CURRENT_HOME],
+            grid_slot=str(event[RequestField.Home.GRID]),
+            item=event[RequestField.User.ITEM],
+            meta=event[RequestField.Item.META],
         ):
             end("Unable to update selected grid slot.")
+
         return True
 
     @staticmethod
     @no_type_check
     def validate(event, user_id) -> Dict[str, Union[int, str]]:
-        InternalHelper.validate_grid_request(
-            target=event, message="Item Place API (GRID SLOT)"
-        )
+        InternalHelper.validate_grid_request(event, "Item Place API (GRID SLOT)")
         validate_meta(
             target=event, field=RequestField.Item.META, message="Item Place API (META)",
         )

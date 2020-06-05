@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, no_type_check, Union
+from typing import Dict, List, no_type_check, Union
 
 from db_properties import UserAttr
 from internal import end

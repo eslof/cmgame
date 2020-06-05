@@ -34,7 +34,7 @@ class Enlist(RequestHandler):
     def validate(event, user_id):
         user_data = User.get(user_id, f"{UserAttr.LIST_ID}, {UserAttr.MATCH_ID}")
         if not user_data:
-            end("Unable to retrieve match id for user.")
+            end("Unable to retrieve match and listing for user.")
         if user_data[UserAttr.LIST_ID]:
             seconds_old = MatchHelper.get_age(user_data[UserAttr.LIST_ID])
             if seconds_old < 4:  # todo: put into config

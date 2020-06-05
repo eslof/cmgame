@@ -1,8 +1,8 @@
 from typing import Dict, no_type_check
 
-from database import db_update
-from db_properties import TableKey, TablePartition, UserAttr, HomeAttr
+from db_properties import UserAttr
 from internal import validate_meta, end
+from item.helper.home_helper import HomeHelper
 from item.helper.internal_helper import InternalHelper
 from properties import RequestField
 from request_handler import RequestHandler
@@ -16,18 +16,7 @@ class Update(RequestHandler):
         home_id = valid_data[UserAttr.CURRENT_HOME]
         grid_slot = event[RequestField.Home.GRID]
         item_meta = event[RequestField.Item.META]
-        if not db_update(
-            Key={TableKey.PARTITION: TablePartition.HOME, TableKey.SORT: home_id},
-            UpdateExpression=f"SET #grid.#grid_slot.#slot_meta = :item_meta",
-            ConditionExpression=f"attribute_exists(#id) and #grid_slot in #grid",
-            ExpressionAttributeNames={
-                "#id": TableKey.SORT,
-                "#grid": HomeAttr.GRID,
-                "#slot_meta": HomeAttr.GridSlot.META,
-                "#grid_slot": grid_slot,
-            },
-            ExpressionAttributeValues={":item_meta": item_meta},
-        ):
+        if not HomeHelper.update(home_id, grid_slot, item_meta):
             end("Unable to update meta for grid slot.")
         return True
 
