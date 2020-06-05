@@ -21,19 +21,6 @@ class User:
         return event[RequestField.User.ID]
 
     @staticmethod
-    def archive(user_id: str):
-        return db_update(
-            Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
-            UpdateExpression="set #partition = :user_archive",
-            ConditionExpression=f"attribute_exists(#id)",
-            ExpressionAttributeValues={":user_archive": TablePartition.USER_ARCHIVE},
-            ExpressionAttributeNames={
-                "#id": TableKey.SORT,
-                "#partition": TableKey.PARTITION,
-            },
-        )
-
-    @staticmethod
     def get(user_id: str, attributes: str) -> Dict[str, Any]:
         return db_get(
             Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},

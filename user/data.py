@@ -28,7 +28,7 @@ class Data(RequestHandler):
     @staticmethod
     @no_type_check
     def validate(event: Dict[str, Any], user_id: Optional[str]) -> Dict[str, Any]:
-        results = User.get(user_id, UserHelper.welcome_attributes())
-        if not results:
+        user_data = User.get(user_id, UserHelper.welcome_attributes())
+        if not user_data:
             end("Unable to get welcome attributes for user.")
-        return results["Item"]
+        return user_data

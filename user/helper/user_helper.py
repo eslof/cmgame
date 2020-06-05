@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Union, Optional
 
-from database import db_put
+from database import db_put, db_update
 from db_properties import TableKey, TablePartition, UserAttr
 from internal import generate_id
 from properties import Constants, ResponseField, starting_inventory
@@ -69,3 +69,16 @@ class UserHelper:
         if not results:
             return None
         return new_id
+
+    @staticmethod
+    def archive(user_id: str):
+        return db_update(
+            Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
+            UpdateExpression="set #partition = :user_archive",
+            ConditionExpression=f"attribute_exists(#id)",
+            ExpressionAttributeValues={":user_archive": TablePartition.USER_ARCHIVE},
+            ExpressionAttributeNames={
+                "#id": TableKey.SORT,
+                "#partition": TableKey.PARTITION,
+            },
+        )

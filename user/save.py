@@ -30,8 +30,7 @@ class Save(RequestHandler):
             attribute, value = UserAttr.FLAG, RequestField.User.FLAG
         elif request == SaveRequest.META:
             attribute, value = UserAttr.META, RequestField.User.META
-        results = User.update(user_id, attribute, value)
-        if not results:
+        if not User.update(user_id, attribute, value):
             end("Unable to save user data.")
         return True
 
