@@ -22,17 +22,16 @@ class Enlist(RequestHandler):
             if not MatchHelper.new(new_id, user_id):
                 end("Unable to create match listing.")
             if not User.update(user_id, UserAttr.LIST_ID, new_id):
-                end("Unable to update user list id.")
+                end("Unable to update user listing id.")
             return True
 
         new_id = MatchHelper.generate_id(user_id)
-        match_id = valid_data[UserAttr.LIST_ID]
-        results = MatchHelper.upsert_return(match_id, new_id)
+        results = MatchHelper.upsert_return(list_id, new_id)
         if not results:
             end("Unable to refresh listing.")
-        if not results.get("Attributes", {}).get(MatchAttr.FINDER_ID):
+        if results.get("Attributes", {}).get(MatchAttr.FINDER_ID):
             return True
-        if not User.update(user_id, UserAttr.MATCH_ID, match_id):
+        if not User.update(user_id, UserAttr.MATCH_ID, new_id):
             end("Unable to update user with claimed match.")
         return web_socket_endpoint()["address"]
 
@@ -44,7 +43,7 @@ class Enlist(RequestHandler):
             end("Unable to retrieve match and listing for user.")
         if user_data[UserAttr.LIST_ID]:
             seconds_old = MatchHelper.get_age(user_data[UserAttr.LIST_ID])
-            if seconds_old < 4:  # todo: put into config
+            if seconds_old < 2.5:  # todo: put into config
                 end("Attempting to refresh listing too early.")
 
         return user_data

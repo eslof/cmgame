@@ -15,10 +15,8 @@ class Find(RequestHandler):
     @no_type_check
     def run(event, user_id, valid_data: Dict[str, str]) -> Union[str, bool]:
         match_id = valid_data[UserAttr.MATCH_ID]
-        if (
-            match_id
-            and MatchHelper.get_age(match_id) < 10  # todo: Constants.MATCH_COOLDOWN
-        ):
+        # todo: Constants.MATCH_COOLDOWN
+        if match_id and MatchHelper.get_age(match_id) < 10:
             return web_socket_endpoint()["address"]
         scan_items = MatchHelper.find_available(user_id)
         if not scan_items:
@@ -26,6 +24,7 @@ class Find(RequestHandler):
         scan_match_id = scan_items[0]["id"]
 
         seconds_old = MatchHelper.get_age(scan_match_id)
+        # todo: Constants.MATCH_TIMEOUT
         if seconds_old > 15:
             MatchHelper.delete(scan_match_id)
             return False
