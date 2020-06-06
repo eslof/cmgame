@@ -57,7 +57,6 @@ def route(
         def route_decorated(
             event: Dict[str, Any], context: Optional[Any]
         ) -> Optional[str]:
-            os.environ["sourceIP"] = context["identity"]["sourceIP"]
             return wrapper(routes, request_enum, f, event)
 
         route_decorated.__decorated__ = "route"
