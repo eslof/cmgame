@@ -14,6 +14,7 @@ class Data(RequestHandler):
     @staticmethod
     @no_type_check
     def run(event, user_id, valid_data) -> Dict[str, Any]:
+        biodomes = ItemHelper.get_biodomes()
         homes: List[Dict[str, Union[str, int]]] = [
             UserHelper.template_home(
                 home[UserAttr.Home.NAME], home[UserAttr.Home.BIODOME]
@@ -21,10 +22,7 @@ class Data(RequestHandler):
             for home in valid_data[UserAttr.HOMES]
         ]
         inventory = ItemHelper.get_inventory(valid_data[UserAttr.INVENTORY])
-        inventory = [
-            ItemHelper.template_inv(item) for item in valid_data[UserAttr.INVENTORY]
-        ]
-        return UserHelper.template_welcome(valid_data, homes, inventory)
+        return UserHelper.template_data(valid_data, homes, inventory, biodomes)
 
     @staticmethod
     @no_type_check

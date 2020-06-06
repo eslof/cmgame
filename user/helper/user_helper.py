@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Union, Optional
 from database import db_put, db_update
 from db_properties import TableKey, TablePartition, UserAttr
 from internal import generate_id
+from item_factory import DBItem
 from properties import Constants, ResponseField, starting_inventory
 
 
@@ -27,10 +28,11 @@ class UserHelper:
         }
 
     @staticmethod
-    def template_welcome(
+    def template_data(
         user_data: Dict[str, Any],
         homes: List[Dict[str, Union[str, int]]],
-        inventory: List[Dict[str, Union[str, int]]],
+        inventory: List[DBItem],
+        biodomes: List[DBItem],
     ) -> Dict[str, Any]:
         return {
             ResponseField.User.NAME: user_data[UserAttr.NAME],
@@ -38,6 +40,7 @@ class UserHelper:
             ResponseField.User.META: user_data[UserAttr.META],
             ResponseField.User.HOMES: homes,
             ResponseField.User.INVENTORY: inventory,
+            ResponseField.BIODOMES: biodomes,
         }
 
     @staticmethod

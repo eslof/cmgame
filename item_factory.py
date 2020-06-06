@@ -5,7 +5,6 @@ from typing import Dict, Literal
 from typing import TypedDict
 
 from internal import end
-from properties import starting_inventory
 
 
 class ItemAttr:
