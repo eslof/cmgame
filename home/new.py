@@ -1,5 +1,6 @@
 from typing import Dict, no_type_check
 
+from Config import Config
 from db_properties import UserAttr
 from home.helper.home_helper import HomeHelper
 from home.helper.user_helper import UserHelper
@@ -47,7 +48,7 @@ class New(RequestHandler):
             target=event,
             field=RequestField.Home.BIODOME,
             validation=lambda value: type(value) is int
-            and value in (val.value for val in Biodome.__members__.values()),
+            and 1 <= value <= Config.BIODOME_COUNT,
             message="Home Create API (BIODOME)",
         )
         return user_data
