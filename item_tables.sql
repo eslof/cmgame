@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS items (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    bundle TEXT NOT NULL,
+    version INTEGER NOT NULL,
+    UNIQUE (bundle)
+);
+CREATE TABLE IF NOT EXISTS biodome (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    bundle TEXT NOT NULL,
+    version INTEGER NOT NULL,
+    UNIQUE (bundle)
+);

@@ -1,21 +1,11 @@
-import sqlite3
+import pathlib
 import random
 import sqlite3
-from typing import Dict, Final, Literal
+from typing import Dict, Literal
 from typing import TypedDict
 
-# TODO: look into this
 from internal import end
-
-AUTO: Final = "auto"
-ITEMS: Final = "items"
-BUNDLE = Literal["bundle"]
-VERSION = Literal["version"]
-BIODOMES: Final = "biodomes"
-
-
-def seeded_random(string1, string2):
-    return random.randint(-1, 1)
+from properties import starting_inventory
 
 
 class ItemAttr:
@@ -34,38 +24,38 @@ class ItemDB(TypedDict):
 
 
 class Items:
-    # data: ItemDB = None
     conn: sqlite3.Connection = None
     cur: sqlite3.Cursor = None
 
-    # SQL_CREATE_ITEM_TABLE = """ CREATE TABLE IF NOT EXISTS items (
-    #                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-    #                         bundle TEXT NOT NULL,
-    #                         version INTEGER NOT NULL,
-    #                         UNIQUE (bundle)
-    #                     );"""
-    # create_table = """CREATE TABLE IF NOT EXISTS biodome (
-    #                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    #                     bundle TEXT NOT NULL,
-    #                     version INTEGER NOT NULL,
-    #                     UNIQUE (bundle)
-    #                 );"""
+    @classmethod
+    def create_tables(cls):
+        with open("item_tables.sql") as if_not_exists:
+            cls.cur.executescript(if_not_exists.read())
 
     @staticmethod
     def dict_factory(cursor: sqlite3.Cursor, row):
         return {col[0]: row[idx] for idx, col in enumerate(cursor.description)}
 
+    @staticmethod
+    def seeded_random(string1, string2):
+        return random.randint(-1, 1)
+
     @classmethod
     def connect(cls, readonly: bool = True) -> None:
         if not cls.conn:
             try:
+                print(pathlib.Path().absolute())
+                print(
+                    f"file:///D:/Projects/cmgame/db.sqlite?{'mode=ro' if readonly else 'mode=rw'}"
+                )
                 cls.conn = sqlite3.connect(
-                    f"file:db.sqlite{'?mode=ro' if readonly else ''}", uri=True
+                    f"file:///D:/Projects/cmgame/db.sqlite?{'mode=ro' if readonly else 'mode=rw'}",
+                    uri=True,
                 )
             except sqlite3.Error as e:
                 end(f"Item DB API ({type(e).__name__})")
             else:
-                cls.conn.create_collation("seeded_random", seeded_random)
+                cls.conn.create_collation("seeded_random", cls.seeded_random)
                 cls.conn.row_factory = cls.dict_factory
                 cls.cur = cls.conn.cursor()
 
@@ -93,15 +83,20 @@ class Items:
         return cls.cur.execute(query).fetchall()
 
 
-random.seed("hwefawefalo")
-Items.connect()
-random.seed("6")
-sql_many = "SELECT bundle, version FROM items ORDER BY CAST(id as TEXT) COLLATE seeded_random LIMIT 3 OFFSET 3"
-sql_one = "SELECT * FROM items ORDER BY CAST(id as TEXT) COLLATE seeded_random LIMIT 1 OFFSET 3"
-result = Items.cur.execute(sql_one).fetchone()
-print(result)
-print(result.keys())
-results = Items.cur.execute(sql_many).fetchall()
-print(results)
+# Items.connect()
+# sql = f"SELECT bundle, version FROM items WHERE id in ({','.join(['?'] * len(starting_inventory))})"
+# print(Items.cur.execute(sql, starting_inventory).fetchall())
+# Items.connect(False)
+# Items.create_tables()
+# random.seed("hwefawefalo")
+# Items.connect()
+# random.seed("6")
+# sql_many = "SELECT bundle, version FROM items ORDER BY CAST(id as TEXT) COLLATE seeded_random LIMIT 3 OFFSET 3"
+# sql_one = "SELECT * FROM items ORDER BY CAST(id as TEXT) COLLATE seeded_random LIMIT 1 OFFSET 3"
+# result = Items.cur.execute(sql_one).fetchone()
+# print(result)
+# print(result.keys())
+# results = Items.cur.execute(sql_many).fetchall()
+# print(results)
 # items = [{row.keys()[i]: tuple(row)[i] for i in range(len(row))} for row in results]
 # print(items)

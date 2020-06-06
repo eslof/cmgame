@@ -17,7 +17,7 @@ def end_unless_conditional(e: ClientError) -> None:
 
 
 def end(message: str) -> None:
-    raise GameException(View.error(GameException.__name__, message))
+    raise GameException(View.error(message))
 
 
 def web_socket_endpoint() -> Dict[str, Union[str, int]]:

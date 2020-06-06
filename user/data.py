@@ -20,6 +20,7 @@ class Data(RequestHandler):
             )
             for home in valid_data[UserAttr.HOMES]
         ]
+        inventory = ItemHelper.get_inventory(valid_data[UserAttr.INVENTORY])
         inventory = [
             ItemHelper.template_inv(item) for item in valid_data[UserAttr.INVENTORY]
         ]

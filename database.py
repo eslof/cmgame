@@ -24,7 +24,7 @@ def _db_try(table_function, *args, **kwargs) -> Union[Dict[str, Any], bool]:
             AWSError.WCU_LIMIT,
         ):
             raise RateException(
-                View.error(RateException.__name__, e.response["Error"]["Code"])
+                View.error(e.response["Error"]["Code"], RateException.__name__)
             )
         return False
     except Exception as e:

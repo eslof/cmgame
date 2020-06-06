@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from item_factory import Items, DBItem, BUNDLE, VERSION
+from item_factory import Items, DBItem
 
 # TODO: look into how to do this better
 from properties import starting_inventory
@@ -16,21 +16,21 @@ class ItemHelper(Items):
         }
 
     @classmethod
-    def template_inv(cls, item_id: int) -> DBItem:
-        cls.connect()
-        item = cls.data["items"][item_id]
-        return {
-            BUNDLE: item["bundle"],
-            VERSION: item["version"],
-        }
-
-    @classmethod
     def get_biodomes(cls) -> List[DBItem]:
         cls.connect()
-        biodomes = list(cls.data["biodomes"].values())
-        return biodomes
+        return cls.cur.execute("SELECT bundle, version FROM biodome").fetchall()
 
     @classmethod
     def get_starter_inventory(cls) -> List[DBItem]:
         cls.connect()
-        return [cls.data["items"][i] for i in starting_inventory]
+        sql = f"SELECT bundle, version FROM items WHERE id in ({','.join(['?']*len(starting_inventory))})"
+        return cls.cur.execute(sql, starting_inventory).fetchall()
+
+    @classmethod
+    def get_inventory(cls, user_inventory: List[int]):
+        cls.connect()
+        sql = f"SELECT bundle, version FROM items WHERE id in ({','.join(['?']*len(user_inventory))})"
+        return cls.cur.execute(sql, user_inventory).fetchall()
+
+
+print(ItemHelper.get_biodomes())
