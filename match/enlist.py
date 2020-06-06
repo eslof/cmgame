@@ -27,7 +27,7 @@ class Enlist(RequestHandler):
         results = MatchHelper.upsert_return(list_id, new_id)
         if not results:
             end("Unable to refresh listing.")
-        if results.get("Attributes", {}).get(MatchAttr.FINDER_ID):
+        if MatchAttr.FINDER_ID in results.get("Attributes", {}):
             return True
         if not User.update(user_id, UserAttr.MATCH_ID, new_id):
             end("Unable to update user with claimed match.")

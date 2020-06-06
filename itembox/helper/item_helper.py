@@ -10,15 +10,11 @@ class ItemHelper(Items):
     def get_itembox(cls, seed: str) -> List[DBItem]:
         cls.connect()
         random.seed(seed)
-        results = cls.conn.execute(
+        return cls.conn.execute(
             "SELECT bundle, version FROM items"
             " ORDER BY CAST(id as TEXT) COLLATE seeded_random"
             f" LIMIT {Constants.ItemBox.ITEM_COUNT}"
         ).fetchall()
-        random.seed()
-        return [
-            {row.keys()[i]: tuple(row)[i] for i in range(len(row))} for row in results
-        ]
 
     @classmethod
     def get_choice(cls, choice: int, seed: str) -> int:

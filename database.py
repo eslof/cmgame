@@ -34,22 +34,20 @@ def _db_try(table_function, *args, **kwargs) -> Union[Dict[str, Any], bool]:
 
 
 def db_scan(*args, **kwargs) -> Optional[Dict[str, Any]]:
-    response = _db_try(table.scan, lambda v: None, args, kwargs)
-    return response.get("Items", None)
+    return _db_try(table.scan, lambda v: None, args, kwargs).get("Items", None)
 
 
-def db_update(*args, **kwargs) -> bool:
+def db_update(*args, **kwargs) -> Union[bool, Dict[str, Any]]:
     return _db_try(table.update_item, lambda v: False, args, kwargs)
 
 
 def db_get(*args, **kwargs) -> Optional[Dict[str, Any]]:
-    response = _db_try(table.get_item, lambda v: None, args, kwargs)
-    return response.get("Item", None)
+    return _db_try(table.get_item, lambda v: None, args, kwargs).get("Item", None)
 
 
-def db_put(*args, **kwargs) -> bool:
+def db_put(*args, **kwargs) -> Union[bool, Dict[str, Any]]:
     return _db_try(table.put_item, lambda e: False, args, kwargs)
 
 
-def db_delete(*args, **kwargs) -> bool:
+def db_delete(*args, **kwargs) -> Union[bool, Dict[str, Any]]:
     return _db_try(table.delete, lambda v: False, args, kwargs)

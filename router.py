@@ -1,3 +1,4 @@
+import os
 from enum import Enum, EnumMeta
 from functools import wraps
 from typing import Callable, Optional, Any, Dict, Type, no_type_check
@@ -25,12 +26,11 @@ ROUTES_TYPE = Dict[Enum, Route]
 def _handler(
     routes: ROUTES_TYPE, request_enum: EnumMeta, event: Dict[str, Any],
 ) -> str:
-    req: Enum = validate_request(event, request_enum)
-    _route: Route = routes[req]
+    _route: Route = routes[validate_request(event, request_enum)]
     user_id: Optional[str] = User.validate_id(event) if _route.require_id else None
-    valid_data: Any = _route.handler.validate(event, user_id)
-    output: Any = _route.handler.run(event, user_id, valid_data or None)
-    return _route.output(output)
+    return _route.output(
+        _route.handler.run(event, user_id, _route.handler.validate(event, user_id))
+    )
 
 
 # TODO: figure out how we need context
@@ -57,6 +57,7 @@ def route(
         def route_decorated(
             event: Dict[str, Any], context: Optional[Any]
         ) -> Optional[str]:
+            os.environ["sourceIP"] = context["identity"]["sourceIP"]
             return wrapper(routes, request_enum, f, event)
 
         route_decorated.__decorated__ = "route"
