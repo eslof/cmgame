@@ -31,6 +31,3 @@ class ItemHelper(Items):
         cls.connect()
         sql = f"SELECT bundle, version FROM items WHERE id in ({','.join(['?']*len(user_inventory))})"
         return cls.cur.execute(sql, user_inventory).fetchall()
-
-
-print(ItemHelper.get_biodomes())
