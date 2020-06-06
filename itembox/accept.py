@@ -4,7 +4,7 @@ from db_properties import UserAttr
 from internal import validate_field, end
 from itembox.helper.item_helper import ItemHelper
 from itembox.helper.user_helper import UserHelper
-from properties import RequestField
+from properties import RequestField, Constants
 from request_handler import RequestHandler
 from user_utils import User
 
@@ -29,7 +29,8 @@ class Accept(RequestHandler):
         validate_field(
             target=event,
             field=RequestField.ItemBox.CHOICE,
-            validation=lambda value: type(value) is int and 1 <= value <= 3,
+            validation=lambda value: type(value) is int
+            and 1 <= value <= Constants.ItemBox.ITEM_COUNT,
             message="ItemBox Accept API",
         )
         user_data = User.get(

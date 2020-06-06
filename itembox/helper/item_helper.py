@@ -2,6 +2,7 @@ import random
 from typing import List
 
 from item_factory import Items, DBItem
+from properties import Constants
 
 
 class ItemHelper(Items):
@@ -10,7 +11,9 @@ class ItemHelper(Items):
         cls.connect()
         random.seed(seed)
         results = cls.conn.execute(
-            "SELECT bundle, version FROM items ORDER BY CAST(id as TEXT) COLLATE seeded_random LIMIT 3"
+            "SELECT bundle, version FROM items"
+            " ORDER BY CAST(id as TEXT) COLLATE seeded_random"
+            f" LIMIT {Constants.ItemBox.ITEM_COUNT}"
         ).fetchall()
         random.seed()
         return [
