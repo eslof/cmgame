@@ -1,5 +1,5 @@
 import os
-import zipfile as zf, sys
+from zipfile import ZipFile
 import shutil
 
 ls = os.listdir(".")
@@ -13,9 +13,9 @@ module_list = [
 ]
 
 for module in module_list:
-    shutil.make_archive(f"bin\\{module}", "zip", module)
+    shutil.make_archive(f"build\\{module}", "zip", module)
 
-z = zf.ZipFile("bin/layer.zip", "a")
+z = ZipFile("build/layer.zip", "a")
 for name in ls:
     if (
         name.endswith((".py", ".json", ".sql", ".sqlite"))
