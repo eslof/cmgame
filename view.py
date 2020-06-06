@@ -3,7 +3,7 @@ from enum import Enum
 from json import JSONDecodeError
 from typing import Optional, Any, Dict
 
-from properties import PacketHeader, ResponseType, ResponseField
+from properties import PacketHeader, ResponseType, ResponseField, GameException
 
 
 class View:
@@ -47,7 +47,7 @@ class View:
         )
 
     @classmethod
-    def error(cls, error_type: str, message: str) -> str:
+    def error(cls, message: str, error_type: str = GameException.__name__) -> str:
         """Create and return a .serialize'd error response with given message."""
         return cls.serialize(
             {

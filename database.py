@@ -5,19 +5,9 @@ from typing import Dict, Union, no_type_check, Any, Optional
 import boto3  # type: ignore
 from botocore.exceptions import ClientError  # type: ignore
 
-from db_properties import AWSError
+from db_properties import AWSError, RateException
 from internal import end
 from view import View
-
-
-def web_socket_endpoint() -> Dict[str, Union[str, int]]:
-    #  TODO: get live state
-    return {"response_code": 200, "address": "domain.com/ws"}
-
-
-# with sqlite3.connect("db.sql") as conn:
-#    cursor = conn.execute("query")
-#   res = cursor.fetchall()
 
 
 dynamodb = boto3.resource("dynamodb", endpoint_url="http://localhost:8000")
@@ -43,42 +33,23 @@ def _db_try(table_function, *args, **kwargs) -> Union[Dict[str, Any], bool]:
         return response or True
 
 
-class RateException(Exception):
-    pass
-
-
-@no_type_check
 def db_scan(*args, **kwargs) -> Optional[Dict[str, Any]]:
     response = _db_try(table.scan, lambda v: None, args, kwargs)
     return response.get("Items", None)
 
 
-# @no_type_check
-# @wraps(table.update_item)
-# def db_update_assert(*args, **kwargs) -> Dict[str, Any]:
-#     return _db_try(table.update_item, end, args, kwargs)
-
-
-@no_type_check
-@wraps(table.update_item)
 def db_update(*args, **kwargs) -> bool:
     return _db_try(table.update_item, lambda v: False, args, kwargs)
 
 
-@no_type_check
-@wraps(table.get_item)
 def db_get(*args, **kwargs) -> Optional[Dict[str, Any]]:
     response = _db_try(table.get_item, lambda v: None, args, kwargs)
     return response.get("Item", None)
 
 
-@no_type_check
-@wraps(table.put_item)
 def db_put(*args, **kwargs) -> bool:
     return _db_try(table.put_item, lambda e: False, args, kwargs)
 
 
-@no_type_check
-@wraps(table.put_item)
 def db_delete(*args, **kwargs) -> bool:
     return _db_try(table.delete, lambda v: False, args, kwargs)

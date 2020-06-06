@@ -1,10 +1,7 @@
 from typing import no_type_check, Dict, Union
 
-from boto3.dynamodb.conditions import Attr
-
-from database import web_socket_endpoint, db_scan, db_update, db_delete
-from db_properties import UserAttr, TablePartition, TableKey, MatchAttr
-from internal import end
+from db_properties import UserAttr
+from internal import end, web_socket_endpoint
 from match.helper.match_helper import MatchHelper
 from request_handler import RequestHandler
 from user_utils import User

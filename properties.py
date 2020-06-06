@@ -1,3 +1,4 @@
+import string
 from enum import unique, auto, Enum
 
 
@@ -20,7 +21,12 @@ class Seed:
 starting_inventory: List[int] = [1, 2, 3, 4]
 
 
+class GameException(Exception):
+    pass
+
+
 class Constants:
+    ID_CHARSET = "".join([string.ascii_letters, string.digits, "-_"])
     LAMBDA_HANDLER_NAME = "lambda_handler"
     ID_GEN_LENGTH = 22
     # Certain partitions have 1 char prefix added (U for User, H for Home)

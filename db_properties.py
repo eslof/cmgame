@@ -1,6 +1,10 @@
 from typing import Dict
 
 
+class RateException(Exception):
+    pass
+
+
 class AWSError:
     WCU_LIMIT = "ProvisionedThroughputExceededException"
     REQ_LIMIT = "RequestLimitExceeded"

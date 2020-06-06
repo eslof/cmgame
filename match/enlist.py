@@ -1,9 +1,7 @@
-from datetime import datetime
 from typing import Union, no_type_check
 
-from database import web_socket_endpoint, db_update, db_get
-from db_properties import TableKey, TablePartition, UserAttr, MatchAttr
-from internal import end
+from db_properties import UserAttr, MatchAttr
+from internal import end, web_socket_endpoint
 from match.helper.match_helper import MatchHelper
 from request_handler import RequestHandler
 from user_utils import User

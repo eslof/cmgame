@@ -3,7 +3,13 @@ from unittest import TestCase
 
 from db_properties import UserAttr
 from internal import generate_id
-from properties import PacketHeader, RequestField, ResponseField, ResponseType
+from properties import (
+    PacketHeader,
+    RequestField,
+    ResponseField,
+    ResponseType,
+    GameException,
+)
 from test.lambda_function import TestRequest
 from test.lambda_function import lambda_handler
 from view import View
@@ -41,7 +47,7 @@ class TestTestService(TestCase):
             PacketHeader.RESPONSE: ResponseType.DEBUG.value,
             ResponseField.Generic.DEBUG: request,
         }
-        self.run_handler(request, expected_output, "debug")
+        self.run_handler(request, expected_output, "View.debug")
 
     def test_generic(self) -> None:
         request = {
@@ -52,7 +58,7 @@ class TestTestService(TestCase):
             PacketHeader.RESPONSE: ResponseType.GENERIC.value,
             ResponseField.Generic.RESULT: request[ResponseField.Generic.RESULT],
         }
-        self.run_handler(request, expected_output, "generic")
+        self.run_handler(request, expected_output, "View.generic")
 
     def test_error(self) -> None:
         error_message = "hello world"
@@ -62,8 +68,7 @@ class TestTestService(TestCase):
         }
         expected_output = {
             PacketHeader.RESPONSE: ResponseType.ERROR.value,
-            ResponseField.Generic.ERROR_MESSAGE: request[
-                ResponseField.Generic.ERROR_MESSAGE
-            ],
+            ResponseField.Generic.ERROR_TYPE: GameException.__name__,
+            ResponseField.Generic.ERROR_MESSAGE: error_message,
         }
-        self.run_handler(request, expected_output, "error")
+        self.run_handler(request, expected_output, "View.error")

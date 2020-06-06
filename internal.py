@@ -1,12 +1,11 @@
 import random
-import string
 from enum import EnumMeta, Enum
-from typing import Dict, Callable, Any, Final
+from typing import Dict, Callable, Any, Union
 
 from botocore.exceptions import ClientError  # type: ignore
 
 from db_properties import META_SIZE_LIMIT
-from properties import Constants, PacketHeader
+from properties import Constants, PacketHeader, GameException
 from view import View
 
 
@@ -21,16 +20,17 @@ def end(message: str) -> None:
     raise GameException(View.error(GameException.__name__, message))
 
 
-class GameException(Exception):
-    pass
-
-
-charset: Final = "".join([string.ascii_letters, string.digits, "-_"])
+def web_socket_endpoint() -> Dict[str, Union[str, int]]:
+    #  TODO: get live state
+    return {"response_code": 200, "address": "domain.com/ws"}
 
 
 def generate_id(prefix: str) -> str:
     return "".join(
-        [prefix, "".join(random.choices(charset, k=Constants.ID_GEN_LENGTH))]
+        [
+            prefix,
+            "".join(random.choices(Constants.ID_CHARSET, k=Constants.ID_GEN_LENGTH)),
+        ]
     )
 
 
