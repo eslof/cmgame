@@ -51,6 +51,10 @@ class Items:
     #                     UNIQUE (bundle)
     #                 );"""
 
+    @staticmethod
+    def dict_factory(cursor: sqlite3.Cursor, row):
+        return {col[0]: row[idx] for idx, col in enumerate(cursor.description)}
+
     @classmethod
     def connect(cls, readonly: bool = True) -> None:
         if not cls.conn:
@@ -62,7 +66,7 @@ class Items:
                 end(f"Item DB API ({type(e).__name__})")
             else:
                 cls.conn.create_collation("seeded_random", seeded_random)
-                cls.conn.row_factory = sqlite3.Row
+                cls.conn.row_factory = cls.dict_factory
                 cls.cur = cls.conn.cursor()
 
     @classmethod
@@ -89,13 +93,15 @@ class Items:
         return cls.cur.execute(query).fetchall()
 
 
-# random.seed("hwefawefalo")
-# Items.connect()
-# mysql = "SELECT id FROM items ORDER BY CAST(id as TEXT) COLLATE seeded_random LIMIT 3 OFFSET 2"
-# results = Items.cur.execute(mysql).fetchone()
-# print(results)
-# print(results.keys())
-# print(tuple(results)[0])
-#
+random.seed("hwefawefalo")
+Items.connect()
+random.seed("6")
+sql_many = "SELECT bundle, version FROM items ORDER BY CAST(id as TEXT) COLLATE seeded_random LIMIT 3 OFFSET 3"
+sql_one = "SELECT * FROM items ORDER BY CAST(id as TEXT) COLLATE seeded_random LIMIT 1 OFFSET 3"
+result = Items.cur.execute(sql_one).fetchone()
+print(result)
+print(result.keys())
+results = Items.cur.execute(sql_many).fetchall()
+print(results)
 # items = [{row.keys()[i]: tuple(row)[i] for i in range(len(row))} for row in results]
 # print(items)
