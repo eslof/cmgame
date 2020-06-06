@@ -1,21 +1,6 @@
 import string
 from enum import unique, auto, Enum
-
-
-# TODO: a lot of stuff here, figure something out
-
-# region Base
 from typing import List
-
-
-class Seed:
-    USER_ID = 677983735
-    ITEMBOX = 232837927
-
-
-# endregion
-
-# region Game
 
 
 starting_inventory: List[int] = [1, 2, 3, 4]
@@ -27,9 +12,7 @@ class GameException(Exception):
 
 class Constants:
     ID_CHARSET = "".join([string.ascii_letters, string.digits, "-_"])
-    LAMBDA_HANDLER_NAME = "lambda_handler"
     ID_GEN_LENGTH = 22
-    # Certain partitions have 1 char prefix added (U for User, H for Home)
     EXPECTED_ID_LEN = ID_GEN_LENGTH + 1
 
     class ItemBox:
@@ -106,7 +89,7 @@ class ResponseField:
         DEBUG = "debug"
         ERROR_MESSAGE = "message"
         ERROR_TYPE = "type"
-        RESULT = "results"
+        RESULTS = "results"
 
     class User:
         WELCOME = "welcome"

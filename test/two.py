@@ -8,7 +8,7 @@ class Two(RequestHandler):
     @staticmethod
     @no_type_check
     def run(event, user_id, valid_data) -> bool:
-        return valid_data[ResponseField.Generic.RESULT]
+        return valid_data[ResponseField.Generic.RESULTS]
 
     @staticmethod
     @no_type_check

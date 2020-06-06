@@ -33,7 +33,7 @@ class View:
         return cls.serialize(
             {
                 PacketHeader.RESPONSE: ResponseType.GENERIC.value,
-                ResponseField.Generic.RESULT: result,
+                ResponseField.Generic.RESULTS: result,
             }
         )
 

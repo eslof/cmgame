@@ -27,12 +27,12 @@ class HomeHelper:
     @classmethod
     def new(cls) -> Optional[str]:
         new_id = generate_id(HomeAttr.SORT_KEY_PREFIX)
-        result = db_put(
+        results = db_put(
             Item=cls.template_new(new_id),
             ConditionExpression="attribute_not_exists(#id)",
             ExpressionAttributeNames={"#id": TableKey.SORT},
         )
-        return new_id if result else None
+        return new_id if results else None
 
     @classmethod
     def delete(cls, home_id: str) -> bool:

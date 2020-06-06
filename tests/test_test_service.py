@@ -52,11 +52,11 @@ class TestTestService(TestCase):
     def test_generic(self) -> None:
         request = {
             PacketHeader.REQUEST: TestRequest.TWO.value,
-            ResponseField.Generic.RESULT: True,
+            ResponseField.Generic.RESULTS: True,
         }
         expected_output = {
             PacketHeader.RESPONSE: ResponseType.GENERIC.value,
-            ResponseField.Generic.RESULT: request[ResponseField.Generic.RESULT],
+            ResponseField.Generic.RESULTS: request[ResponseField.Generic.RESULTS],
         }
         self.run_handler(request, expected_output, "View.generic")
 
