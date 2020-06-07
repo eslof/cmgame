@@ -23,11 +23,11 @@ class ItemHelper(Items):
     @classmethod
     def get_starter_inventory(cls) -> List[DBItem]:
         cls.connect()
-        sql = f"SELECT bundle, version FROM items WHERE id in ({','.join(['?']*len(starting_inventory))})"
+        sql = f"SELECT bundle, version FROM item WHERE id in ({','.join(['?']*len(starting_inventory))})"
         return cls.cur.execute(sql, starting_inventory).fetchall()
 
     @classmethod
     def get_inventory(cls, user_inventory: List[int]):
         cls.connect()
-        sql = f"SELECT bundle, version FROM items WHERE id in ({','.join(['?']*len(user_inventory))})"
+        sql = f"SELECT bundle, version FROM item WHERE id in ({','.join(['?']*len(user_inventory))})"
         return cls.cur.execute(sql, user_inventory).fetchall()

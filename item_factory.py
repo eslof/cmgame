@@ -1,7 +1,7 @@
 import pathlib
 import random
 import sqlite3
-from typing import Dict, Literal
+from typing import Literal
 from typing import TypedDict
 
 from internal import end
@@ -15,11 +15,6 @@ class ItemAttr:
 class DBItem(TypedDict):
     bundle: str
     version: int
-
-
-class ItemDB(TypedDict):
-    items: Dict[int, DBItem]
-    biodomes: Dict[int, DBItem]
 
 
 class Items:
@@ -60,7 +55,7 @@ class Items:
 
     @classmethod
     def upsert_bundle(
-        cls, item_type: Literal["items", "biodomes"], bundle_name: str, version: int,
+        cls, item_type: Literal["item", "biodome"], bundle_name: str, version: int,
     ) -> list:
         cls.connect(False)
         query = (

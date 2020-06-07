@@ -11,7 +11,7 @@ class ItemHelper(Items):
         cls.connect()
         random.seed(seed)
         return cls.conn.execute(
-            "SELECT bundle, version FROM items"
+            "SELECT bundle, version FROM item"
             " ORDER BY CAST(id as TEXT) COLLATE seeded_random"
             f" LIMIT {Constants.ItemBox.ITEM_COUNT}"
         ).fetchall()
@@ -21,7 +21,7 @@ class ItemHelper(Items):
         cls.connect()
         random.seed(seed)
         row = cls.conn.execute(
-            f"SELECT id FROM items ORDER BY CAST(id as TEXT) COLLATE seeded_random LIMIT 1 OFFSET {choice-1}"
+            f"SELECT id FROM item ORDER BY CAST(id as TEXT) COLLATE seeded_random LIMIT 1 OFFSET {choice-1}"
         ).fetchone()
         random.seed()
         return tuple(row)[0]
