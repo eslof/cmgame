@@ -38,13 +38,6 @@ class ArchiveReason:
     INACTIVE = "inactive"
 
 
-@unique
-class Biodome(Enum):
-    GRASS = auto()
-    DESERT = auto()
-    INCA = auto()
-
-
 # endregion
 
 # region Network

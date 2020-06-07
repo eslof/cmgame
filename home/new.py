@@ -5,7 +5,7 @@ from db_properties import UserAttr
 from home.helper.home_helper import HomeHelper
 from home.helper.user_helper import UserHelper
 from internal import validate_field, end
-from properties import RequestField, Constants, Biodome
+from properties import RequestField, Constants
 from request_handler import RequestHandler
 from user_utils import User
 
