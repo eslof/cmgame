@@ -6,7 +6,7 @@ from helper.home_helper import HomeHelper
 from helper.internal_helper import InternalHelper
 from properties import RequestField
 from request_handler import RequestHandler
-from user_utils import User
+from user_utils import UserUtils
 
 
 class Clear(RequestHandler):
@@ -23,7 +23,7 @@ class Clear(RequestHandler):
     @no_type_check
     def validate(event, user_id) -> Dict[str, str]:
         InternalHelper.validate_grid_request(event, "Item Clear API (GRID SLOT)")
-        user_data = User.get(user_id, UserAttr.CURRENT_HOME)
+        user_data = UserUtils.get(user_id, UserAttr.CURRENT_HOME)
         if not user_data:
             end("Unable to retrieve current home for user.")
         return user_data

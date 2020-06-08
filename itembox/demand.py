@@ -4,7 +4,7 @@ from db_properties import UserAttr
 from internal import end
 from item_properties import DBItem
 from request_handler import RequestHandler
-from user_utils import User
+from user_utils import UserUtils
 from helper.item_helper import ItemHelper
 
 
@@ -18,7 +18,7 @@ class Demand(RequestHandler):
     @staticmethod
     @no_type_check
     def validate(event, user_id) -> Dict[str, Union[List[str], int]]:
-        user_data = User.get(
+        user_data = UserUtils.get(
             user_id=user_id,
             attributes=f"{UserAttr.KEY_COUNT}, {UserAttr.KEY_USED_COUNT}",
         )

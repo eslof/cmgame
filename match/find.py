@@ -4,7 +4,7 @@ from db_properties import UserAttr
 from internal import end, web_socket_endpoint
 from helper.match_helper import MatchHelper
 from request_handler import RequestHandler
-from user_utils import User
+from user_utils import UserUtils
 
 
 class Find(RequestHandler):
@@ -29,7 +29,7 @@ class Find(RequestHandler):
         if not MatchHelper.claim(scan_match_id, user_id):
             return False
 
-        if not User.update(user_id, UserAttr.MATCH_ID, scan_match_id):
+        if not UserUtils.update(user_id, UserAttr.MATCH_ID, scan_match_id):
             end("Unable to update user match id.")
         # todo: send match id to chat server to expect lister_id and finder_id
         return web_socket_endpoint()["address"]
@@ -37,5 +37,5 @@ class Find(RequestHandler):
     @staticmethod
     @no_type_check
     def validate(event, user_id) -> Dict[str, str]:
-        user_data = User.get(user_id, UserAttr.MATCH_ID)
+        user_data = UserUtils.get(user_id, UserAttr.MATCH_ID)
         return user_data

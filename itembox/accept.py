@@ -7,7 +7,7 @@ from helper.item_helper import ItemHelper
 from helper.user_helper import UserHelper
 from properties import RequestField
 from request_handler import RequestHandler
-from user_utils import User
+from user_utils import UserUtils
 
 
 class Accept(RequestHandler):
@@ -36,7 +36,7 @@ class Accept(RequestHandler):
             and 1 <= value <= Config.ITEM_BOX_SIZE,
             message="ItemBox Accept API",
         )
-        user_data = User.get(
+        user_data = UserUtils.get(
             user_id=user_id,
             attributes=f"{UserAttr.INVENTORY}, {UserAttr.KEY_COUNT}, {UserAttr.KEY_USED_COUNT}",
         )

@@ -6,7 +6,7 @@ from db_properties import TableKey, TablePartition, UserAttr, HomeAttr
 from internal import validate_meta, end
 from properties import RequestField
 from request_handler import RequestHandler
-from user_utils import User
+from user_utils import UserUtils
 
 
 class Save(RequestHandler):
@@ -28,7 +28,7 @@ class Save(RequestHandler):
     @staticmethod
     @no_type_check
     def validate(event, user_id) -> Dict[str, str]:
-        user_data = User.get(user_id, UserAttr.CURRENT_HOME)
+        user_data = UserUtils.get(user_id, UserAttr.CURRENT_HOME)
         if not user_data:
             end("Unable to retrieve current home for user.")
         validate_meta(

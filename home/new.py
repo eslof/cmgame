@@ -7,7 +7,7 @@ from helper.user_helper import UserHelper
 from internal import validate_field, end
 from properties import RequestField, Constants
 from request_handler import RequestHandler
-from user_utils import User
+from user_utils import UserUtils
 
 
 class New(RequestHandler):
@@ -32,7 +32,7 @@ class New(RequestHandler):
     @staticmethod
     @no_type_check
     def validate(event, user_id) -> Dict[str, int]:
-        user_data = User.get(user_id, UserAttr.HOME_COUNT)
+        user_data = UserUtils.get(user_id, UserAttr.HOME_COUNT)
         if not user_data:
             end("Unable to retrieve home count for user.")
         if user_data[UserAttr.HOME_COUNT] >= Config.HOME_COUNT_MAX:

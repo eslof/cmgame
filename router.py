@@ -4,7 +4,7 @@ from typing import Callable, Optional, Any, Dict, Type, no_type_check
 
 from internal import validate_request
 from request_handler import RequestHandler
-from user_utils import User
+from user_utils import UserUtils
 
 
 class Route:
@@ -27,7 +27,7 @@ def _handler(
     routes: ROUTES_TYPE, request_enum: EnumMeta, event: Dict[str, Any],
 ) -> str:
     _route: Route = routes[validate_request(event, request_enum)]
-    user_id: Optional[str] = User.validate_id(event) if _route.require_id else None
+    user_id: Optional[str] = UserUtils.validate_id(event) if _route.require_id else None
     return _route.output(
         _route.handler.run(event, user_id, _route.handler.validate(event, user_id))
     )

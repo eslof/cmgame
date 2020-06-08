@@ -7,7 +7,7 @@ from db_properties import UserAttr
 from internal import validate_field, validate_request, validate_meta, end
 from properties import Constants, RequestField
 from request_handler import RequestHandler
-from user_utils import User
+from user_utils import UserUtils
 
 
 @unique
@@ -29,7 +29,7 @@ class Save(RequestHandler):
             attribute, value = UserAttr.FLAG, RequestField.User.FLAG
         elif request == SaveRequest.META:
             attribute, value = UserAttr.META, RequestField.User.META
-        if not User.update(user_id, attribute, value):
+        if not UserUtils.update(user_id, attribute, value):
             end("Unable to save user data.")
         return True
 

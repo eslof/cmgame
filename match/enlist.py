@@ -4,7 +4,7 @@ from db_properties import UserAttr, MatchAttr
 from internal import end, web_socket_endpoint
 from helper.match_helper import MatchHelper
 from request_handler import RequestHandler
-from user_utils import User
+from user_utils import UserUtils
 
 
 class Enlist(RequestHandler):
@@ -19,7 +19,7 @@ class Enlist(RequestHandler):
             new_id = MatchHelper.generate_id(user_id)
             if not MatchHelper.new(new_id, user_id):
                 end("Unable to create match listing.")
-            if not User.update(user_id, UserAttr.LIST_ID, new_id):
+            if not UserUtils.update(user_id, UserAttr.LIST_ID, new_id):
                 end("Unable to update user listing id.")
             return True
 
@@ -29,14 +29,14 @@ class Enlist(RequestHandler):
             end("Unable to refresh listing.")
         if MatchAttr.FINDER_ID in results.get("Attributes", {}):
             return True
-        if not User.update(user_id, UserAttr.MATCH_ID, new_id):
+        if not UserUtils.update(user_id, UserAttr.MATCH_ID, new_id):
             end("Unable to update user with claimed match.")
         return web_socket_endpoint()["address"]
 
     @staticmethod
     @no_type_check
     def validate(event, user_id):
-        user_data = User.get(user_id, f"{UserAttr.LIST_ID}, {UserAttr.MATCH_ID}")
+        user_data = UserUtils.get(user_id, f"{UserAttr.LIST_ID}, {UserAttr.MATCH_ID}")
         if not user_data:
             end("Unable to retrieve match and listing for user.")
         if user_data[UserAttr.LIST_ID]:

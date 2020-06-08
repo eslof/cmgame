@@ -7,7 +7,7 @@ from helper.home_helper import HomeHelper
 from helper.internal_helper import InternalHelper
 from properties import RequestField
 from request_handler import RequestHandler
-from user_utils import User
+from user_utils import UserUtils
 
 
 class Place(RequestHandler):
@@ -34,7 +34,7 @@ class Place(RequestHandler):
             max_size=Config.GRID_META_LIMIT,
             message="Item Place API (META)",
         )
-        user_data = User.get(
+        user_data = UserUtils.get(
             user_id, f"{UserAttr.INVENTORY_COUNT}, {UserAttr.CURRENT_HOME}",
         )
         if not user_data:

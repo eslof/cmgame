@@ -4,7 +4,7 @@ from db_properties import UserAttr
 from internal import validate_field, end
 from properties import RequestField
 from request_handler import RequestHandler
-from user_utils import User
+from user_utils import UserUtils
 from helper.home_helper import HomeHelper
 
 
@@ -17,14 +17,16 @@ class Delete(RequestHandler):
         if not HomeHelper.delete(home_id):
             end("Unable to delete requested home.")
         # todo: do we need an extra if :value in #name condition here to catch misuse?
-        if not User.update(user_id, UserAttr.HOMES, home_index, "REMOVE #name :value"):
+        if not UserUtils.update(
+            user_id, UserAttr.HOMES, home_index, "REMOVE #name :value"
+        ):
             end("Unable to remove deleted home from user.")
         return True
 
     @staticmethod
     @no_type_check
     def validate(event, user_id) -> Dict[str, Any]:
-        user_data = User.get(user_id, UserAttr.HOMES)
+        user_data = UserUtils.get(user_id, UserAttr.HOMES)
         if not user_data:
             end("Unable to retrieve homes list for user.")
         validate_field(

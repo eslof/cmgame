@@ -6,7 +6,7 @@ from internal import validate_field
 from properties import RequestField, Constants
 
 
-class User:
+class UserUtils:
     @staticmethod
     def validate_id(event: Dict[str, str]) -> str:
         validate_field(

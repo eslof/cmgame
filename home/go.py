@@ -5,12 +5,11 @@ from db_properties import TableKey, TablePartition, UserAttr, HomeAttr
 from internal import validate_field, end
 from properties import RequestField
 from request_handler import RequestHandler
-from user_utils import User
+from user_utils import UserUtils
 
 
 class Go(RequestHandler):
     @staticmethod
-    @no_type_check
     def run(event, user_id, valid_data) -> Dict[str, Any]:
         home_index = event[RequestField.User.HOME] - 1
         home_id = valid_data[UserAttr.HOMES][home_index]
@@ -23,16 +22,15 @@ class Go(RequestHandler):
                 "#meta": HomeAttr.META,
             },
         )
-        if not (response and "Item" and response and response["Item"]):
+        if not (response and "Item" in response and response["Item"]):
             end("Unable to get home data for requested home.")
-        if not User.update(user_id, UserAttr.CURRENT_HOME, home_id):
+        if not UserUtils.update(user_id, UserAttr.CURRENT_HOME, home_id):
             end("Unable to set user current home to requested home.")
         return response["Item"]
 
     @staticmethod
-    @no_type_check
     def validate(event, user_id) -> Dict[str, Any]:
-        user_data = User.get(user_id, UserAttr.HOMES)
+        user_data = UserUtils.get(user_id, UserAttr.HOMES)
         if not user_data:
             end("Unable to retrieve homes list for user.")
         home_count = len(user_data[UserAttr.HOMES])
