@@ -2,7 +2,7 @@ from typing import no_type_check, List, Union, Dict
 
 from config import Config
 from db_properties import UserAttr
-from internal import validate_field, end
+from internal import end, validate_choice
 from helper.item_helper import ItemHelper
 from helper.user_helper import UserHelper
 from properties import RequestField
@@ -29,12 +29,11 @@ class Accept(RequestHandler):
     @staticmethod
     @no_type_check
     def validate(event, user_id) -> Dict[str, Union[List[int], int]]:
-        validate_field(
+        validate_choice(
             target=event,
             field=RequestField.ItemBox.CHOICE,
-            validation=lambda value: type(value) is int
-            and 1 <= value <= Config.ITEM_BOX_SIZE,
-            message="ItemBox Accept API",
+            max=Config.ITEM_BOX_SIZE,
+            message="ItemBox Accept API (CHOICE).",
         )
         user_data = UserUtils.get(
             user_id=user_id,

@@ -1,7 +1,7 @@
 from typing import Optional, Any, Dict, no_type_check
 
 from country import Country
-from internal import validate_field, end
+from internal import validate_field, end, validate_name
 from properties import RequestField, Constants, ResponseField
 from request_handler import RequestHandler
 from helper.user_helper import UserHelper
@@ -21,11 +21,10 @@ class New(RequestHandler):
     @staticmethod
     @no_type_check
     def validate(event: Dict[str, Any], user_id: Optional[str]):
-        validate_field(
+        validate_name(
             target=event,
             field=RequestField.User.NAME,
-            validation=lambda value: type(value) is str
-            and 0 < len(value) < Constants.User.NAME_MAX_LENGTH,
+            max_length=Constants.User.NAME_MAX_LENGTH,
             message="User New API (NAME)",
         )
         validate_field(

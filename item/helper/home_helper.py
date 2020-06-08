@@ -1,5 +1,9 @@
+from typing import Dict, Any
+
 from database import db_update
 from db_properties import TableKey, HomeAttr, TablePartition
+from internal import validate_choice, end
+from properties import RequestField, Constants
 
 
 class HomeHelper:
@@ -45,4 +49,13 @@ class HomeHelper:
                 "#grid_slot": grid_slot,
             },
             ExpressionAttributeValues={":item_meta": item_meta},
+        )
+
+    @staticmethod
+    def validate_grid_request(target: Dict[str, Any], message: str = "") -> None:
+        validate_choice(
+            target=target,
+            field=RequestField.Home.GRID,
+            max=Constants.Home.SIZE,
+            message=message,
         )

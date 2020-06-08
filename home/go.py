@@ -2,7 +2,7 @@ from typing import no_type_check, Dict, Any
 
 from database import table
 from db_properties import TableKey, TablePartition, UserAttr, HomeAttr
-from internal import validate_field, end
+from internal import validate_choice, end
 from properties import RequestField
 from request_handler import RequestHandler
 from user_utils import UserUtils
@@ -34,10 +34,10 @@ class Go(RequestHandler):
         if not user_data:
             end("Unable to retrieve homes list for user.")
         home_count = len(user_data[UserAttr.HOMES])
-        validate_field(
+        validate_choice(
             target=event,
             field=RequestField.User.HOME,
-            validation=lambda value: type(value) is int and 0 < value <= home_count,
-            message="Home select API",
+            max=home_count,
+            message="Home Select API (CHOICE).",
         )
         return user_data

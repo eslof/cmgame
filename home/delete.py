@@ -1,7 +1,7 @@
 from typing import no_type_check, Dict, Any
 
 from db_properties import UserAttr
-from internal import validate_field, end
+from internal import end, validate_choice
 from properties import RequestField
 from request_handler import RequestHandler
 from user_utils import UserUtils
@@ -29,11 +29,10 @@ class Delete(RequestHandler):
         user_data = UserUtils.get(user_id, UserAttr.HOMES)
         if not user_data:
             end("Unable to retrieve homes list for user.")
-        validate_field(
-            event,
-            RequestField.User.HOME,
-            lambda value: type(value) is int
-            and 0 < value <= len(user_data[UserAttr.HOMES]),
-            "Home delete API",
+        validate_choice(
+            target=event,
+            field=RequestField.User.HOME,
+            max=len(user_data[UserAttr.HOMES]),
+            message="Home Delete API (CHOICE).",
         )
         return user_data

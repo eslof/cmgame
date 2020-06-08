@@ -4,7 +4,6 @@ from typing import Dict, Callable, Any, Union
 
 from botocore.exceptions import ClientError  # noqa
 
-from config import Config
 from properties import Constants, PacketHeader, GameException
 from view import View
 
@@ -38,33 +37,44 @@ def validate_request(target: Dict[str, Any], request_enum: EnumMeta) -> Enum:
     validate_field(
         target=target,
         field=PacketHeader.REQUEST,
-        validation=lambda value: type(value) is int
-        and value in (val.value for val in request_enum.__members__.values()),  # type: ignore
+        value_type=int,
+        validation=lambda v: v
+        in (val.value for val in request_enum.__members__.values()),
         message=f"Request API ({request_enum.__name__})",
     )
-    return request_enum(target[PacketHeader.REQUEST])  # type: ignore
+    return request_enum(target[PacketHeader.REQUEST])
 
 
 def validate_field(
     target: Dict[str, Any],
     field: str,
+    value_type: type,
     validation: Callable[[Any], bool],
-    message: str = "",
+    message: str,
 ) -> None:
     if not hasattr(target, field) and field not in target:
-        end(f"No valid attribute present ({message})")
+        end(f"No valid attribute present ({message}): {field} not in {target}.")
+    if not type(target[field]) is value_type:
+        end(f"Value type error ({message}): {target[field]} != {value_type}.")
     elif not validation(target[field]):
-        end(f"Failed validation ({message}): {field} = {str(target[field])}")
+        end(f"Failed validation ({message}): {field} = {target[field]}.")
+
+
+def validate_name(target: Dict[str, Any], field: str, max_length: int, message: str):
+    validate_field(
+        target, field, lambda v: type(v) is str and 0 < len(v) < max_length, message
+    )
+
+
+def validate_choice(target: Dict[str, Any], field: str, max: int, message: str):
+    validate_field(target, field, int, lambda v: 1 <= v <= max, message)
 
 
 def validate_meta(
     target: Dict[str, Any], field: str, max_size: int, message: str
 ) -> None:
     validate_field(
-        target=target,
-        field=field,
-        validation=lambda value: value and type(value) is str and len(value) < max_size,
-        message=message,
+        target, field, str, lambda v: v and len(v) < max_size, message,
     )
     try:
         View.deserialize(target[field])

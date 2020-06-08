@@ -4,7 +4,7 @@ from config import Config
 from db_properties import UserAttr
 from helper.home_helper import HomeHelper
 from helper.user_helper import UserHelper
-from internal import validate_field, end
+from internal import validate_field, end, validate_choice, validate_name
 from properties import RequestField, Constants
 from request_handler import RequestHandler
 from user_utils import UserUtils
@@ -37,18 +37,16 @@ class New(RequestHandler):
             end("Unable to retrieve home count for user.")
         if user_data[UserAttr.HOME_COUNT] >= Config.HOME_COUNT_MAX:
             end("Maximum homes reached.")
-        validate_field(
+        validate_name(
             target=event,
             field=RequestField.Home.NAME,
-            validation=lambda value: type(value) is str
-            and 0 < len(value) <= Constants.Home.NAME_MAX_LENGTH,
+            max_length=Constants.Home.NAME_MAX_LENGTH,
             message="Home Create API (NAME)",
         )
-        validate_field(
+        validate_choice(
             target=event,
             field=RequestField.Home.BIODOME,
-            validation=lambda value: type(value) is int
-            and 1 <= value <= Config.BIODOME_COUNT,
+            max=Config.BIODOME_COUNT,
             message="Home Create API (BIODOME)",
         )
         return user_data

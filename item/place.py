@@ -2,10 +2,9 @@ from typing import no_type_check, Union, Dict
 
 from config import Config
 from db_properties import UserAttr
-from internal import validate_field, validate_meta, end
+from internal import validate_meta, end, validate_choice
 from helper.home_helper import HomeHelper
-from helper.internal_helper import InternalHelper
-from properties import RequestField
+from properties import RequestField, Constants
 from request_handler import RequestHandler
 from user_utils import UserUtils
 
@@ -27,7 +26,9 @@ class Place(RequestHandler):
     @staticmethod
     @no_type_check
     def validate(event, user_id) -> Dict[str, Union[int, str]]:
-        InternalHelper.validate_grid_request(event, "Item Place API (GRID SLOT)")
+        HomeHelper.validate_grid_request(event, "Item Place API (GRID SLOT)")
+        if event[RequestField.Home.GRID] == Constants.Home.MATCH_GRID_SLOT:
+            end("Cannot place reserved home grid slot.")
         validate_meta(
             target=event,
             field=RequestField.Item.META,
@@ -39,11 +40,10 @@ class Place(RequestHandler):
         )
         if not user_data:
             end("Unable to retrieve inventory and current home for user.")
-        validate_field(
+        validate_choice(
             target=event,
             field=RequestField.User.ITEM,
-            validation=lambda value: type(value) is int
-            and 0 < value <= user_data[UserAttr.INVENTORY_COUNT],
-            message="Item Place API (ITEM REFERENCE)",
+            max=user_data[UserAttr.INVENTORY_COUNT],
+            message="Item Place API (ITEM CHOICE)",
         )
         return user_data

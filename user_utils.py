@@ -17,7 +17,7 @@ class UserUtils:
             message="User authentication API",
         )
 
-        return event[RequestField.User.ID]
+        return event[RequestField.User.ID]  # pop it? or leave it and let by event?
 
     @staticmethod
     def get(user_id: str, attributes: str) -> Dict[str, Any]:

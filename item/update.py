@@ -4,7 +4,6 @@ from db_properties import UserAttr
 from internal import end, validate_meta
 from config import Config
 from helper.home_helper import HomeHelper
-from helper.internal_helper import InternalHelper
 from properties import RequestField
 from request_handler import RequestHandler
 from user_utils import UserUtils
@@ -24,7 +23,7 @@ class Update(RequestHandler):
     @staticmethod
     @no_type_check
     def validate(event, user_id) -> Dict[str, str]:
-        InternalHelper.validate_grid_request(
+        HomeHelper.validate_grid_request(
             target=event, message="Item Update API (GRID SLOT)"
         )
         validate_meta(
