@@ -37,44 +37,44 @@ class ResponseType(Enum):
 
 
 class PacketHeader:
-    REQUEST = "request"
-    RESPONSE = "response"
+    REQUEST = "Request"
+    RESPONSE = "Response"
 
 
 class RequestField:
     class Item:
-        META = "meta"
+        META = "Meta"
 
     class ItemBox:
-        CHOICE = "choice"
+        CHOICE = "Choice"
 
     class User:
-        META = "meta"
-        ITEM = "item"
-        HOME = "home"
-        SAVE = "save"
-        ID = "id"
-        NAME = "name"
-        FLAG = "flag"
+        META = "Meta"
+        ITEM = "Item"
+        HOME = "Home"
+        SAVE = "Save"
+        ID = "UserId"
+        NAME = "Name"
+        FLAG = "Flag"
 
     class Home:
-        META = "meta"
-        GRID = "grid"
-        BIODOME = "biodome"
-        NAME = "name"
+        META = "Meta"
+        GRID = "Grid"
+        BIODOME = "Biodome"
+        NAME = "Name"
 
 
 class ResponseField:
     BIODOMES = "Biodomes"
 
     class Queue:
-        MATCH = "match"
+        MATCH = "Match"
 
     class ItemBox:
-        DATA = "data"
+        DATA = "Data"
 
     class Generic:
-        DEBUG = "debug"
+        DEBUG = "Debug"
         RESULTS = "Results"
 
         class Error:
