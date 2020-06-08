@@ -1,4 +1,6 @@
-from typing import Any, Dict
+from csv import DictWriter
+from datetime import datetime
+from typing import Any, Dict, List
 from time import perf_counter
 from db_properties import UserAttr
 from internal import generate_id
@@ -34,40 +36,45 @@ class TestPerformance:
     alive: str = ""
 
     @classmethod
-    def run_handler(cls, request: Dict[str, Any], test_name: str) -> None:
-        t_ = perf_counter()
+    def run_handler(cls, request: Dict[str, Any], test_name: str) -> Dict[str, str]:
+        t1 = perf_counter()
         output_str: str = lambda_handler(request, None)
-        end = perf_counter()
+        end1 = perf_counter()
         cls.alive = output_str
-        t__ = perf_counter()
+        t2 = perf_counter()
         for _ in test_range:
             output_str: str = lambda_handler(request, None)
-        _end = perf_counter()
+        end2 = perf_counter()
         print(
-            f"'{test_name}'\t:\tsingle {((end-t_)*1000000):.1f}µs\tx100k {_end-t__:.3f}s"
+            f"'{test_name}'\t:\tx1 {((end1-t1)*1000000):.1f}us\tx{test_range[-1]+1} {end2-t2:.3f}s"
         )
         cls.alive = output_str
+        return {
+            "Name": test_name,
+            "x1": f"{((end1-t1)*1000000):.1f}us",
+            f"x{test_range[-1]+1}": f"{end2-t2:.3f}s",
+        }
 
     @classmethod
-    def test_debug(cls) -> None:
-        cls.run_handler(debug_request, debug_name)
-
-    @classmethod
-    def test_error(cls) -> None:
-        cls.run_handler(error_request, error_name)
-
-    @classmethod
-    def test_generic(cls) -> None:
-        cls.run_handler(generic_request, generic_name)
-
-    @classmethod
-    def test_z(cls) -> None:
-        cls.run_handler(debug_request, debug_name)
-        cls.run_handler(error_request, error_name)
-        cls.run_handler(generic_request, generic_name)
+    def test_requests(cls) -> List[Dict[str, str]]:
+        return [
+            cls.run_handler(generic_request, generic_name),
+            cls.run_handler(error_request, error_name),
+            cls.run_handler(debug_request, debug_name),
+        ]
 
 
-# TestPerformance.test_z()
+# batch_one = TestPerformance.test_requests()
 # print()
-# TestPerformance.test_z()
+# batch_two = TestPerformance.test_requests()
 # print("\nIt's all ogre now.")
+#
+#
+# data = batch_one + batch_two
+# with open(f"results-{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}.txt", "w") as r_file:
+#     csv_writer = DictWriter(
+#         r_file, fieldnames=["Name", "x1", f"x{test_range[-1]+1}"], delimiter="\t"
+#     )
+#     csv_writer.writeheader()
+#     for entry in data:
+#         csv_writer.writerow(entry)
