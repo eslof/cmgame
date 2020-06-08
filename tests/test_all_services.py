@@ -125,14 +125,9 @@ class TestAllServices(TestCase):
                 routes and type(routes) is dict,
                 f"{name}: Invalid routes dict: '{routes}'.",
             )
-            # TODO: figure out which of these are actually necessary @001
             self.assertTrue(
                 request_enum
-                and isclass(request_enum)
-                and issubclass(request_enum, Enum)
                 and isinstance(request_enum, EnumMeta)
-                and not isinstance(request_enum, Enum)
-                and isinstance(request_enum, Sized)
                 and len(request_enum),
                 f"{name}: Invalid request enum: '{request_enum}'.",
             )
@@ -146,10 +141,8 @@ class TestAllServices(TestCase):
 
             # region Assert that all entries in routes dict are valid
             for key in routes:
-                # TODO: see @001
                 self.assertTrue(
                     isinstance(key, Enum)
-                    and not isinstance(key, EnumMeta)
                     and type(key) is request_enum
                     and key in request_enum,
                     f"{name}: Invalid entry: '{key}' in '{routes}'"
