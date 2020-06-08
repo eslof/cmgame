@@ -1,11 +1,8 @@
 from enum import unique, auto, Enum
 from typing import Dict
-
-from router import Route, route
-from view import View
 #set($request = "")
+#set($comment = '# noqa')
 #set($sc = ${StringUtils.removeUnderScores($service)})
-#set($sl = $service.toLowerCase())
 #set($ns = $requests.replace(" ", ""))
 #set($rl = $ns.split(","))
 #set($rm = {})
@@ -24,9 +21,11 @@ from view import View
 #end##
 
 #foreach($request in $rm)
-    from ${sl}.${request.lower} import ${request.camel}
+from ${request.lower} import ${request.camel}
 #end##
 
+from router import Route, route
+from view import View
 
 @unique
 class ${sc}Request(Enum):
@@ -44,5 +43,5 @@ routes: Dict[Enum, Route] = {
 
 
 @route(routes, ${sc}Request)
-def lambda_handler(event, context):
+def lambda_handler(event, context):  ${comment}
     pass

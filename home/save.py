@@ -1,5 +1,6 @@
 from typing import no_type_check, Dict
 
+from config import Config
 from database import db_update
 from db_properties import TableKey, TablePartition, UserAttr, HomeAttr
 from internal import validate_meta, end
@@ -31,6 +32,9 @@ class Save(RequestHandler):
         if not user_data:
             end("Unable to retrieve current home for user.")
         validate_meta(
-            target=event, field=RequestField.Home.META, message="Home Save API (META)"
+            target=event,
+            field=RequestField.Home.META,
+            max_size=Config.HOME_META_LIMIT,
+            message="Home Save API (META)",
         )
         return user_data

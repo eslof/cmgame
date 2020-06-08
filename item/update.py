@@ -1,7 +1,8 @@
 from typing import Dict, no_type_check
 
 from db_properties import UserAttr
-from internal import validate_meta, end
+from internal import end, validate_meta
+from config import Config
 from helper.home_helper import HomeHelper
 from helper.internal_helper import InternalHelper
 from properties import RequestField
@@ -29,6 +30,7 @@ class Update(RequestHandler):
         validate_meta(
             target=event,
             field=RequestField.Item.META,
+            max_size=Config.GRID_META_LIMIT,
             message="Item Update API (META)",
         )
         user_data = User.get(user_id, UserAttr.CURRENT_HOME)

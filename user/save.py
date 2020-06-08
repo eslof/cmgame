@@ -1,6 +1,7 @@
 from enum import Enum, unique, auto
 from typing import no_type_check
 
+from config import Config
 from country import Country
 from db_properties import UserAttr
 from internal import validate_field, validate_request, validate_meta, end
@@ -53,7 +54,12 @@ class Save(RequestHandler):
             message = "User Save API (FLAG)"
 
         if req == SaveRequest.META:
-            validate_meta(event, RequestField.User.META, "User Save API (META)")
+            validate_meta(
+                target=event,
+                field=RequestField.User.META,
+                max_size=Config.USER_META_LIMIT,
+                message="User Save API (META)",
+            )
         else:
             if None in (field, validation, message):
                 end("User Save API (NON-META)")

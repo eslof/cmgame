@@ -45,7 +45,7 @@ def wrapper(
 def route(
     routes: ROUTES_TYPE, request_enum: EnumMeta
 ) -> Callable[[Callable[[Dict[str, Any], Any], None]], Callable[..., str]]:
-    @no_type_check  # keeps lambda_function unused parameters quiet
+    @no_type_check  # keeps lambda_function no return type quiet
     def inner(
         f: Callable[[Dict[str, Any], Dict[str, Any]], None]
     ) -> Callable[..., str]:

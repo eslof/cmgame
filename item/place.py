@@ -1,5 +1,6 @@
 from typing import no_type_check, Union, Dict
 
+from config import Config
 from db_properties import UserAttr
 from internal import validate_field, validate_meta, end
 from helper.home_helper import HomeHelper
@@ -28,7 +29,10 @@ class Place(RequestHandler):
     def validate(event, user_id) -> Dict[str, Union[int, str]]:
         InternalHelper.validate_grid_request(event, "Item Place API (GRID SLOT)")
         validate_meta(
-            target=event, field=RequestField.Item.META, message="Item Place API (META)",
+            target=event,
+            field=RequestField.Item.META,
+            max_size=Config.GRID_META_LIMIT,
+            message="Item Place API (META)",
         )
         user_data = User.get(
             user_id, f"{UserAttr.INVENTORY_COUNT}, {UserAttr.CURRENT_HOME}",

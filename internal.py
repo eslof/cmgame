@@ -2,9 +2,9 @@ import random
 from enum import EnumMeta, Enum
 from typing import Dict, Callable, Any, Union
 
-from botocore.exceptions import ClientError  # type: ignore
+from botocore.exceptions import ClientError  # noqa
 
-from db_properties import UserAttr, HomeAttr
+from config import Config
 from properties import Constants, PacketHeader, GameException
 from view import View
 
@@ -35,7 +35,6 @@ def generate_id(prefix: str) -> str:
 
 
 def validate_request(target: Dict[str, Any], request_enum: EnumMeta) -> Enum:
-    """validate_field wrapper for given enum used for base requests in all lambda_function.py files."""
     validate_field(
         target=target,
         field=PacketHeader.REQUEST,
@@ -58,8 +57,9 @@ def validate_field(
         end(f"Failed validation ({message}): {field} = {str(target[field])}")
 
 
-def validate_meta(target: Dict[str, Any], field: str, message: str) -> None:
-    max_size = 512 if field not in META_SIZE_LIMIT else META_SIZE_LIMIT[field]
+def validate_meta(
+    target: Dict[str, Any], field: str, max_size: int, message: str
+) -> None:
     validate_field(
         target=target,
         field=field,
