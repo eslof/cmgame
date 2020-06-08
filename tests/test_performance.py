@@ -67,7 +67,7 @@ class TestPerformance:
         cls.run_handler(generic_request, generic_name)
 
 
-TestPerformance.test_z()
-print()
-TestPerformance.test_z()
-print("\nIt's all ogre now.")
+# TestPerformance.test_z()
+# print()
+# TestPerformance.test_z()
+# print("\nIt's all ogre now.")
