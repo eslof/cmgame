@@ -22,10 +22,15 @@ class Route:
 ROUTES_TYPE = Dict[Enum, Route]
 
 
-# verbose version of this function commented out at bottom of file
 def _handler(
     routes: ROUTES_TYPE, request_enum: EnumMeta, event: Dict[str, Any],
 ) -> str:
+    # req: Enum = validate_request(event, request_enum)
+    # _route: Route = routes[req]
+    # user_id: Optional[str] = User.validate_id(event) if _route.require_id else None
+    # valid_data: Any = _route.handler.validate(event, user_id)
+    # output: Any = _route.handler.run(event, user_id, valid_data or None)
+    # return _route.output(output)
     _route: Route = routes[validate_request(event, request_enum)]
     user_id: Optional[str] = UserUtils.validate_id(event) if _route.require_id else None
     return _route.output(
@@ -59,14 +64,3 @@ def route(
         return route_decorated
 
     return inner
-
-
-# def __handler(
-#     routes: ROUTES_TYPE, request_enum: EnumMeta, event: Dict[str, Any],
-# ) -> str:
-#     req: Enum = validate_request(event, request_enum)
-#     _route: Route = routes[req]
-#     user_id: Optional[str] = User.validate_id(event) if _route.require_id else None
-#     valid_data: Any = _route.handler.validate(event, user_id)
-#     output: Any = _route.handler.run(event, user_id, valid_data or None)
-#     return _route.output(output)
