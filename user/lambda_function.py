@@ -3,10 +3,10 @@ from typing import Dict
 
 from properties import ResponseType, ResponseField
 from router import Route, route
-from user.data import Data
-from user.delete import Delete
-from user.new import New
-from user.save import Save
+from data import Data
+from delete import Delete
+from new import New
+from save import Save
 from view import View
 
 
@@ -28,9 +28,7 @@ routes: Dict[Enum, Route] = {
     UserRequest.DELETE: Route(Delete, View.generic),
     UserRequest.NEW: Route(
         handler=New,
-        output=lambda value: View.response(
-            response_type=ResponseType.WELCOME, data=value,
-        ),
+        output=lambda value: View.response(response_type=ResponseType.NEW, data=value),
         require_id=False,
     ),
     UserRequest.SAVE: Route(Save, View.generic),
@@ -38,5 +36,5 @@ routes: Dict[Enum, Route] = {
 
 
 @route(routes, UserRequest)
-def lambda_handler(event, context):
+def lambda_handler(event, context):  # noqa
     pass

@@ -49,6 +49,19 @@ class TestTestService(TestCase):
         }
         self.run_handler(request, expected_output, "View.debug")
 
+    def test_error(self) -> None:
+        error_message = "hello world"
+        request = {
+            PacketHeader.REQUEST: TestRequest.THREE.value,
+            ResponseField.Generic.Error.MESSAGE: error_message,
+        }
+        expected_output = {
+            PacketHeader.RESPONSE: ResponseType.ERROR.value,
+            ResponseField.Generic.Error.TYPE: GameException.__name__,
+            ResponseField.Generic.Error.MESSAGE: error_message,
+        }
+        self.run_handler(request, expected_output, "View.error")
+
     def test_generic(self) -> None:
         request = {
             PacketHeader.REQUEST: TestRequest.TWO.value,
@@ -59,16 +72,3 @@ class TestTestService(TestCase):
             ResponseField.Generic.RESULTS: request[ResponseField.Generic.RESULTS],
         }
         self.run_handler(request, expected_output, "View.generic")
-
-    def test_error(self) -> None:
-        error_message = "hello world"
-        request = {
-            PacketHeader.REQUEST: TestRequest.THREE.value,
-            ResponseField.Generic.ERROR_MESSAGE: error_message,
-        }
-        expected_output = {
-            PacketHeader.RESPONSE: ResponseType.ERROR.value,
-            ResponseField.Generic.ERROR_TYPE: GameException.__name__,
-            ResponseField.Generic.ERROR_MESSAGE: error_message,
-        }
-        self.run_handler(request, expected_output, "View.error")

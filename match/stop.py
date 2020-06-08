@@ -2,7 +2,7 @@ from typing import no_type_check
 
 from db_properties import UserAttr
 from internal import end
-from match.helper.match_helper import MatchHelper
+from helper.match_helper import MatchHelper
 from request_handler import RequestHandler
 from user_utils import User
 

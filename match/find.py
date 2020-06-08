@@ -2,7 +2,7 @@ from typing import no_type_check, Dict, Union
 
 from db_properties import UserAttr
 from internal import end, web_socket_endpoint
-from match.helper.match_helper import MatchHelper
+from helper.match_helper import MatchHelper
 from request_handler import RequestHandler
 from user_utils import User
 

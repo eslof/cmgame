@@ -1,10 +1,11 @@
 from typing import no_type_check, List, Union, Dict
 
+from config import Config
 from db_properties import UserAttr
 from internal import validate_field, end
-from itembox.helper.item_helper import ItemHelper
-from itembox.helper.user_helper import UserHelper
-from properties import RequestField, Constants
+from helper.item_helper import ItemHelper
+from helper.user_helper import UserHelper
+from properties import RequestField
 from request_handler import RequestHandler
 from user_utils import User
 
@@ -14,7 +15,9 @@ class Accept(RequestHandler):
     @no_type_check
     def run(event, user_id, valid_data) -> bool:
         seed = ItemHelper.itembox_seed(user_id, valid_data[UserAttr.KEY_USED_COUNT])
-        item_id = ItemHelper.get_choice(valid_data[RequestField.ItemBox.CHOICE], seed)
+        item_id = ItemHelper.get_choice_id(
+            valid_data[RequestField.ItemBox.CHOICE], seed
+        )
         if item_id in valid_data[UserAttr.INVENTORY]:
             results = UserHelper.handle_duplicate_item(user_id)
         else:
@@ -30,7 +33,7 @@ class Accept(RequestHandler):
             target=event,
             field=RequestField.ItemBox.CHOICE,
             validation=lambda value: type(value) is int
-            and 1 <= value <= Constants.ItemBox.ITEM_COUNT,
+            and 1 <= value <= Config.ITEM_BOX_SIZE,
             message="ItemBox Accept API",
         )
         user_data = User.get(

@@ -1,6 +1,3 @@
-from typing import Dict
-
-
 class RateException(Exception):
     pass
 
@@ -50,11 +47,8 @@ class HomeAttr:
         META = "meta"
 
 
-META_SIZE_LIMIT: Dict[str, int] = {
-    UserAttr.META: 2048,
-    HomeAttr.META: 2048,
-    HomeAttr.GridSlot.META: 1024,
-}
+class ArchiveAttr(UserAttr):
+    ARCHIVE_REASON = "archive_reason"
 
 
 class TableKey:

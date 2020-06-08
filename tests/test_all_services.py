@@ -44,13 +44,13 @@ class TestAllServices(TestCase):
                     # region SubTest for each folder in root with lambda_function
                     with self.subTest(directory):
                         # region Assert lambda_handler exists and is decorated
-                        service = importlib.import_module(
-                            f"{directory}.{self.LAMBDA_FILE_NAME}"
-                        )
+                        owd = os.getcwd()
+                        os.chdir(f"../{directory}")
+                        service = importlib.import_module(f"{self.LAMBDA_FILE_NAME}")
                         self.assertTrue(
                             hasattr(service, self.LAMBDA_HANDLER_NAME),
-                            f"{directory}: Missing '{self.LAMBDA_HANDLER_NAME}' "
-                            f"in module '{directory}.{self.LAMBDA_FILE_NAME}'",
+                            f"{directory}: Missing '{self.LAMBDA_HANDLER_NAME}'"
+                            f" in module '{self.LAMBDA_FILE_NAME}'",
                         )
                         func = getattr(service, self.LAMBDA_HANDLER_NAME)
                         self.assertTrue(
@@ -58,11 +58,12 @@ class TestAllServices(TestCase):
                             and hasattr(func, "__decorated__")
                             and func.__decorated__
                             and func.__decorated__ == "route",
-                            f"{directory}: Undecorated '{self.LAMBDA_HANDLER_NAME}' "
-                            f"in module '{directory}.{self.LAMBDA_FILE_NAME}'",
+                            f"{directory}: Undecorated '{self.LAMBDA_HANDLER_NAME}'"
+                            f" in module '{self.LAMBDA_FILE_NAME}'",
                         )
                         # endregion
                         self.lambda_handler_subTest(func, service, directory)
+                        os.chdir(owd)
                     # endregion
         print("End of implementation test for all services.")
 
@@ -77,8 +78,8 @@ class TestAllServices(TestCase):
             # TODO: this kinda feels unnecessary
             self.assertTrue(
                 RequestHandler and isclass(RequestHandler),
-                f"{name}: Broken or missing RequestHandler base: "
-                f"'{RequestHandler}'.",
+                f"{name}: Broken or missing RequestHandler base:"
+                f" '{RequestHandler}'.",
             )
             # endregion
 
@@ -88,8 +89,8 @@ class TestAllServices(TestCase):
                 and isclass(handler)
                 and issubclass(handler, RequestHandler)
                 and not (handler is RequestHandler),
-                f"{name}: Invalid inheritance: '{handler}' "
-                f"must derive '{RequestHandler}'.",
+                f"{name}: Invalid inheritance: '{handler}'"
+                f" must derive '{RequestHandler}'.",
             )
             # endregion
 
@@ -99,8 +100,8 @@ class TestAllServices(TestCase):
                 routes[enum]
                 and isinstance(routes[enum], router.Route)
                 and not (routes[enum] is router.Route),
-                f"{name}: Invalid route: '{routes[enum]}' not instance of "
-                f"d'{router.Route}' in '{routes}' at '{enum}'.",
+                f"{name}: Invalid route: '{routes[enum]}' not instance of"
+                f" '{router.Route}' in '{routes}' at '{enum}'.",
             )
             # endregion
 
@@ -138,8 +139,8 @@ class TestAllServices(TestCase):
             self.assertTrue(
                 hasattr(request_enum, "__module__")
                 and request_enum.__module__
-                and request_enum.__module__ == f"{name}.{self.LAMBDA_FILE_NAME}",
-                f"{name}: Incorrect request enum: '{request_enum}' defined in '{request_enum.__module__}'",
+                and request_enum.__module__ == f"{self.LAMBDA_FILE_NAME}",
+                f"{name}: Incorrect request enum: '{request_enum}' not in '{self.LAMBDA_FILE_NAME}'.",
             )
             # endregion
 

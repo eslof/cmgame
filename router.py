@@ -1,4 +1,3 @@
-import os
 from enum import Enum, EnumMeta
 from functools import wraps
 from typing import Callable, Optional, Any, Dict, Type, no_type_check
@@ -23,6 +22,7 @@ class Route:
 ROUTES_TYPE = Dict[Enum, Route]
 
 
+# verbose version of this function commented out at bottom of file
 def _handler(
     routes: ROUTES_TYPE, request_enum: EnumMeta, event: Dict[str, Any],
 ) -> str:
@@ -33,7 +33,6 @@ def _handler(
     )
 
 
-# TODO: figure out how we need context
 def wrapper(
     routes: ROUTES_TYPE,
     request_enum: EnumMeta,
@@ -43,13 +42,10 @@ def wrapper(
     return _handler(routes, request_enum, event)
 
 
-# Union[str, int, float, bool, None, Dict[str, Any], List[Any]]
-
-
 def route(
     routes: ROUTES_TYPE, request_enum: EnumMeta
 ) -> Callable[[Callable[[Dict[str, Any], Any], None]], Callable[..., str]]:
-    @no_type_check
+    @no_type_check  # keeps lambda_function unused parameters quiet
     def inner(
         f: Callable[[Dict[str, Any], Dict[str, Any]], None]
     ) -> Callable[..., str]:
@@ -63,3 +59,14 @@ def route(
         return route_decorated
 
     return inner
+
+
+# def __handler(
+#     routes: ROUTES_TYPE, request_enum: EnumMeta, event: Dict[str, Any],
+# ) -> str:
+#     req: Enum = validate_request(event, request_enum)
+#     _route: Route = routes[req]
+#     user_id: Optional[str] = User.validate_id(event) if _route.require_id else None
+#     valid_data: Any = _route.handler.validate(event, user_id)
+#     output: Any = _route.handler.run(event, user_id, valid_data or None)
+#     return _route.output(output)

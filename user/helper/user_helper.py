@@ -1,15 +1,16 @@
 from typing import Any, Dict, List, Union, Optional
 
+from config import Config
 from database import db_put, db_update
 from db_properties import TableKey, TablePartition, UserAttr
 from internal import generate_id
-from item_factory import DBItem
-from properties import Constants, ResponseField, starting_inventory
+from item_properties import DBItem
+from properties import Constants, ResponseField
 
 
 class UserHelper:
     @staticmethod
-    def welcome_attributes() -> str:
+    def data_attributes() -> str:
         return ", ".join(
             [
                 UserAttr.NAME,
@@ -17,6 +18,7 @@ class UserHelper:
                 UserAttr.META,
                 UserAttr.HOMES,
                 UserAttr.INVENTORY,
+                UserAttr.KEY_COUNT,
             ]
         )
 
@@ -38,6 +40,7 @@ class UserHelper:
             ResponseField.User.NAME: user_data[UserAttr.NAME],
             ResponseField.User.FLAG: user_data[UserAttr.FLAG],
             ResponseField.User.META: user_data[UserAttr.META],
+            ResponseField.User.KEYS: user_data[UserAttr.KEY_COUNT],
             ResponseField.User.HOMES: homes,
             ResponseField.User.INVENTORY: inventory,
             ResponseField.BIODOMES: biodomes,
@@ -57,8 +60,8 @@ class UserHelper:
             UserAttr.HOME_COUNT: 0,
             UserAttr.KEY_COUNT: Constants.User.STARTING_KEY_COUNT,
             UserAttr.KEY_USED_COUNT: 0,
-            UserAttr.INVENTORY: starting_inventory,
-            UserAttr.INVENTORY_COUNT: len(starting_inventory),
+            UserAttr.INVENTORY: Config.STARTING_INVENTORY,
+            UserAttr.INVENTORY_COUNT: len(Config.STARTING_INVENTORY),
         }
 
     @classmethod

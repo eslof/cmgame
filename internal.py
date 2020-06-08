@@ -4,7 +4,7 @@ from typing import Dict, Callable, Any, Union
 
 from botocore.exceptions import ClientError  # type: ignore
 
-from db_properties import META_SIZE_LIMIT
+from db_properties import UserAttr, HomeAttr
 from properties import Constants, PacketHeader, GameException
 from view import View
 

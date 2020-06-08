@@ -1,9 +1,9 @@
 from typing import Dict, no_type_check
 
-from Config import Config
+from config import Config
 from db_properties import UserAttr
-from home.helper.home_helper import HomeHelper
-from home.helper.user_helper import UserHelper
+from helper.home_helper import HomeHelper
+from helper.user_helper import UserHelper
 from internal import validate_field, end
 from properties import RequestField, Constants
 from request_handler import RequestHandler
@@ -35,7 +35,7 @@ class New(RequestHandler):
         user_data = User.get(user_id, UserAttr.HOME_COUNT)
         if not user_data:
             end("Unable to retrieve home count for user.")
-        if user_data[UserAttr.HOME_COUNT] >= Constants.User.HOME_COUNT_MAX:
+        if user_data[UserAttr.HOME_COUNT] >= Config.HOME_COUNT_MAX:
             end("Maximum homes reached.")
         validate_field(
             target=event,

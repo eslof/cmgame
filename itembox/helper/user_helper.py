@@ -6,7 +6,7 @@ class UserHelper:
     @staticmethod
     def handle_new_item(user_id: str, item_id: int) -> bool:
         return db_update(
-            Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id,},
+            Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
             UpdateExpression=(
                 "set #inventory = list_append(#inventory, :item_id), "
                 "#key_count = #key_count - 1, "

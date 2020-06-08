@@ -1,9 +1,9 @@
 from enum import unique, Enum, auto
 from typing import Dict
 
-from match.enlist import Enlist
-from match.find import Find
-from match.stop import Stop
+from enlist import Enlist
+from find import Find
+from stop import Stop
 from properties import ResponseType, ResponseField
 from router import Route, route
 from view import View
@@ -36,5 +36,5 @@ routes: Dict[Enum, Route] = {
 
 
 @route(routes, MatchRequest)
-def lambda_handler(event, context):
+def lambda_handler(event, context):  # noqa
     pass

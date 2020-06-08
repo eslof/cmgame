@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from boto3.dynamodb.conditions import Attr
+from boto3.dynamodb.conditions import Attr  # noqa
 
-from database import db_get, db_scan, db_delete, db_update, db_put
+from database import db_scan, db_delete, db_update, db_put
 from db_properties import TableKey, TablePartition, MatchAttr
 from properties import Constants
 
@@ -29,13 +29,13 @@ class MatchHelper:
     @staticmethod
     def delete(match_id):
         return db_delete(
-            Key={TableKey.PARTITION: TablePartition.MATCH, TableKey.SORT: match_id,}
+            Key={TableKey.PARTITION: TablePartition.MATCH, TableKey.SORT: match_id}
         )
 
     @staticmethod
     def claim(match_id, user_id):
         return db_update(
-            Key={TableKey.PARTITION: TablePartition.MATCH, TableKey.SORT: match_id,},
+            Key={TableKey.PARTITION: TablePartition.MATCH, TableKey.SORT: match_id},
             UpdateExpression="SET #finder_id = :user_id",
             ConditionExpression=f"attribute_exists(#id) AND #finder_id = :empty",
             ExpressionAttributeValues={":user_id": user_id, ":empty": ""},
@@ -71,7 +71,7 @@ class MatchHelper:
         return db_update(
             Key={TableKey.PARTITION: TablePartition.MATCH, TableKey.SORT: match_id},
             UpdateExpression="SET #sort = :new_match_id",
-            ExpressionAttributeNames={"#sort": TableKey.SORT,},
-            ExpressionAttributeValues={":new_match_id": new_id,},
+            ExpressionAttributeNames={"#sort": TableKey.SORT},
+            ExpressionAttributeValues={":new_match_id": new_id},
             ReturnValues="ALL_NEW",
         )

@@ -2,7 +2,7 @@ from typing import no_type_check
 
 from internal import end
 from request_handler import RequestHandler
-from user.helper.user_helper import UserHelper
+from helper.user_helper import UserHelper
 
 
 class Delete(RequestHandler):

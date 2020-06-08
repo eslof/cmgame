@@ -2,8 +2,8 @@ from typing import no_type_check, Dict
 
 from db_properties import UserAttr
 from internal import end
-from item.helper.home_helper import HomeHelper
-from item.helper.internal_helper import InternalHelper
+from helper.home_helper import HomeHelper
+from helper.internal_helper import InternalHelper
 from properties import RequestField
 from request_handler import RequestHandler
 from user_utils import User

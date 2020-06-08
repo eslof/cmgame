@@ -1,9 +1,9 @@
 from enum import unique, auto, Enum
 from typing import Dict
 
-from item.clear import Clear
-from item.place import Place
-from item.update import Update
+from clear import Clear
+from place import Place
+from update import Update
 from router import route, Route
 from view import View
 
@@ -23,5 +23,5 @@ routes: Dict[Enum, Route] = {
 
 
 @route(routes, ItemRequest)
-def lambda_handler(event, context):
+def lambda_handler(event, context):  # noqa
     pass

@@ -1,9 +1,8 @@
 from enum import Enum, auto, unique
 from typing import Dict
 
-from item_factory import ItemAttr
-from itembox.accept import Accept
-from itembox.demand import Demand
+from accept import Accept
+from demand import Demand
 from properties import ResponseType, ResponseField
 from router import Route, route
 from view import View
@@ -17,9 +16,7 @@ class ItemBoxRequest(Enum):
 
 # TODO: system under rework
 routes: Dict[Enum, Route] = {
-    ItemBoxRequest.ACCEPT: Route(
-        handler=Accept, output=lambda value: View.generic(True),
-    ),
+    ItemBoxRequest.ACCEPT: Route(handler=Accept, output=View.generic),
     ItemBoxRequest.DEMAND: Route(
         handler=Demand,
         output=lambda value: View.response(
@@ -31,5 +28,5 @@ routes: Dict[Enum, Route] = {
 
 
 @route(routes, ItemBoxRequest)
-def lambda_handler(event, context):
+def lambda_handler(event, context):  # noqa
     pass

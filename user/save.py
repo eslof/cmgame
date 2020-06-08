@@ -17,8 +17,6 @@ class SaveRequest(Enum):
 
 
 class Save(RequestHandler):
-    """User requests to save changes made to one of the user's settings or profile."""
-
     @staticmethod
     @no_type_check
     def run(event, user_id, valid_data) -> bool:

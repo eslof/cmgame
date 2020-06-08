@@ -19,7 +19,7 @@ debug_name = "test.one:View.debug"
 error_message = "hello world"
 error_request = {
     PacketHeader.REQUEST: TestRequest.THREE.value,
-    ResponseField.Generic.ERROR_MESSAGE: error_message,
+    ResponseField.Generic.Error.MESSAGE: error_message,
 }
 error_name = "test.three:View.error"
 generic_request = {

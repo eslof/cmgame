@@ -9,7 +9,6 @@ from properties import RequestField, Constants
 class User:
     @staticmethod
     def validate_id(event: Dict[str, str]) -> str:
-        # TODO: real user authentication
         validate_field(
             target=event,
             field=RequestField.User.ID,

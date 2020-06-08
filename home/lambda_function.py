@@ -2,10 +2,10 @@ from enum import auto, unique, Enum
 from typing import Dict
 
 from db_properties import HomeAttr
-from home.delete import Delete
-from home.go import Go
-from home.new import New
-from home.save import Save
+from delete import Delete
+from go import Go
+from new import New
+from save import Save
 from properties import ResponseField, ResponseType
 from router import route, Route
 from view import View
@@ -37,5 +37,5 @@ routes: Dict[Enum, Route] = {
 
 
 @route(routes, HomeRequest)
-def lambda_handler(event, context):
+def lambda_handler(event, context):  # noqa
     pass

@@ -4,14 +4,10 @@ from country import Country
 from internal import validate_field, end
 from properties import RequestField, Constants, ResponseField
 from request_handler import RequestHandler
-from .helper.item_helper import ItemHelper
-from .helper.user_helper import UserHelper
+from helper.user_helper import UserHelper
 
 
 class New(RequestHandler):
-    """We are blessed with a new user, make sure he has a good time.
-    New user is added and receive: A list of starting items, a list of biodomes for a home, and his ID/token."""
-
     @staticmethod
     @no_type_check
     def run(event, user_id, valid_data) -> dict:
@@ -20,10 +16,7 @@ class New(RequestHandler):
         )
         if not new_id:
             end("Unable to create new user.")
-        return {
-            ResponseField.User.ID: new_id,
-            ResponseField.User.WELCOME: ItemHelper.welcome_info(),
-        }
+        return {ResponseField.User.ID: new_id}
 
     @staticmethod
     @no_type_check

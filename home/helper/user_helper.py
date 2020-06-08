@@ -1,14 +1,14 @@
 from typing import Any, Dict
 
+from config import Config
 from database import db_update
 from db_properties import TableKey, TablePartition, UserAttr
-from properties import Constants
 
 
 class UserHelper:
     # TODO: under construction
     @staticmethod
-    def template_home(home_id: str, name: str, biodome: int) -> Dict[str, Any]:
+    def _template_home(home_id: str, name: str, biodome: int) -> Dict[str, Any]:
         return {
             UserAttr.Home.ID: home_id,
             UserAttr.Home.NAME: name,
@@ -30,7 +30,7 @@ class UserHelper:
             },
             ExpressionAttributeValues={
                 ":one": 1,
-                ":max_homes": Constants.User.HOME_COUNT_MAX,
-                ":home": [cls.template_home(home_id, name, biodome)],
+                ":max_homes": Config.HOME_COUNT_MAX,
+                ":home": [cls._template_home(home_id, name, biodome)],
             },
         )

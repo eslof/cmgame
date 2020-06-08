@@ -2,9 +2,9 @@ from enum import unique, auto, Enum
 from typing import Dict
 
 from router import Route, route
-from test.one import One
-from test.three import Three
-from test.two import Two
+from one import One
+from three import Three
+from two import Two
 from view import View
 
 
@@ -23,5 +23,5 @@ routes: Dict[Enum, Route] = {
 
 
 @route(routes, TestRequest)
-def lambda_handler(event, context):
+def lambda_handler(event, context):  # noqa
     pass

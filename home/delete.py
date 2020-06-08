@@ -5,7 +5,7 @@ from internal import validate_field, end
 from properties import RequestField
 from request_handler import RequestHandler
 from user_utils import User
-from .helper.home_helper import HomeHelper
+from helper.home_helper import HomeHelper
 
 
 class Delete(RequestHandler):
