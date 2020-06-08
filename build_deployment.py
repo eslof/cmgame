@@ -20,13 +20,13 @@ for module in LAMBDA_FUNCTION_DIRS:
             if dirname in DIR_EXCLUDE or any(
                 bad_dir in dirname for bad_dir in DIR_EXCLUDE
             ):
+                print(f"skipping {dirname}")
                 continue
 
             stripped_dir = dirname[len(module) + 1 :]
-            if not stripped_dir:
-                continue
+            if stripped_dir:
+                zf.write(dirname, stripped_dir)
 
-            zf.write(dirname, stripped_dir)
             module_files = [
                 name
                 for name in files
