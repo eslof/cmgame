@@ -40,7 +40,9 @@ def publish_layer(name: str, zip_name: str) -> str:
     )
 
 
+# region Not done
 def update_function(name: str) -> Dict[str, Any]:
+    return  # TODO: finish
     with open(f"{ZIP_DIRECTORY}/{name}.zip", "rb") as rb_f:
         data = rb_f.read()
     if not data:
@@ -50,6 +52,7 @@ def update_function(name: str) -> Dict[str, Any]:
 
 
 def create_function(name: str, layer_arn: str) -> Dict[str, Any]:
+    return  # TODO: finish
     with open(f"{ZIP_DIRECTORY}/{name}.zip", "rb") as rb_f:
         data = rb_f.read()
     if not data:
