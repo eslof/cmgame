@@ -4,20 +4,20 @@ from typing import Dict, Any, Optional
 import boto3
 from botocore.exceptions import ClientError
 
-from deployment_properties import ZIP_DIRECTORY
+from deployment_properties import ZIP_DIRECTORY. # todo: chdir
 
 LAMBDA_CLIENT = boto3.client("lambda")
 
 
-def lambda_try(function, *args, **kwargs) -> Optional[Dict[str, Any]]:
+def lambda_try(lambda_function, *args, **kwargs) -> Optional[Dict[str, Any]]:
     try:
-        results = function(*args, **kwargs)
+        results = lambda_function(args, kwargs)
     except ClientError as e:
         return None
     except Exception:
         return None
     else:
-        return results
+        return results or {}
 
 
 def get_layers() -> Dict[str, str]:
@@ -29,7 +29,7 @@ def get_layers() -> Dict[str, str]:
         all(key in layer.keys() for layer in results["Layers"])
         for key in ("LayerName", "LayerArn")
     ):
-        print(f"Unexpected contents: {results}")
+        print(f"Unexpected results: {results}")
         quit()
     layers = results["Layers"]
     if len(layers) == 0:
@@ -46,7 +46,7 @@ def get_functions() -> Dict[str, str]:
         all(key in function.keys() for function in results["Functions"])
         for key in ("FunctionName", "FunctionArn")
     ):
-        print(f"Unexpected contents: {results}")
+        print(f"Unexpected results: {results}")
         quit()
     functions = results["Functions"]
     if len(functions) == 0:
