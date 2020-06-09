@@ -10,8 +10,8 @@ from properties import (
     ResponseType,
     GameException,
 )
-from test.lambda_function import TestRequest
-from test.lambda_function import lambda_handler
+from lambda_function import TestRequest
+from lambda_function import lambda_handler
 from view import View
 
 

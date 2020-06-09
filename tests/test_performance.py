@@ -9,8 +9,8 @@ from properties import (
     RequestField,
     ResponseField,
 )
-from test.lambda_function import TestRequest
-from test.lambda_function import lambda_handler
+from lambda_function import TestRequest
+from lambda_function import lambda_handler
 
 mock_id = generate_id(UserAttr.SORT_KEY_PREFIX)
 debug_request = {
@@ -56,7 +56,7 @@ class TestPerformance:
         }
 
     @classmethod
-    def test_requests(cls) -> List[Dict[str, str]]:
+    def time_requests(cls) -> List[Dict[str, str]]:
         return [
             cls.run_handler(generic_request, generic_name),
             cls.run_handler(error_request, error_name),
