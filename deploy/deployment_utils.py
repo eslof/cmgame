@@ -9,9 +9,9 @@ from deployment_properties import ZIP_DIRECTORY
 LAMBDA_CLIENT = boto3.client("lambda")
 
 
-def lambda_try(function, *args, **kwargs) -> Optional[Dict[str, Any]]:
+def lambda_try(lambda_function, *args, **kwargs) -> Optional[Dict[str, Any]]:
     try:
-        results = function(args, kwargs)
+        results = lambda_function(args, kwargs)
     except ClientError as e:
         return None
     except Exception:
