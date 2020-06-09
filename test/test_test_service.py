@@ -10,6 +10,7 @@ from properties import (
     ResponseType,
     GameException,
 )
+
 from lambda_function import TestRequest
 from lambda_function import lambda_handler
 from view import View
