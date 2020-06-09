@@ -1,5 +1,3 @@
-from csv import DictWriter
-from datetime import datetime
 from typing import Any, Dict, List
 from time import perf_counter
 from db_properties import UserAttr
@@ -64,14 +62,22 @@ class TestPerformance:
         ]
 
 
-# batch_one = TestPerformance.test_requests()
+# import getpass
+# import socket
+# from csv import DictWriter
+# from datetime import datetime
+#
+# batch_one = TestPerformance.time_requests()
 # print()
-# batch_two = TestPerformance.test_requests()
+# batch_two = TestPerformance.time_requests()
 # print("\nIt's all ogre now.")
 #
 #
 # data = batch_one + batch_two
-# with open(f"results-{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}.txt", "w") as r_file:
+# with open(
+#     f"{getpass.getuser()}@{socket.gethostname()}_{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}.txt",
+#     "w",
+# ) as r_file:
 #     csv_writer = DictWriter(
 #         r_file, fieldnames=["Name", "x1", f"x{test_range[-1]+1}"], delimiter="\t"
 #     )
