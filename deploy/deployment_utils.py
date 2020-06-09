@@ -4,7 +4,7 @@ from typing import Dict, Any, Optional
 import boto3
 from botocore.exceptions import ClientError
 
-from deployment_properties import ZIP_DIRECTORY
+from deployment_properties import ZIP_DIRECTORY. # todo: chdir
 
 LAMBDA_CLIENT = boto3.client("lambda")
 
