@@ -4,20 +4,39 @@ from typing import Dict, Any, Optional
 import boto3
 from botocore.exceptions import ClientError
 
-from deployment_properties import ZIP_DIRECTORY. # todo: chdir
+from deployment_properties import ZIP_DIRECTORY, PREFIX  # todo: chdir
 
 LAMBDA_CLIENT = boto3.client("lambda")
 
 
 def lambda_try(lambda_function, *args, **kwargs) -> Optional[Dict[str, Any]]:
     try:
-        results = lambda_function(args, kwargs)
+        results = lambda_function(*args, **kwargs)
+        print(results)
     except ClientError as e:
+        print(e)
         return None
     except Exception:
         return None
     else:
         return results or {}
+
+
+def data_try(directory: str, name: str, tag: str) -> bytes:
+    file_path = f"../{directory}/{name}.zip"
+    if not path.exists(file_path):
+        print(f"({tag}) File not found: {file_path}.")
+        quit()
+    try:
+        with open(file_path, "rb") as file_binary:
+            data = file_binary.read()
+    except IOError as e:
+        print(f"({tag}) IOError when open/read: {file_path}: {e}.")
+        quit()
+    if not data or len(data) <= 0:
+        print(f"({tag}) Data missing or empty: {file_path}.")
+        quit()
+    return data
 
 
 def get_layers() -> Dict[str, str]:
@@ -54,56 +73,46 @@ def get_functions() -> Dict[str, str]:
     return {function["FunctionName"]: function["FunctionArn"] for function in functions}
 
 
-def publish_layer(name: str, zip_name: str) -> str:
-    if not path.exists(zip_name):
-        print(f"Layer zip file not found: {zip_name} for {name}.")
-        quit()
-    with open(f"{ZIP_DIRECTORY}/{zip_name}", "rb") as rb_f:
-        data = rb_f.read()
-    if not data:
-        print(f"Unable to read layer zip file: {zip_name} for {name}.")
-        quit()
-    results = lambda_try(
-        LAMBDA_CLIENT.publish_layer_version,
-        LayerName=name,
-        Content={"ZipFile": data},
-        CompatibleRuntimes=["python3.8"],
-    )
-    if results is None:
-        print(f"Unable to publish layer: {name}.")
-        quit()
-    if "LayerArn" not in results:
-        print(f'Unexpected results: "LayerArn" not in {results}')
-        quit()
-    return results["LayerArn"]  # type: str
+def publish_layer(name: str) -> str:
+    print(f"Publishing layer: {PREFIX}{name}")
+    data = data_try(ZIP_DIRECTORY, name, "Layer")
+    print("Success!")
+    return "SomeArn"
+    # results = lambda_try(
+    #     LAMBDA_CLIENT.publish_layer_version,
+    #     LayerName=name,
+    #     Content={"ZipFile": data},
+    #     CompatibleRuntimes=["python3.8"],
+    # )
+    # if results is None:
+    #     print(f"Unable to publish layer: {name}.")
+    #     quit()
+    # if "LayerArn" not in results:
+    #     print(f'Unexpected results: "LayerArn" not in {results}')
+    #     quit()
+    # return results["LayerArn"]  # type: str
 
 
 # region Not done
 def update_function(name: str) -> Dict[str, Any]:
-    return  # TODO: finish
-    with open(f"{ZIP_DIRECTORY}/{name}.zip", "rb") as rb_f:
-        data = rb_f.read()
-    if not data:
-        print(f"Unable to read zip file: {name}.zip.")
-        raise Exception
-    return LAMBDA_CLIENT.update_function_code(FunctionName=name, ZipFile=data)
+    print(f"Updating function: {PREFIX}{name}")
+    data = data_try(ZIP_DIRECTORY, name, "Function")
+    print("Success!")
+    # return LAMBDA_CLIENT.update_function_code(FunctionName=name, ZipFile=data)
 
 
 def create_function(name: str, layer_arn: str) -> Dict[str, Any]:
-    return  # TODO: finish
-    with open(f"{ZIP_DIRECTORY}/{name}.zip", "rb") as rb_f:
-        data = rb_f.read()
-    if not data:
-        print(f"Unable to read zip file: {name}.zip.")
-        raise Exception
-    return LAMBDA_CLIENT.create_function(
-        FunctionName=name,
-        Runtime="python3.8",
-        Role="cmgame",
-        Handler="lambda_handler",
-        Code={"ZipFile": data},
-        Layers=[layer_arn],
-    )
+    print(f"Creating function: {PREFIX}{name}")
+    data = data_try(ZIP_DIRECTORY, name, "Function")
+    print("Success!")
+    # return LAMBDA_CLIENT.create_function(
+    #     FunctionName=name,
+    #     Runtime="python3.8",
+    #     Role="cmgame",
+    #     Handler="lambda_handler",
+    #     Code={"ZipFile": data},
+    #     Layers=[layer_arn],
+    # )
 
 
 # response = client.delete_function(FunctionName="cmgame-test", Qualifier="string")

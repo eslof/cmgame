@@ -1,28 +1,21 @@
-import os
-
 # region Set up
 from deployment_properties import *
 from deployment_utils import *
 
 functions = get_functions()
 layers = get_layers()
-
-os.chdir("..")
-# endregion
 # region Deploy layer
-if LAYER_NAME in layers.keys():
-    print(f"Updating layer: {LAYER_NAME}.")
+if LAYER in layers.keys():
+    print(f"Updating layer: {PREFIX}{LAYER}.")
 else:
-    print(f"Creating layer: {LAYER_NAME}.")
+    print(f"Creating layer: {PREFIX}{LAYER}.")
 
-layer_arn = publish_layer(LAYER_NAME, LAYER_ZIP)
+layer_arn = publish_layer(LAYER)
 # endregion
 # region Deploy functions
 for function in FUNCTIONS_TO_DEPLOY:
     if function in functions:
-        print(f"Updating function: {function}.")
         update_function(function)
     else:
-        print(f"Creating function: {function}")
         create_function(function, layer_arn)
 # endregion
