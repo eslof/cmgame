@@ -1,5 +1,6 @@
 import json
 from enum import Enum
+from functools import partial
 from json import JSONDecodeError
 from typing import Optional, Any, Dict
 
@@ -7,7 +8,7 @@ from properties import PacketHeader, ResponseType, ResponseField, GameException
 
 
 class View:
-    encode = lambda value: json.dumps(value, separators=(",", ":"))
+    encode = partial(json.dumps, separators=(",", ":"))
     decode = json.loads
     decode_error = JSONDecodeError
 
