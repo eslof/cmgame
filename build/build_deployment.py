@@ -11,15 +11,14 @@ from build_properties import (
     LAMBDA_FUNCTION_DIRS,
 )
 
+os.chdir("..")
 ls = os.listdir(".")
 # endregion
 # region Zip Lambda Functions
 for module in LAMBDA_FUNCTION_DIRS:
     with ZipFile(f"{BUILD_FOLDER}/{module}.zip", "x", ZIP_STORED) as zf:
         for dirname, subdirs, files in os.walk(module):
-            if dirname in DIR_EXCLUDE or any(
-                bad_dir in dirname for bad_dir in DIR_EXCLUDE
-            ):
+            if dirname in DIR_EXCLUDE:
                 print(f"skipping {dirname}")
                 continue
 
