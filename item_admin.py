@@ -2,45 +2,43 @@ from item_db import ItemDB
 from item_properties import ITEM_TABLES, ItemAttr
 
 
-class ItemAdmin(ItemDB):
-    @classmethod
-    def table_count(cls, table_name: ITEM_TABLES) -> int:
-        cls.connect()
+class ItemAdmin:
+    @staticmethod
+    def table_count(table_name: ITEM_TABLES) -> int:
+        ItemDB.connect()
         return next(
             iter(
-                cls.cur.execute(f"SELECT count(ROWID) FROM {table_name}")
+                ItemDB.cur.execute(f"SELECT count(ROWID) FROM {table_name}")
                 .fetchone()
                 .values()
             )
         )
 
-    @classmethod
-    def create_tables(cls):
+    @staticmethod
+    def create_tables():
         with open("item_tables.sql") as if_not_exists:
-            cls.cur.executescript(if_not_exists.read())
+            ItemDB.cur.executescript(if_not_exists.read())
 
-    @classmethod
-    def upsert_bundle(
-        cls, table_name: ITEM_TABLES, bundle_name: str, version: int,
-    ) -> list:
-        cls.connect(False)
+    @staticmethod
+    def upsert_bundle(table_name: ITEM_TABLES, bundle_name: str, version: int,) -> list:
+        ItemDB.connect(False)
         query = (
             f"INSERT INTO {table_name} ({ItemAttr.BUNDLE}, {ItemAttr.VERSION})"
             f" VALUES('{bundle_name}', {version})"
             f" ON CONFLICT({ItemAttr.BUNDLE})"
             f" DO UPDATE SET {ItemAttr.VERSION} = {version}"
         )
-        return cls.cur.execute(query).fetchall()
+        return ItemDB.cur.execute(query).fetchall()
 
-    @classmethod
-    def change_bundle_name(cls, table, old_name, new_name, version=None) -> list:
-        cls.connect(False)
+    @staticmethod
+    def change_bundle_name(table, old_name, new_name, version=None) -> list:
+        ItemDB.connect(False)
         query = (
             f"UPDATE {table}"
             f" SET {ItemAttr.BUNDLE}='{new_name}', {ItemAttr.VERSION}={version or ItemAttr.VERSION}"
             f" WHERE {ItemAttr.BUNDLE}='{old_name}'"
         )
-        return cls.cur.execute(query).fetchall()
+        return ItemDB.cur.execute(query).fetchall()
 
 
 # Items.connect()

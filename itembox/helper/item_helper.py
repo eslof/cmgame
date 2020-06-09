@@ -4,27 +4,26 @@ from typing import List, Dict
 from config import Config
 from item_db import ItemDB
 from item_properties import DBItem
-from properties import Constants
 
 
-class ItemHelper(ItemDB):
-    @classmethod
-    def get_itembox(cls, seed: str) -> List[DBItem]:
-        cls.connect()
+class ItemHelper:
+    @staticmethod
+    def get_itembox(seed: str) -> List[DBItem]:
+        ItemDB.connect()
         random.seed(seed)
-        return cls.conn.execute(
+        return ItemDB.cur.execute(
             "SELECT bundle, version FROM item"
             " ORDER BY CAST(id as TEXT) COLLATE seeded_random"
             f" LIMIT {Config.ITEM_BOX_SIZE}"
         ).fetchall()
 
-    @classmethod
-    def get_choice_id(cls, choice: int, seed: str) -> int:
-        cls.connect()
+    @staticmethod
+    def get_choice_id(choice: int, seed: str) -> int:
+        ItemDB.connect()
         random.seed(seed)
         return next(
             iter(
-                cls.conn.execute(
+                ItemDB.cur.execute(
                     f"SELECT id FROM item ORDER BY CAST(id as TEXT) COLLATE seeded_random LIMIT 1 OFFSET {choice-1}"
                 )
                 .fetchone()

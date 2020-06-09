@@ -5,7 +5,7 @@ from internal import end
 from item_properties import ITEM_DB_PATH
 
 
-class ItemDB:
+class _ItemDB:
     conn: sqlite3.Connection = None
     cur: sqlite3.Cursor = None
 
@@ -37,3 +37,6 @@ class ItemDB:
                 self.conn.create_collation("seeded_random", self.seeded_random)
                 self.conn.row_factory = self.dict_factory
                 self.cur = self.conn.cursor()
+
+
+ItemDB = _ItemDB()
