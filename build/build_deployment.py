@@ -2,14 +2,7 @@ import os
 from zipfile import ZipFile, ZIP_DEFLATED, ZIP_STORED
 
 # region Set-up
-from build_properties import (
-    DIR_EXCLUDE,
-    BUILD_FOLDER,
-    EXT_INCLUDE,
-    EXT_EXCLUDE,
-    LAYER_NAME,
-    LAMBDA_FUNCTION_DIRS,
-)
+from build_properties import *
 
 os.chdir("..")
 ls = os.listdir(".")
