@@ -1,7 +1,6 @@
 import importlib
 import os
 import sys
-from collections.abc import Sized
 from enum import Enum, EnumMeta
 from inspect import isclass
 from types import ModuleType
@@ -64,16 +63,13 @@ class TestAllServices(TestCase):
                             f" in module '{self.LAMBDA_FILE_NAME}'",
                         )
                         # endregion
-                        self.lambda_handler_subTest(func, service, directory)
+                        self.lambda_handler_subTest(func, directory)
                         sys.path.remove(module_path)
                     # endregion
         print("End of implementation test for all services.")
 
     def lambda_handler_subTest(
-        self,
-        lambda_handler: Callable[[Dict[str, Any], Any], None],
-        service: ModuleType,
-        name: str,
+        self, lambda_handler: Callable[[Dict[str, Any], Any], None], name: str,
     ) -> None:
         def test_handler(handler: Type[RequestHandler]) -> None:
             # region Assert that our handler base class is not broken
@@ -121,6 +117,7 @@ class TestAllServices(TestCase):
             request_enum: EnumMeta,
             f: Callable[[Dict[str, Any], Dict[str, Any]], None],
             event: Dict[str, Any],
+            context: Dict[str, Any],
         ) -> str:
             # region Assert rout dict and request enum
             self.assertTrue(

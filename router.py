@@ -1,6 +1,6 @@
 from enum import Enum, EnumMeta
 from functools import wraps
-from typing import Callable, Optional, Any, Dict, Type, no_type_check
+from typing import Callable, Optional, Any, Dict, Type, no_type_check, Protocol
 
 from internal import validate_request
 from request_handler import RequestHandler
@@ -22,6 +22,16 @@ class Route:
 ROUTES_TYPE = Dict[Enum, Route]
 
 
+class LambdaHandler(Protocol):
+    def __call__(self, event: Dict[str, Any], context: Dict[str, Any]) -> str:
+        ...
+
+
+class RouteDecorator(Protocol):
+    def __call__(self, f: LambdaHandler) -> LambdaHandler:
+        ...
+
+
 def _handler(
     routes: ROUTES_TYPE, request_enum: EnumMeta, event: Dict[str, Any],
 ) -> str:
@@ -41,24 +51,19 @@ def _handler(
 def wrapper(
     routes: ROUTES_TYPE,
     request_enum: EnumMeta,
-    f: Callable[[Dict[str, Any], Dict[str, Any]], None],
+    f: LambdaHandler,
     event: Dict[str, Any],
+    context: Dict[str, Any],
 ) -> str:
     return _handler(routes, request_enum, event)
 
 
-def route(
-    routes: ROUTES_TYPE, request_enum: EnumMeta
-) -> Callable[[Callable[[Dict[str, Any], Any], None]], Callable[..., str]]:
-    @no_type_check  # keeps lambda_function no return type quiet
-    def inner(
-        f: Callable[[Dict[str, Any], Dict[str, Any]], None]
-    ) -> Callable[..., str]:
+def route(routes: ROUTES_TYPE, request_enum: EnumMeta) -> RouteDecorator:
+    # @no_type_check  # keeps lambda_function no return type quiet
+    def inner(f: LambdaHandler) -> LambdaHandler:
         @wraps(f)
-        def route_decorated(
-            event: Dict[str, Any], context: Optional[Any]
-        ) -> Optional[str]:
-            return wrapper(routes, request_enum, f, event)
+        def route_decorated(event: Dict[str, Any], context: Dict[str, Any]) -> str:
+            return wrapper(routes, request_enum, f, event, context)
 
         # for tests, should maybe be something more unique
         route_decorated.__decorated__ = "route"
