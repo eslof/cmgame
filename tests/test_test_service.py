@@ -1,3 +1,4 @@
+import sys
 from typing import Any, Dict
 from unittest import TestCase
 
@@ -11,8 +12,14 @@ from properties import (
     GameException,
 )
 
+test_service_path = "../test"
+
+if test_service_path not in sys.path:
+    sys.path.append(test_service_path)
 from lambda_function import TestRequest
 from lambda_function import lambda_handler
+
+sys.path.remove(test_service_path)
 from view import View
 
 

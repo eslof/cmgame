@@ -1,3 +1,4 @@
+import sys
 from typing import Any, Dict, List
 from time import perf_counter
 from db_properties import UserAttr
@@ -7,8 +8,16 @@ from properties import (
     RequestField,
     ResponseField,
 )
+
+test_service_path = "../test"
+
+if test_service_path not in sys.path:
+    sys.path.append(test_service_path)
 from lambda_function import TestRequest
 from lambda_function import lambda_handler
+
+sys.path.remove(test_service_path)
+
 
 mock_id = generate_id(UserAttr.SORT_KEY_PREFIX)
 debug_request = {

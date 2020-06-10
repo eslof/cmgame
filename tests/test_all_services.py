@@ -45,7 +45,9 @@ class TestAllServices(TestCase):
                     # region SubTest for each folder in root with lambda_function
                     with self.subTest(directory):
                         # region Assert lambda_handler exists and is decorated
-                        sys.path.append(f"../{directory}")
+                        module_path = f"../{directory}"
+                        if module_path not in sys.path:
+                            sys.path.append(f"../{directory}")
                         service = importlib.import_module(f"{self.LAMBDA_FILE_NAME}")
                         self.assertTrue(
                             hasattr(service, self.LAMBDA_HANDLER_NAME),
@@ -63,7 +65,7 @@ class TestAllServices(TestCase):
                         )
                         # endregion
                         self.lambda_handler_subTest(func, service, directory)
-                        sys.path.remove(f"../{directory}")
+                        sys.path.remove(module_path)
                     # endregion
         print("End of implementation test for all services.")
 
