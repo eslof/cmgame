@@ -1,10 +1,8 @@
 from os import path
-from typing import Dict, Any, Optional, Callable, Tuple
+from typing import Dict, Any, Optional, Callable
 
-import boto3
-from botocore.exceptions import ClientError
-
-from deployment_properties import ZIP_DIRECTORY
+import boto3  # noqa
+from botocore.exceptions import ClientError  # noqa
 
 LAMBDA_CLIENT = boto3.client("lambda")
 
@@ -23,19 +21,19 @@ def lambda_try(
         return results or {}
 
 
-def data_try(directory: str, name: str, tag: str) -> bytes:
-    file_path = f"../{directory}/{name}.zip"
-    if not path.exists(file_path):
-        print(f"({tag}) File not found: {file_path}.")
+def data_try(zip_name: str, tag: str) -> bytes:
+    file_name = f"{zip_name}.zip"
+    if not path.exists(file_name):
+        print(f"({tag}) File not found: {file_name}.")
         quit()
     try:
-        with open(file_path, "rb") as file_binary:
+        with open(file_name, "rb") as file_binary:
             data = file_binary.read()
     except IOError as e:
-        print(f"({tag}) IOError when open/read: {file_path}: {e}.")
+        print(f"({tag}) IOError when open/read: {file_name}: {e}.")
         quit()
     if not data or len(data) <= 0:
-        print(f"({tag}) Data missing or empty: {file_path}.")
+        print(f"({tag}) Data missing or empty: {file_name}.")
         quit()
     return data
 
@@ -74,9 +72,18 @@ def get_functions() -> Dict[str, str]:
     return {function["FunctionName"]: function["FunctionArn"] for function in functions}
 
 
-def publish_layer(name: str) -> str:
-    print(f"Publishing layer: {name}")
-    data = data_try(ZIP_DIRECTORY, name, "Layer")
+def get_list(deployment_type: str) -> Dict[str, str]:
+    if deployment_type == "function":
+        return get_functions()
+    elif deployment_type == "layer":
+        return get_layers()
+    else:
+        print("Misuse of deployment_utils.get_list().")
+        quit()
+
+
+def publish_layer(function_name: str, zip_name: str) -> Dict[str, Any]:
+    data = data_try(zip_name, "Layer")
     print("Success!")
     return "SomeArn"
     # results = lambda_try(
@@ -95,16 +102,14 @@ def publish_layer(name: str) -> str:
 
 
 # region Not done
-def update_function(name: str) -> Dict[str, Any]:
-    print(f"Updating function: {name}")
-    data = data_try(ZIP_DIRECTORY, name, "Function")
+def update_function(function_name: str, zip_name: str) -> Dict[str, Any]:
+    data = data_try(zip_name, "Function")
     print("Success!")
     # return LAMBDA_CLIENT.update_function_code(FunctionName=name, ZipFile=data)
 
 
-def create_function(name: str, layer_arn: str) -> Dict[str, Any]:
-    print(f"Creating function: {name}")
-    data = data_try(ZIP_DIRECTORY, name, "Function")
+def create_function(function_name: str, zip_name: str) -> Dict[str, Any]:
+    data = data_try(zip_name, "Function")
     print("Success!")
     # return LAMBDA_CLIENT.create_function(
     #     FunctionName=name,
