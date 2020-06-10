@@ -48,6 +48,7 @@ class TestAllServices(TestCase):
                         if module_path not in sys.path:
                             sys.path.append(f"../{directory}")
                         service = importlib.import_module(f"{self.LAMBDA_FILE_NAME}")
+                        sys.path.remove(module_path)
                         self.assertTrue(
                             hasattr(service, self.LAMBDA_HANDLER_NAME),
                             f"{directory}: Missing '{self.LAMBDA_HANDLER_NAME}'"
@@ -64,7 +65,6 @@ class TestAllServices(TestCase):
                         )
                         # endregion
                         self.lambda_handler_subTest(func, directory)
-                        sys.path.remove(module_path)
                     # endregion
         print("End of implementation test for all services.")
 
