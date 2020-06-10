@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional, Any, Dict
 
 from boto3.dynamodb.conditions import Attr  # noqa
 
@@ -17,7 +18,7 @@ class MatchHelper:
         return (time_now - list_time).total_seconds()
 
     @staticmethod
-    def find_available(user_id):
+    def find_available(user_id: str) -> Optional[Dict[str, Any]]:
         return db_scan(
             Key={TableKey.PARTITION: TablePartition.MATCH},
             FilterExpression=Attr(MatchAttr.LISTER_ID).ne(user_id)
@@ -27,13 +28,13 @@ class MatchHelper:
         )
 
     @staticmethod
-    def delete(match_id):
+    def delete(match_id: str) -> Optional[Dict[str, Any]]:
         return db_delete(
             Key={TableKey.PARTITION: TablePartition.MATCH, TableKey.SORT: match_id}
         )
 
     @staticmethod
-    def claim(match_id, user_id):
+    def claim(match_id: str, user_id: str) -> Optional[Dict[str, Any]]:
         return db_update(
             Key={TableKey.PARTITION: TablePartition.MATCH, TableKey.SORT: match_id},
             UpdateExpression="SET #finder_id = :user_id",
@@ -46,7 +47,7 @@ class MatchHelper:
         )
 
     @staticmethod
-    def template_new(match_id, user_id):
+    def template_new(match_id: str, user_id: str) -> Dict[str, Any]:
         return {
             TableKey.PARTITION: TablePartition.MATCH,
             TableKey.SORT: match_id,
@@ -55,7 +56,7 @@ class MatchHelper:
         }
 
     @classmethod
-    def new(cls, new_id, user_id):
+    def new(cls, new_id: str, user_id: str) -> Optional[Dict[str, Any]]:
         return db_put(
             Item=cls.template_new(new_id, user_id),
             ConditionExpression="attribute_not_exists(#id)",
@@ -63,11 +64,11 @@ class MatchHelper:
         )
 
     @staticmethod
-    def generate_id(user_id):
+    def generate_id(user_id: str) -> str:
         return f"{datetime.now().strftime('%m-%d-%H-%M-%S')}{user_id}"
 
     @staticmethod
-    def upsert_return(match_id, new_id):
+    def upsert_return(match_id: str, new_id: str) -> Optional[Dict[str, Any]]:
         return db_update(
             Key={TableKey.PARTITION: TablePartition.MATCH, TableKey.SORT: match_id},
             UpdateExpression="SET #sort = :new_match_id",

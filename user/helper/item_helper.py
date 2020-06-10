@@ -17,14 +17,14 @@ class ItemHelper:
             return ItemDB.cur.execute(sql, id_list).fetchall()
         return ItemDB.cur.execute(sql).fetchall()
 
-    @staticmethod
-    def get_biodomes() -> List[DBItem]:
-        return ItemDB.get_many("biodome")
+    @classmethod
+    def get_biodomes(cls) -> List[DBItem]:
+        return cls.get_many("biodome")
 
-    @staticmethod
-    def get_starter_inventory() -> List[DBItem]:
-        return ItemDB.get_many("item", Config.STARTING_INVENTORY)
+    @classmethod
+    def get_starter_inventory(cls) -> List[DBItem]:
+        return cls.get_many("item", Config.STARTING_INVENTORY)
 
-    @staticmethod
-    def get_inventory(user_inventory: List[int]) -> List[DBItem]:
-        return ItemDB.get_many("item", user_inventory)
+    @classmethod
+    def get_inventory(cls, user_inventory: List[int]) -> List[DBItem]:
+        return cls.get_many("item", user_inventory)

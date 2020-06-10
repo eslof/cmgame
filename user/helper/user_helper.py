@@ -58,7 +58,7 @@ class UserHelper:
             UserAttr.CURRENT_HOME: "",
             UserAttr.HOMES: [],
             UserAttr.HOME_COUNT: 0,
-            UserAttr.KEY_COUNT: Constants.User.STARTING_KEY_COUNT,
+            UserAttr.KEY_COUNT: Config.STARTING_KEY_COUNT,
             UserAttr.KEY_USED_COUNT: 0,
             UserAttr.INVENTORY: Config.STARTING_INVENTORY,
             UserAttr.INVENTORY_COUNT: len(Config.STARTING_INVENTORY),

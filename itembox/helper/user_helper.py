@@ -1,10 +1,12 @@
+from typing import Optional, Dict, Any
+
 from database import db_update
 from db_properties import TableKey, UserAttr, TablePartition
 
 
 class UserHelper:
     @staticmethod
-    def handle_new_item(user_id: str, item_id: int) -> bool:
+    def handle_new_item(user_id: str, item_id: int) -> Optional[Dict[str, Any]]:
         return db_update(
             Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
             UpdateExpression=(
@@ -23,7 +25,7 @@ class UserHelper:
         )
 
     @staticmethod
-    def handle_duplicate_item(user_id: str) -> bool:
+    def handle_duplicate_item(user_id: str) -> Optional[Dict[str, Any]]:
         return db_update(
             Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id,},
             UpdateExpression="#used_key_count = #used_key_count + 1",
