@@ -1,18 +1,19 @@
 from os import path
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Callable, Tuple
 
 import boto3
 from botocore.exceptions import ClientError
 
-from deployment_properties import ZIP_DIRECTORY, PREFIX  # todo: chdir
+from deployment_properties import ZIP_DIRECTORY
 
 LAMBDA_CLIENT = boto3.client("lambda")
 
 
-def lambda_try(lambda_function, *args, **kwargs) -> Optional[Dict[str, Any]]:
+def lambda_try(
+    lambda_function: Callable[..., Any], *args: Any, **kwargs: Any
+) -> Optional[Dict[str, Any]]:
     try:
         results = lambda_function(*args, **kwargs)
-        print(results)
     except ClientError as e:
         print(e)
         return None
@@ -74,7 +75,7 @@ def get_functions() -> Dict[str, str]:
 
 
 def publish_layer(name: str) -> str:
-    print(f"Publishing layer: {PREFIX}{name}")
+    print(f"Publishing layer: {name}")
     data = data_try(ZIP_DIRECTORY, name, "Layer")
     print("Success!")
     return "SomeArn"
@@ -95,14 +96,14 @@ def publish_layer(name: str) -> str:
 
 # region Not done
 def update_function(name: str) -> Dict[str, Any]:
-    print(f"Updating function: {PREFIX}{name}")
+    print(f"Updating function: {name}")
     data = data_try(ZIP_DIRECTORY, name, "Function")
     print("Success!")
     # return LAMBDA_CLIENT.update_function_code(FunctionName=name, ZipFile=data)
 
 
 def create_function(name: str, layer_arn: str) -> Dict[str, Any]:
-    print(f"Creating function: {PREFIX}{name}")
+    print(f"Creating function: {name}")
     data = data_try(ZIP_DIRECTORY, name, "Function")
     print("Success!")
     # return LAMBDA_CLIENT.create_function(

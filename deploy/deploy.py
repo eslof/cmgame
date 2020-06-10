@@ -4,18 +4,21 @@ from deployment_utils import *
 
 functions = get_functions()
 layers = get_layers()
+print(layers)
 # region Deploy layer
-if LAYER in layers.keys():
-    print(f"Updating layer: {PREFIX}{LAYER}.")
+layer_name = f"{PREFIX}{LAYER}"
+if layer_name in layers.keys():
+    print(f"Updating layer: {layer_name}.")
 else:
-    print(f"Creating layer: {PREFIX}{LAYER}.")
+    print(f"Creating layer: {layer_name}.")
 
-layer_arn = publish_layer(LAYER)
+layer_arn = publish_layer(layer_name)
 # endregion
 # region Deploy functions
-for function in FUNCTIONS_TO_DEPLOY:
+for function in FUNCTIONS:
+    function_name = f"{PREFIX}{function}"
     if function in functions:
-        update_function(function)
+        update_function(function_name)
     else:
-        create_function(function, layer_arn)
+        create_function(function_name, layer_arn)
 # endregion
