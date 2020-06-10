@@ -1,3 +1,5 @@
+from typing import Optional
+
 from item_db import ItemDB
 from item_properties import ITEM_TABLES, ItemAttr
 
@@ -15,30 +17,30 @@ class ItemAdmin:
         )
 
     @staticmethod
-    def create_tables():
+    def create_tables() -> None:
         with open("item_tables.sql") as if_not_exists:
             ItemDB.cur.executescript(if_not_exists.read())
 
     @staticmethod
-    def upsert_bundle(table_name: ITEM_TABLES, bundle_name: str, version: int,) -> list:
+    def upsert_bundle(table_name: ITEM_TABLES, bundle_name: str, version: int) -> None:
         ItemDB.connect(False)
-        query = (
+        ItemDB.cur.execute(
             f"INSERT INTO {table_name} ({ItemAttr.BUNDLE}, {ItemAttr.VERSION})"
             f" VALUES('{bundle_name}', {version})"
             f" ON CONFLICT({ItemAttr.BUNDLE})"
             f" DO UPDATE SET {ItemAttr.VERSION} = {version}"
         )
-        return ItemDB.cur.execute(query).fetchall()
 
     @staticmethod
-    def change_bundle_name(table, old_name, new_name, version=None) -> list:
+    def change_bundle_name(
+        table: str, old_name: str, new_name: str, version: Optional[int] = None
+    ) -> None:
         ItemDB.connect(False)
-        query = (
+        ItemDB.cur.execute(
             f"UPDATE {table}"
             f" SET {ItemAttr.BUNDLE}='{new_name}', {ItemAttr.VERSION}={version or ItemAttr.VERSION}"
             f" WHERE {ItemAttr.BUNDLE}='{old_name}'"
         )
-        return ItemDB.cur.execute(query).fetchall()
 
 
 # Items.connect()

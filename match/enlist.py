@@ -41,7 +41,7 @@ class Enlist(RequestHandler):
             end("Unable to retrieve match and listing for user.")
         if user_data[UserAttr.LIST_ID]:
             seconds_old = MatchHelper.get_age(user_data[UserAttr.LIST_ID])
-            if seconds_old < 2.5:  # todo: put into config
+            if seconds_old < 2.5:  # todo: Config.ENLIST_DELAY
                 end("Attempting to refresh listing too early.")
 
         return user_data

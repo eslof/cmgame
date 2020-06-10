@@ -45,13 +45,7 @@ class Save(RequestHandler):
                 message="User Save API (NAME)",
             )
         elif req == SaveRequest.FLAG:
-            validate_field(
-                target=event,
-                field=RequestField.User.FLAG,
-                validation=lambda value: type(value) is int
-                and value in (val.value for val in Country.__members__.values()),
-                message="User Save API (FLAG)",
-            )
+            validate_request(event, Country, RequestField.User.FLAG)
         elif req == SaveRequest.META:
             validate_meta(
                 target=event,

@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 from database import db_get, db_update
 from db_properties import TableKey, TablePartition
@@ -20,7 +20,7 @@ class UserUtils:
         return event[RequestField.User.ID]  # pop it? or leave it and let by event?
 
     @staticmethod
-    def get(user_id: str, attributes: str) -> Dict[str, Any]:
+    def get(user_id: str, attributes: str) -> Optional[Dict[str, Any]]:
         return db_get(
             Key={TableKey.PARTITION: TablePartition.USER, TableKey.SORT: user_id},
             ProjectionExpression=attributes,

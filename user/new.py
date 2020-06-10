@@ -1,7 +1,7 @@
 from typing import Optional, Any, Dict, no_type_check
 
 from country import Country
-from internal import validate_field, end, validate_name
+from internal import validate_field, end, validate_name, validate_request
 from properties import RequestField, Constants, ResponseField
 from request_handler import RequestHandler
 from helper.user_helper import UserHelper
@@ -27,10 +27,4 @@ class New(RequestHandler):
             max_length=Constants.User.NAME_MAX_LENGTH,
             message="User New API (NAME)",
         )
-        validate_field(
-            target=event,
-            field=RequestField.User.FLAG,
-            validation=lambda value: type(value) is int
-            and value in (val.value for val in Country.__members__.values()),
-            message="User New API (FLAG)",
-        )
+        validate_request(event, Country, RequestField.User.FLAG)

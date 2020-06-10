@@ -8,13 +8,6 @@ from properties import Constants, PacketHeader, GameException
 from view import View
 
 
-def end_unless_conditional(e: ClientError) -> None:
-    error = e.response["Error"]["Code"]
-    if error != "ConditionalCheckFailedException":
-        end(error)  # TODO: error handling
-    return
-
-
 def end(message: str) -> None:
     raise GameException(View.error(message))
 
@@ -33,10 +26,12 @@ def generate_id(prefix: str) -> str:
     )
 
 
-def validate_request(target: Dict[str, Any], request_enum: EnumMeta) -> Enum:
+def validate_request(
+    target: Dict[str, Any], request_enum: EnumMeta, field=PacketHeader.REQUEST
+) -> Enum:
     validate_field(
         target=target,
-        field=PacketHeader.REQUEST,
+        field=field,
         value_type=int,
         validation=lambda v: v
         in (val.value for val in request_enum.__members__.values()),
@@ -49,7 +44,7 @@ def validate_field(
     target: Dict[str, Any],
     field: str,
     value_type: type,
-    validation: Callable[[Any], bool],
+    validation: Callable[[Any], Any],
     message: str,
 ) -> None:
     if not hasattr(target, field) and field not in target:
@@ -60,14 +55,14 @@ def validate_field(
         end(f"Failed validation ({message}): {field} = {target[field]}.")
 
 
-def validate_name(target: Dict[str, Any], field: str, max_length: int, message: str):
-    validate_field(
-        target, field, lambda v: type(v) is str and 0 < len(v) < max_length, message
-    )
+def validate_choice(target: Dict[str, Any], field: str, max: int, message: str) -> None:
+    validate_field(target, field, int, lambda v: 0 < v <= max, message)
 
 
-def validate_choice(target: Dict[str, Any], field: str, max: int, message: str):
-    validate_field(target, field, int, lambda v: 1 <= v <= max, message)
+def validate_name(
+    target: Dict[str, Any], field: str, max_length: int, message: str
+) -> None:
+    validate_field(target, field, str, lambda v: 0 < len(v) <= max_length, message)
 
 
 def validate_meta(

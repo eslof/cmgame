@@ -3,10 +3,6 @@ from enum import unique, auto, Enum
 
 
 # region Game Properties
-class GameException(Exception):
-    pass
-
-
 class Constants:
     ID_CHARSET = "".join([string.ascii_letters, string.digits, "-_"])
     ID_GEN_LENGTH = 22
@@ -19,6 +15,10 @@ class Constants:
         SIZE = 49
         MATCH_GRID_SLOT = 4
         NAME_MAX_LENGTH = 32
+
+
+class GameException(Exception):
+    pass
 
 
 # endregion

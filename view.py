@@ -17,11 +17,11 @@ class View:
         return cls.encode(data)
 
     @classmethod
-    def deserialize(cls, data: str) -> Dict[str, Any]:
-        return cls.decode(data)  # type: Dict[str, Any]
+    def deserialize(cls, data: str) -> Any:
+        return cls.decode(data)  # noqa
 
     @classmethod
-    def response(cls, response_type: Enum, data: Dict[str, Any]) -> str:
+    def response(cls, response_type: Enum, data: Dict[Any, Any]) -> str:
         data[PacketHeader.RESPONSE] = response_type
         return cls.serialize(data)
 
@@ -35,7 +35,7 @@ class View:
         )
 
     @classmethod
-    def debug(cls, data: Optional[Any]):
+    def debug(cls, data: Optional[Any]) -> str:
         return cls.serialize(
             {
                 PacketHeader.RESPONSE: ResponseType.DEBUG.value,
