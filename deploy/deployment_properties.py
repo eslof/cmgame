@@ -1,15 +1,16 @@
 from typing import Protocol, Dict, Any, TypedDict, Callable
 
-LAYER = "layer"
-DEFAULT_ZIP_DIR = "../bin"
+# region CMGame
 FUNCTIONS = ["home", "item", "itembox", "match", "user", "test"]
-# FUNCTIONS = input("Functions to update (csv): ").split(",")
 PREFIX = "cmgame-"
-
-
-class LambdaDeploy(Protocol):
-    def __call__(self, lambda_name: str, zip_file: str) -> Dict[str, Any]:
-        ...
+DEFAULT_LAYER = "layer"
+DEFAULT_LAYERS = [f"{PREFIX}{DEFAULT_LAYER}"]
+DEFAULT_ZIP_DIR = "../bin"
+# endregion
+# region AWS
+ROLE = "cmgame"
+RUNTIME = "python3.8"
+# endregion
 
 
 class DeployRoute(TypedDict):

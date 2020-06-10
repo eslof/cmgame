@@ -1,5 +1,7 @@
-from typing import Dict, Sequence
+from typing import Dict, Sequence, List
 from os import path
+
+from deployment_properties import DEFAULT_LAYER, PREFIX
 
 
 def input_name(
@@ -77,3 +79,26 @@ def input_zip_directory(default_zip_dir: str) -> str:
         if directory == "":
             directory = default_zip_dir
     return directory
+
+
+def input_layers_for_function(layers: Dict[str, str]) -> List[str]:
+    print(f"\nPrinting list of available layers.")
+    for layer in layers:
+        print(f"{layer} : {layers[layer]}")
+    function_layers: List[str] = []
+    user_input = ""
+    while (
+        len(function_layers) > 0
+        and all(
+            layer in layers.keys() or layer in layers.values()
+            for layer in function_layers
+        )
+        or user_input == "none"
+    ):
+        default = f"{PREFIX}{DEFAULT_LAYER}"
+        appendix = f" [{default}/none]" if default in layers.keys() else ""
+        user_input = input(f"Layers for function{appendix}").lower().strip()
+        function_layers = [_.strip() for _ in user_input.split(",")]
+        if user_input == "":
+            function_layers = [default]
+    return function_layers

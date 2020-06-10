@@ -21,12 +21,15 @@ deployment_type = input_action(("function", "layer"), "Type to deploy")
 directory = input_zip_directory(DEFAULT_ZIP_DIR)
 chdir(directory)
 
-print(f"\nPrinting list of current {deployment_type}s.")
 lambda_data = get_list(deployment_type)
-for entry in lambda_data:
-    print(f"{entry} : {lambda_data[entry]}")
+if len(lambda_data) > 0:
+    print(f"\nPrinting list of current {deployment_type}s.")
+    for entry in lambda_data:
+        print(f"{entry} : {lambda_data[entry]}")
 
-action = input_action(("new", "update"), "Action")
+    action = input_action(("new", "update"), "Action")
+else:
+    action = "new"
 zip_name = input_zip_name()
 default_name = f"{PREFIX}{zip_name}"
 # endregion

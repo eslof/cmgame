@@ -4,6 +4,8 @@ from typing import Dict, Any, Optional, Callable
 import boto3  # noqa
 from botocore.exceptions import ClientError  # noqa
 
+from deployment_ui import input_layers_for_function
+
 LAMBDA_CLIENT = boto3.client("lambda")
 
 
@@ -109,25 +111,19 @@ def update_function(function_name: str, zip_name: str) -> Dict[str, Any]:
 
 
 def create_function(function_name: str, zip_name: str) -> Dict[str, Any]:
+    layers = get_layers()
+    if len(layers) <= 0:
+        data = data_try(zip_name, "Function")
+        return {"FunctionName": function_name, "FunctionArn": "string"}
+
+    function_layers = input_layers_for_function(layers)
     data = data_try(zip_name, "Function")
     print("Success!")
     # return LAMBDA_CLIENT.create_function(
-    #     FunctionName=name,
-    #     Runtime="python3.8",
-    #     Role="cmgame",
+    #     FunctionName=function_name,
+    #     Runtime=RUNTIME,
+    #     Role=ROLE,
     #     Handler="lambda_handler",
     #     Code={"ZipFile": data},
-    #     Layers=[layer_arn],
+    #     Layers=function_layers,
     # )
-
-
-# response = client.delete_function(FunctionName="cmgame-test", Qualifier="string")
-# pprint(response)
-# response = client.create_function(
-#     FunctionName=config["name"],
-#     Runtime="python3.6",
-#     Role="cmgame",
-#     Handler="lambda_handler",
-#     Code={"ZipFile": code},
-#     Layers=[""],
-# )
