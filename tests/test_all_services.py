@@ -21,7 +21,7 @@ from request_handler import RequestHandler
 class TestAllServices(TestCase):
 
     # region Const members
-    def setUp(self):
+    def setUp(self) -> None:
         self.LAMBDA_HANDLER_NAME = "lambda_handler"
         self.LAMBDA_FILE_NAME = "lambda_function"
         self.ROOT_DIR = ".."
@@ -69,7 +69,7 @@ class TestAllServices(TestCase):
         print("End of implementation test for all services.")
 
     def lambda_handler_subTest(
-        self, lambda_handler: Callable[[Dict[str, Any], Any], None], name: str,
+        self, lambda_handler: router.LambdaHandler, name: str,
     ) -> None:
         def test_handler(handler: Type[RequestHandler]) -> None:
             # region Assert that our handler base class is not broken
@@ -115,7 +115,7 @@ class TestAllServices(TestCase):
         def test_wrapper(
             routes: router.ROUTES_TYPE,
             request_enum: EnumMeta,
-            f: Callable[[Dict[str, Any], Dict[str, Any]], None],
+            f: router.LambdaHandler,
             event: Dict[str, Any],
             context: Dict[str, Any],
         ) -> str:
