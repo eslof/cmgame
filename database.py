@@ -11,7 +11,6 @@ from view import View
 
 dynamodb = boto3.resource("dynamodb", endpoint_url="http://localhost:8000")
 table = dynamodb.Table("cmgame")
-table.put_item()
 
 
 def _db_try(table_function, *args, **kwargs) -> Optional[Dict[str, Any]]:  # noqa

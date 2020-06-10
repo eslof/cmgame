@@ -1,5 +1,6 @@
 import importlib
 import os
+import sys
 from collections.abc import Sized
 from enum import Enum, EnumMeta
 from inspect import isclass
@@ -44,8 +45,7 @@ class TestAllServices(TestCase):
                     # region SubTest for each folder in root with lambda_function
                     with self.subTest(directory):
                         # region Assert lambda_handler exists and is decorated
-                        owd = os.getcwd()
-                        os.chdir(f"../{directory}")
+                        sys.path.append(f"../{directory}")
                         service = importlib.import_module(f"{self.LAMBDA_FILE_NAME}")
                         self.assertTrue(
                             hasattr(service, self.LAMBDA_HANDLER_NAME),
@@ -63,7 +63,7 @@ class TestAllServices(TestCase):
                         )
                         # endregion
                         self.lambda_handler_subTest(func, service, directory)
-                        os.chdir(owd)
+                        sys.path.remove(f"../{directory}")
                     # endregion
         print("End of implementation test for all services.")
 
