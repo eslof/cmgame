@@ -1,10 +1,8 @@
 from os import path
-from typing import Dict, Any, Optional, Callable
+from typing import Dict, Any, Optional, Callable, List
 
 import boto3  # noqa
 from botocore.exceptions import ClientError  # noqa
-
-from deployment_ui import input_layers_for_function
 
 LAMBDA_CLIENT = boto3.client("lambda")
 
@@ -40,41 +38,53 @@ def data_try(zip_name: str, tag: str) -> bytes:
     return data
 
 
-def get_layers() -> Dict[str, str]:
-    results = lambda_try(LAMBDA_CLIENT.list_layers)
+def get_list(
+    lambda_function, field: str, key: str, value: str, *args, **kwargs
+) -> Dict[str, str]:
+    results = lambda_try(lambda_function, *args, **kwargs)
     if results is None:
-        print("Unable to get live layers.")
+        print(f"{field} unable to get list.")
         quit()
-    if "Layers" not in results or not all(
-        all(key in layer.keys() for layer in results["Layers"])
-        for key in ("LayerName", "LayerArn")
+    if field not in results or not all(
+        all(key in layer.keys() for layer in results[field]) for key in (key, value)
     ):
         print(f"Unexpected results: {results}")
         quit()
-    layers = results["Layers"]
-    if len(layers) == 0:
-        print("List of live layers returned empty.")
-    return {layer["LayerName"]: layer["LayerArn"] for layer in layers}
+    ret = results[field]
+    if len(ret) == 0:
+        print(f"{field} list returned empty.")
+    return {entry[key]: entry[value] for entry in ret}
+
+
+def get_function_layers(function_name: str) -> Dict[str, str]:
+    return get_list(
+        lambda_function=LAMBDA_CLIENT.get_function_configuration,
+        field="Layers",
+        key="Arn",
+        value="CodeSize",
+        FunctionName=function_name,
+    )
+
+
+def get_layers() -> Dict[str, str]:
+    return get_list(
+        lambda_function=LAMBDA_CLIENT.list_layers,
+        field="Layers",
+        key="LayerName",
+        value="LayerArn",
+    )
 
 
 def get_functions() -> Dict[str, str]:
-    results = lambda_try(LAMBDA_CLIENT.list_functions)
-    if results is None:
-        print("Unable to get live functions.")
-        quit()
-    if "Functions" not in results or not all(
-        all(key in function.keys() for function in results["Functions"])
-        for key in ("FunctionName", "FunctionArn")
-    ):
-        print(f"Unexpected results: {results}")
-        quit()
-    functions = results["Functions"]
-    if len(functions) == 0:
-        print("List of live functions returned empty.")
-    return {function["FunctionName"]: function["FunctionArn"] for function in functions}
+    return get_list(
+        lambda_function=LAMBDA_CLIENT.list_functions,
+        field="Functions",
+        key="FunctionName",
+        value="FunctionArn",
+    )
 
 
-def get_list(deployment_type: str) -> Dict[str, str]:
+def get_current(deployment_type: str) -> Dict[str, str]:
     if deployment_type == "function":
         return get_functions()
     elif deployment_type == "layer":
@@ -84,7 +94,7 @@ def get_list(deployment_type: str) -> Dict[str, str]:
         quit()
 
 
-def publish_layer(function_name: str, zip_name: str) -> Dict[str, Any]:
+def publish_layer(layer_name: str, zip_name: str) -> Dict[str, Any]:
     data = data_try(zip_name, "Layer")
     print("Success!")
     return "SomeArn"
@@ -104,19 +114,23 @@ def publish_layer(function_name: str, zip_name: str) -> Dict[str, Any]:
 
 
 # region Not done
-def update_function(function_name: str, zip_name: str) -> Dict[str, Any]:
+def update_function(
+    function_name: str, zip_name: str, layers: List[str]
+) -> Dict[str, Any]:
     data = data_try(zip_name, "Function")
     print("Success!")
     # return LAMBDA_CLIENT.update_function_code(FunctionName=name, ZipFile=data)
 
 
-def create_function(function_name: str, zip_name: str) -> Dict[str, Any]:
-    layers = get_layers()
-    if len(layers) <= 0:
-        data = data_try(zip_name, "Function")
-        return {"FunctionName": function_name, "FunctionArn": "string"}
+def create_function(
+    function_name: str, zip_name: str, layers: List[str]
+) -> Dict[str, Any]:
+    # layers = get_layers()
+    # if len(layers) <= 0:
+    #     data = data_try(zip_name, "Function")
+    #     return {"FunctionName": function_name, "FunctionArn": "string"}
 
-    function_layers = input_layers_for_function(layers)
+    # function_layers = input_layers_for_function(layers)
     data = data_try(zip_name, "Function")
     print("Success!")
     # return LAMBDA_CLIENT.create_function(

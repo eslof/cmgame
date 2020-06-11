@@ -2,6 +2,7 @@ from typing import Dict, Sequence, List
 from os import path
 
 from deployment_properties import DEFAULT_LAYER, PREFIX
+from deployment_utils import LAMBDA_CLIENT, get_function_layers
 
 
 def input_name(
@@ -51,18 +52,18 @@ def input_zip_name() -> str:
     return zip_name
 
 
-def input_action(actions: Sequence[str], tag: str) -> str:
-    action = ""
-    while action not in actions:
-        action = input(f"{tag} [{'/'.join(actions)}]: ").lower()
-    return action
+def input_choice(choices: Sequence[str], tag: str) -> str:
+    choice = ""
+    while choice not in choices:
+        choice = input(f"{tag} [{'/'.join(choices)}]: ").lower()
+    return choice
 
 
 def input_validate_new(
     existing: Dict[str, str], zip_name: str, deployment_type: str
 ) -> None:
     for entry in existing.keys():
-        if zip_name in entry:
+        if zip_name in entry or zip_name in existing[entry]:
             abort = ""
             while abort not in ("y", "n"):
                 abort = input(
@@ -81,24 +82,71 @@ def input_zip_directory(default_zip_dir: str) -> str:
     return directory
 
 
-def input_layers_for_function(layers: Dict[str, str]) -> List[str]:
-    print(f"\nPrinting list of available layers.")
-    for layer in layers:
-        print(f"{layer} : {layers[layer]}")
-    function_layers: List[str] = []
-    user_input = ""
-    while (
-        len(function_layers) > 0
-        and all(
-            layer in layers.keys() or layer in layers.values()
-            for layer in function_layers
-        )
-        or user_input == "none"
+def print_lambda_data(lambda_data: Dict[str, str], tag: str) -> None:
+    print(f"\nPrinting list of {tag}.")
+    for entry in lambda_data:
+        print(f"{entry} : {lambda_data[entry]}")
+
+
+def input_layers_for_function_new(layers: Dict[str, str]) -> List[str]:
+    # region Set up
+    print_lambda_data(layers, "available layers")
+    ret_layers: List[str] = []
+    layer_names = layers.keys()
+    layer_arns = layers.values()
+    default = f"{PREFIX}{DEFAULT_LAYER}"
+    # endregion
+    while not (
+        len(ret_layers) > 0
+        and all(layer in layer_names or layer in layer_arns for layer in ret_layers)
     ):
-        default = f"{PREFIX}{DEFAULT_LAYER}"
-        appendix = f" [{default}/none]" if default in layers.keys() else ""
-        user_input = input(f"Layers for function{appendix}").lower().strip()
-        function_layers = [_.strip() for _ in user_input.split(",")]
+        # region User input for function layers
+        appendix = f" [{default}/none]" if default in layer_names else " [none]"
+        user_input = (
+            input(f"Layers for function by Name or ARN (csv){appendix}").lower().strip()
+        )
+        ret_layers = [_.strip() for _ in user_input.split(",")]
+        # endregion
+        # region Commands none/empty default
         if user_input == "":
-            function_layers = [default]
-    return function_layers
+            ret_layers = [default]
+        if user_input == "none":
+            return []
+        # endregion
+    return ret_layers
+
+
+def input_layers_for_function_update(
+    function_name: str, layers: Dict[str, str]
+) -> List[str]:
+    layer_names = list(layers.keys())
+    layer_arns = list(layers.values())
+    print_lambda_data(layers, "available layers")
+    current_layers = get_function_layers(function_name)
+    function_layers = {
+        name: layers[name]
+        for name in layer_names
+        if any(layers[name] in arn for arn in current_layers.keys())
+    }
+    print_lambda_data(function_layers, "function's current layers")
+    print()
+    function_layer_names = list(function_layers.keys())
+    default = ",".join(function_layer_names)
+    ret_layers: List[str] = []
+    appendix = (
+        f" [{default}/none]"
+        if all(layer in layer_names for layer in function_layer_names)
+        else ""
+    )
+    while len(ret_layers) == 0 or not all(
+        layer in layer_names or layer in layer_arns for layer in ret_layers
+    ):
+        user_input = (
+            input(f"Layers for function by Name or ARN{appendix}: ").lower().strip()
+        )
+        ret_layers = [layer.strip() for layer in user_input.split(",")]
+        if user_input == "":
+            ret_layers = list(function_layers.keys())
+        if user_input == "none":
+            return []
+    return ret_layers

@@ -1,4 +1,4 @@
-from typing import Protocol, Dict, Any, TypedDict, Callable
+from typing import Dict, Any, TypedDict, Callable, List
 
 # region CMGame
 FUNCTIONS = ["home", "item", "itembox", "match", "user", "test"]
@@ -13,6 +13,16 @@ RUNTIME = "python3.8"
 # endregion
 
 
-class DeployRoute(TypedDict):
+class DeployFunction(TypedDict):
+    new: Callable[[str, str, List[str]], Dict[str, Any]]
+    update: Callable[[str, str, List[str]], Dict[str, Any]]
+
+
+class DeployLayer(TypedDict):
     new: Callable[[str, str], Dict[str, Any]]
     update: Callable[[str, str], Dict[str, Any]]
+
+
+class DeployRoute(TypedDict):
+    function: DeployFunction
+    layer: DeployLayer
